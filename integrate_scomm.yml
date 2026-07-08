@@ -1,0 +1,17 @@
+---
+- name: Integrate SCOM (scomm) agent on RHEL 9
+  hosts: scomm_agents
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: Ensure the target host runs RHEL 9
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['distribution'] in ['RedHat', 'CentOS', 'Rocky', 'AlmaLinux', 'OracleLinux']
+          - ansible_facts['distribution_major_version'] == '9'
+        fail_msg: "This playbook targets RHEL 9 (found {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_major_version'] }})."
+        success_msg: "Detected {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_major_version'] }}."
+
+  roles:
+    - role: scomm_agent

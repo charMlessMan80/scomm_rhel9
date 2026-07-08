@@ -1,0 +1,17 @@
+---
+- name: Install SCOM agent packages
+  ansible.builtin.import_tasks: install.yml
+  tags: [scomm, install]
+
+- name: Configure and enable SCOM agent service
+  ansible.builtin.import_tasks: configure.yml
+  tags: [scomm, configure]
+
+- name: Create SCOM monitoring account and sudo config
+  ansible.builtin.import_tasks: users.yml
+  when: scomm_manage_monitoring_user | bool
+  tags: [scomm, users]
+
+- name: Register agent with the SCOM management server
+  ansible.builtin.import_tasks: register.yml
+  tags: [scomm, register]

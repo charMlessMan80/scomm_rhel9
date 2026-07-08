@@ -1,0 +1,15 @@
+---
+- name: Ensure the SCOM agent service is enabled and running
+  ansible.builtin.systemd:
+    name: "{{ scomm_service_name }}"
+    state: started
+    enabled: true
+
+- name: Open the SCOM agent port in firewalld
+  ansible.posix.firewalld:
+    port: "{{ scomm_agent_port }}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+  when: scomm_manage_firewall | bool
+  notify: Reload firewalld

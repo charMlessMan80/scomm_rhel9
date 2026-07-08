@@ -1,0 +1,30 @@
+---
+- name: Ensure prerequisite packages are present
+  ansible.builtin.dnf:
+    name:
+      - openssl
+      - ca-certificates
+    state: present
+
+- name: Configure the SCOM agent DNF repository
+  ansible.builtin.yum_repository:
+    name: "{{ scomm_repo_name }}"
+    description: "{{ scomm_repo_description }}"
+    baseurl: "{{ scomm_repo_baseurl }}"
+    gpgcheck: "{{ scomm_repo_gpgcheck }}"
+    gpgkey: "{{ scomm_repo_gpgkey | default(omit) }}"
+    enabled: true
+    state: present
+
+- name: Import the repository GPG key
+  ansible.builtin.rpm_key:
+    key: "{{ scomm_repo_gpgkey }}"
+    state: present
+  when: scomm_repo_gpgcheck | bool and scomm_repo_gpgkey | length > 0
+
+- name: Install the SCOM (scomm) agent packages
+  ansible.builtin.dnf:
+    name: "{{ scomm_packages }}"
+    state: present
+    update_cache: true
+  notify: Restart scomm agent

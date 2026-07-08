@@ -1,0 +1,40 @@
+---
+# Registration with the SCOM management server.
+#
+# The SCOM management server signs the agent's certificate during discovery,
+# but the certificate must first carry the correct FQDN/hostname/domain.
+# scxsslconfig regenerates the agent certificate with those values.
+
+- name: Locate the scxsslconfig tool
+  ansible.builtin.stat:
+    path: /opt/microsoft/scx/bin/tools/scxsslconfig
+  register: scomm_scxsslconfig
+
+- name: Regenerate the agent SSL certificate with the correct FQDN
+  ansible.builtin.command:
+    cmd: >-
+      /opt/microsoft/scx/bin/tools/scxsslconfig -f
+      -h {{ scomm_agent_hostname | quote }}
+      -d {{ scomm_agent_domain | quote }}
+  register: scomm_sslconfig_result
+  changed_when: scomm_sslconfig_result.rc == 0
+  when:
+    - scomm_scxsslconfig.stat.exists
+    - scomm_agent_domain | length > 0
+  notify: Restart scomm agent
+
+- name: Copy the SCOM management server CA certificate to the agent
+  ansible.builtin.copy:
+    src: "{{ scomm_management_server_ca_src }}"
+    dest: "{{ scomm_management_server_ca_dest }}"
+    owner: root
+    group: root
+    mode: "0644"
+  when: scomm_management_server_ca_src | length > 0
+  notify: Update CA trust
+
+- name: Show the agent certificate location for management-server signing
+  ansible.builtin.debug:
+    msg: >-
+      Agent certificate generated at /etc/opt/omi/ssl/omi-host-{{ scomm_agent_hostname }}.pem.
+      Discover/sign this host from the SCOM management server to complete registration.

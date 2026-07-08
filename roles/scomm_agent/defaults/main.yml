@@ -1,0 +1,45 @@
+---
+# Defaults for the scomm_agent role.
+# These are overridden by group_vars/scomm_agents.yml but kept here so the
+# role is self-contained and runnable on its own.
+
+scomm_repo_name: "microsoft-scom"
+scomm_repo_description: "Microsoft SCOM Linux Agent"
+scomm_repo_baseurl: "https://packages.microsoft.com/rhel/9/prod/"
+scomm_repo_gpgcheck: true
+scomm_repo_gpgkey: "https://packages.microsoft.com/keys/microsoft.asc"
+
+scomm_packages:
+  - omi
+  - scx
+
+scomm_service_name: "omid"
+scomm_agent_port: 1270
+
+scomm_manage_firewall: true
+
+scomm_agent_fqdn: "{{ ansible_facts['fqdn'] }}"
+scomm_agent_hostname: "{{ ansible_facts['hostname'] }}"
+scomm_agent_domain: "{{ ansible_facts['domain'] | default('') }}"
+
+scomm_management_server_ca_src: ""
+scomm_management_server_ca_dest: "/etc/pki/ca-trust/source/anchors/scom-management-ca.crt"
+
+# --- Monitoring (Run As) account ---
+# SCOM authenticates to the agent as this local account. Set a privileged
+# account for the Agent Maintenance/Privileged profile, or an unprivileged
+# account elevated through sudo for the Monitoring profile.
+scomm_manage_monitoring_user: true
+scomm_monitoring_user: "scomuser"
+scomm_monitoring_group: "scomuser"
+scomm_monitoring_user_comment: "SCOM monitoring account"
+scomm_monitoring_user_shell: "/bin/bash"
+scomm_monitoring_user_home: "/home/scomuser"
+# Provide a pre-hashed password (e.g. from mkpasswd/openssl passwd -6) and keep
+# it in an ansible-vault encrypted file. Leave empty to skip setting a password.
+scomm_monitoring_user_password: ""
+
+# Grant passwordless sudo for the scx maintenance commands so SCOM can elevate
+# the unprivileged monitoring account for privileged workflows.
+scomm_monitoring_user_sudo: true
+scomm_sudoers_file: "/etc/sudoers.d/scom"

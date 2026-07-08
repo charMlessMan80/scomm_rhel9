@@ -1,0 +1,29 @@
+---
+# Create the local SCOM monitoring (Run As) account and configure sudo so the
+# management server can authenticate and elevate for privileged workflows.
+
+- name: Ensure the monitoring group exists
+  ansible.builtin.group:
+    name: "{{ scomm_monitoring_group }}"
+    state: present
+
+- name: Ensure the monitoring user exists
+  ansible.builtin.user:
+    name: "{{ scomm_monitoring_user }}"
+    group: "{{ scomm_monitoring_group }}"
+    comment: "{{ scomm_monitoring_user_comment }}"
+    shell: "{{ scomm_monitoring_user_shell }}"
+    home: "{{ scomm_monitoring_user_home }}"
+    create_home: true
+    password: "{{ scomm_monitoring_user_password | default(omit) }}"
+    state: present
+
+- name: Configure passwordless sudo for scx maintenance commands
+  ansible.builtin.template:
+    src: scom_sudoers.j2
+    dest: "{{ scomm_sudoers_file }}"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: "visudo -cf %s"
+  when: scomm_monitoring_user_sudo | bool

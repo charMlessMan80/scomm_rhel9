@@ -1,0 +1,49 @@
+---
+# Group variables for the SCOM (scomm) Linux agent.
+# Override these with your environment's real values (vault-encrypt secrets).
+
+# --- DNF repository that hosts the SCOM agent packages (omi, scx) ---
+scomm_repo_name: "microsoft-scom"
+scomm_repo_description: "Microsoft SCOM Linux Agent"
+scomm_repo_baseurl: "https://packages.microsoft.com/rhel/9/prod/"
+scomm_repo_gpgcheck: true
+scomm_repo_gpgkey: "https://packages.microsoft.com/keys/microsoft.asc"
+
+# Packages provided by the repo above.
+scomm_packages:
+  - omi
+  - scx
+
+# --- Service ---
+scomm_service_name: "omid"
+scomm_agent_port: 1270
+
+# --- Firewall ---
+scomm_manage_firewall: true
+
+# --- Management server registration / certificates ---
+# FQDN pieces used to (re)generate the agent SSL certificate so the SCOM
+# management server can sign/trust it correctly.
+scomm_agent_fqdn: "{{ ansible_facts['fqdn'] }}"
+scomm_agent_hostname: "{{ ansible_facts['hostname'] }}"
+scomm_agent_domain: "{{ ansible_facts['domain'] | default('') }}"
+
+# Path (on the control node) to the SCOM management server's root CA
+# certificate. Leave empty to skip trusting an external CA.
+scomm_management_server_ca_src: ""
+scomm_management_server_ca_dest: "/etc/pki/ca-trust/source/anchors/scom-management-ca.crt"
+
+# --- Monitoring (Run As) account ---
+# The local account SCOM authenticates as. Vault-encrypt the password.
+scomm_manage_monitoring_user: true
+scomm_monitoring_user: "scomuser"
+scomm_monitoring_group: "scomuser"
+scomm_monitoring_user_comment: "SCOM monitoring account"
+scomm_monitoring_user_shell: "/bin/bash"
+scomm_monitoring_user_home: "/home/scomuser"
+# Pre-hashed password (openssl passwd -6 ...). Store this in a vaulted file.
+scomm_monitoring_user_password: ""
+
+# Passwordless sudo for scx maintenance commands (privileged elevation).
+scomm_monitoring_user_sudo: true
+scomm_sudoers_file: "/etc/sudoers.d/scom"

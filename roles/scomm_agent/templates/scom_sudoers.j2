@@ -1,0 +1,27 @@
+# {{ ansible_managed }}
+# Sudo elevation for the SCOM monitoring account: {{ scomm_monitoring_user }}
+# Based on Microsoft's documented low-privileged UNIX/Linux account sudo config.
+
+# General requirements
+Defaults:{{ scomm_monitoring_user }} !requiretty
+
+# Agent maintenance / certificate signing
+{{ scomm_monitoring_user }} ALL=(root) NOPASSWD: /opt/microsoft/scx/bin/tools/scxadmin -status *
+{{ scomm_monitoring_user }} ALL=(root) NOPASSWD: /opt/microsoft/scx/bin/tools/scxadmin -restart *
+{{ scomm_monitoring_user }} ALL=(root) NOPASSWD: /opt/microsoft/scx/bin/tools/scxsslconfig -*
+
+# Install or upgrade
+{{ scomm_monitoring_user }} ALL=(root) NOPASSWD: sh /tmp/scx-{{ scomm_monitoring_user }}/scx-1.*.universal[[\:alpha\:]].[[\:digit\:]].sh --install *
+{{ scomm_monitoring_user }} ALL=(root) NOPASSWD: sh /tmp/scx-{{ scomm_monitoring_user }}/scx-1.*.universal[[\:alpha\:]].[[\:digit\:]].sh --upgrade *
+{{ scomm_monitoring_user }} ALL=(root) NOPASSWD: rm -rf /tmp/scx-{{ scomm_monitoring_user }}
+
+# Uninstall
+{{ scomm_monitoring_user }} ALL=(root) NOPASSWD: /opt/microsoft/scx/bin/uninstall
+
+# Log file monitoring
+{{ scomm_monitoring_user }} ALL=(root) NOPASSWD: /opt/microsoft/scx/bin/scxlogfilereader -p
+Defaults!/opt/microsoft/scx/bin/scxlogfilereader !requiretty
+
+# Custom shell command monitoring / diagnostic
+{{ scomm_monitoring_user }} ALL=(root) NOPASSWD: /bin/sh /tmp/scx_operations_manager_*/*
+Defaults!/bin/sh !requiretty
