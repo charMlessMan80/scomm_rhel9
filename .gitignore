@@ -1,0 +1,61 @@
+# Aucun .gitignore n'existait avant ce fichier :
+#   ls -la .gitignore                            -> rc=2 (absent)
+#   git ls-files --error-unmatch .gitignore      -> rc=1 (non suivi)
+# Ce fichier est donc une création, pas un écrasement.
+#
+# Le dépôt distant est PUBLIC (voir docs/scomm-certificat-facts.md, F-024).
+# Ces motifs réduisent le risque de publication accidentelle ; ils ne le
+# suppriment pas : un fichier déjà suivi reste suivi malgré .gitignore.
+
+# --- Secrets et matériel cryptographique ---------------------------------
+# Rien de tout cela ne doit atteindre un dépôt public.
+*.pem
+*.key
+*.crt
+*.cer
+*.pfx
+*.p12
+*.keytab
+*.jks
+vault-password*
+.vault_pass*
+*_vault.yml
+vault.yml
+
+# --- Inventaires et variables propres à un environnement -----------------
+# Les vrais noms d'hôtes, realms et VIP ne se versionnent pas ici.
+inventory/*.local
+inventory/hosts.local.ini
+host_vars/
+group_vars/*.local.yml
+
+# --- Sorties d'exécution Ansible ------------------------------------------
+*.retry
+.ansible/
+ansible.log
+*.log
+fact_cache/
+
+# --- Collections et rôles installés (voir requirements.yml) ---------------
+collections/
+roles/*/files/*.tar.gz
+
+# --- Outils de vérification -----------------------------------------------
+.ansible-lint-cache/
+.cache/
+__pycache__/
+*.pyc
+
+# --- Environnements virtuels ----------------------------------------------
+# Le poste utilise un venv partagé et unique, hors dépôt
+# (/home/…/.venvs/ansible-lint). Ce motif empêche d'en créer un ici.
+.venv/
+venv/
+
+# --- Résidus d'éditeurs et de systèmes de fichiers -------------------------
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+.DS_Store
