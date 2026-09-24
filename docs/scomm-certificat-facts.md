@@ -699,7 +699,8 @@ seulement — vit dans la procédure, § 1 bis. Elle n'est pas recopiée ici.
 
 **Aucune n'a été produite sur ce poste.** Sorties, et **réserve de transmission qu'il faut lire** : P-38 à P-42. Libellés réduits (R-07) : cf. P-38.
 
-- **F-074** — `[ÉCRAN-2026-09-23]` Sur `seed01`, en session interactive, `id -un` rend le
+- **F-074** — `[ÉCRAN-2026-09-22]` `[RÉVISÉE le 2026-09-24 — ÉTAIT 2026-09-23]`
+  Sur `seed01`, en session interactive, `id -un` rend le
   **compte AD de l'opérateur** et `klist -s` rend **0**. **Infirme F-059.** P-38.
 - **F-075** — `[TIERS-DÉCLARÉ]`, par écrit, équipe ADCS : le gabarit `<GABARIT>` est réglé
   **« Supply in the request »**. Clôt PO-016.
@@ -749,19 +750,119 @@ seulement — vit dans la procédure, § 1 bis. Elle n'est pas recopiée ici.
   compte machine dans l'annuaire : comparée à celle du keytab, **elle dit directement si
   une machine restaurée porte une identité périmée**, avant qu'un `kinit` n'échoue pour une
   raison indiscernable. **Séparateur pour PO-017.** P-41.
-- **F-087** — `[ÉCRAN ~2026-09-20]` **Étape 0b.1 de la procédure : jouée.** Sur `host01` :
+- **F-087** — `[ÉCRAN ~2026-09-20]` **Étape 0b.1 : jouée.** `[NOTE le 2026-09-24]` Date
+  **non corrigée** : la reprise du 2026-09-24 ne la couvre pas. Elle reste approximative.
+  Sur `host01` :
   `krb5-workstation-1.21.1-10.el9_8`, `openssl-3.5.5-6.el9_8`, `curl-7.76.1-40.el9_8.5`,
   `bind-utils-9.16.23-40.el9_8.8` ; `klist`, `kinit`, `kvno`, `kdestroy` présents dans
   `/usr/bin`. **Date approximative**, dérivée de l'horodatage du fichier de capture : elle
   ne vient pas d'un relevé horodaté à l'exécution (R-15), et c'est une faiblesse de cette
   preuve, pas un détail. **0b.2 — la lecture des options sur la cible — reste à faire** et
   précède toujours les étapes suivantes.
-- **F-088** — `[ÉCRAN ~2026-09-20]` Sur `host01`, `hostname -f` rend le **nom court**.
+- **F-088** — `[ÉCRAN-2026-09-21/22]` Sur `host01`, `hostname -f` rend le **nom court**.
+  `[RÉVISÉE le 2026-09-24 — ÉTAIT « ~2026-09-20 », posée sans source]`
   Cohérent avec F-064 et F-066 : l'entrée locale masque le DNS, qui reste juste dans les
   deux sens. Rend l'étape 1 de la procédure **interprétable sans arrêt** (D-012).
 - **F-086** — `[ÉCRAN-2026-09-23]` Les SPN du compte machine incluent la forme
   `host/<FQDN>`, celle que `PKI_enrolment.yml:105` demande comme principal (F-071).
   Élément pour PO-008, qui **ne le clôt pas**. P-41.
+
+### 2.5 Le diagnostic joué le 2026-09-24 — `[ÉCRAN-2026-09-24, relayé]`
+
+**Aucune de ces mesures n'a été vue par l'agent.** Provenance et réserve : **P-43 à P-47,
+à lire avant cette section**. Libellés réduits (R-07) : cf. P-43.
+
+**A — Sources des options, sur la cible.**
+- **F-089** — **Étape 0b.2 jouée** ; les pages de manuel sont présentes sur `host01`.
+  **Confirmées par la page :** `klist` lit un keytab et les types de chiffrement ;
+  `kinit` depuis le keytab **et avec option de cache** ; option de cache de `kvno` et de
+  `kdestroy` ; `KRB5CCNAME` en `FILE:chemin`, la page précisant que **ce type n'est pas
+  une collection**. **Non capturés par la page, établis à l'usage :** la syntaxe du
+  service de `kvno`, la désignation du principal par `kinit`. **Défaut de la recherche :**
+  chaque motif couvrait plusieurs options sous **un seul `rc`**, qu'une trouvaille
+  suffisait à rendre nul (PO-034). P-43.
+
+**B — Contexte de la machine.**
+- **F-090** — Sur `host01` : `hostname -f` rend le **nom court** (confirme F-088).
+  `getent hosts <MACHINE-FQDN>` rend une **adresse IPv6 de lien local** ; `getent ahosts`
+  rend l'**adresse de bouclage**, avec le **nom court** pour nom canonique. Le DNS, lui,
+  rend l'adresse de l'interface, et la résolution inverse rend `<MACHINE-FQDN>` :
+  **le DNS est juste dans les deux sens, ce sont les voies locales qui divergent.**
+  Horloge synchronisée, décalage de l'ordre de la **microseconde**. P-44.
+- **F-091** — **Deux mécanismes locaux faussent la résolution du nom, pas un.** L'entrée
+  du fichier local pour IPv4 (F-064, F-066), et — **hypothèse, non mesurée** — la source
+  de résolution `myhostname` pour IPv6. **Conséquence pour PO-021 : corriger le seul
+  fichier pourrait démasquer le second**, et non régler la question.
+
+**C — Identité Kerberos de la machine.**
+- **F-092** — Keytab `root:root`, mode `600` : **lecture refusée sans privilège, accordée
+  avec** ; élévation déclarée. **Répond à F-061** — `certmonger` devra ce privilège. Il
+  porte, en **versions de clé 2 et 3**, les principaux du compte machine, `host/` et
+  `RestrictedKrbHost/`, chacun sous **les deux formes de nom**. P-44.
+- **F-093** — **PO-017 appliqué, sans échec.** Version de clé **3** au keytab comme dans
+  l'annuaire ; la date de dernier changement de mot de passe, convertie, **tombe à la
+  minute** de la dernière modification du keytab. **Identité non périmée** — le séparateur
+  de F-085 a servi à l'établir, non à constater une panne.
+- **F-094** — **`host/<MACHINE-FQDN>` est refusé comme client** — « Client … not found in
+  Kerberos database » — **alors que sa clé est au keytab et que le SPN existe dans
+  l'annuaire** ; **`<MACHINE>$@<REALM>` est accepté.** Répond à la part de PO-008 « quel
+  principal la machine présente » : **son nom de compte**. Et corrige une confusion de la
+  procédure entre le principal inscrit **dans le certificat** (`-K`, F-071) et l'identité
+  **d'authentification** — un SPN est un service, pas un client (PO-031).
+- **F-095** — Piège de citation : entre **guillemets doubles**, `$@` est remplacé par le
+  shell. Le nom du compte machine se passe **entre apostrophes**.
+
+**D — Ticket de service.**
+- **F-096** — Ticket obtenu pour `HTTP/<VIP_FQDN>`, **sans canonisation du nom**.
+  **L'hypothèse d'un SPN en double tombe**, et `[TIERS-MESURÉ]` l'équipe l'a confirmé par
+  une recherche sur **tout le domaine**. La réserve posée en F-076 est levée. P-45.
+
+**E — Chaîne de confiance : un blocage nouveau, et sa résolution.**
+- **F-097** — Le VIP envoie une **chaîne complète** : certificat ← `<CA-N2>` ←
+  `<ROOT-CA>` ; TLS 1.3, dates valides, **nom du VIP dans les noms alternatifs**. Le cas
+  (b) de l'étape 4 — chaîne incomplète — est écarté. P-45.
+- **F-098** — **La machine ne fait pas confiance à `<ROOT-CA>`** : erreur **19**, `curl`
+  **60** — le cas (a) prévu par l'étape 4. Le contrôle a fonctionné.
+- **F-099** — `[PILOTE-DÉCLARÉ]` **Aucun mécanisme ne distribue les autorités de
+  l'entreprise aux machines RHEL.** Satellite n'est pas encore déployé et ses essais
+  viendront **après** ce projet. Cf. PO-028.
+- **F-100** — **Racine établie par deux sources indépendantes qui concordent.** L'annuaire
+  publie **une seule** racine ; son empreinte SHA-256, lue par un canal **authentifié par
+  Kerberos**, est **identique** à celle de la racine envoyée par le VIP. L'annuaire publie
+  **trois autorités émettrices**, dont `<CA-N3>`, dont la **signature a été vérifiée contre
+  `<ROOT-CA>`**. **Une seule ancre couvre le VIP et l'autorité d'enrôlement.** P-46.
+  *C'est l'exercice de R-14 :* deux sources indépendantes, comparées **sur l'empreinte**.
+- **F-101** — La page de manuel de `ldapsearch` **ne documente pas** l'option de repli des
+  longues lignes ; `-t` a été établi **à l'usage**. @VERIF : reconfirmer sur la page de la
+  version employée, ou accepter l'usage comme seule source.
+
+**F — Authentification contre les services : la cause.**
+- **F-102** — Sans identifiants : **`401`, avec proposition `Negotiate`**. La garde de
+  l'étape 5 est satisfaite — l'accès anonyme n'est pas permis, l'écart est interprétable.
+- **F-103** — Avec le ticket : **`401`, sans jeton en retour**, **dans toutes les
+  combinaisons** : machine **et** opérateur, CEP **et** CES, URL réécrites **et**
+  officielles, par le F5 **et en direct au serveur**. **Écartés :** le F5, l'identité,
+  l'appartenance aux groupes.
+- **F-104** — **Le jeton est bien envoyé** : sortie détaillée, **envoi anticipé dès la
+  première requête**, et **même refus** s'il est envoyé **après** le défi du serveur.
+- **F-105** — `[TIERS-MESURÉ]` Équipe ADCS : SPN **unique** ; les **deux pools** tournent
+  sous `<COMPTE-SVC-CES>` ; `useAppPoolCredentials` **et** `useKernelMode` **activés** sur
+  les deux sites. **L'hypothèse d'un déchiffrement avec la clé du compte machine du
+  serveur est réfutée.**
+- **F-106** — `[TIERS-MESURÉ]` Journal IIS : `401`, **sous-code 1**, statuts Windows
+  `0x8009030E` et `0xC000035B`.
+- **F-107** — `[TIERS-DÉCLARÉ]` Lecture de l'équipe : « le client n'envoie pas
+  d'identifiants ». **Réfutée par la mesure** (F-104) — le dire évite de la voir revenir.
+- **F-108** — `[SOURCE-EXTERNE]` **S-7** — projet `curl`, *issue* **22466** : le statut
+  `0xC000035B` y est attribué à un **échec de liaison de canal sous protection étendue**,
+  et **la désactiver a fait passer `curl`**. *Réserve :* un fil de discussion n'est pas
+  une documentation d'éditeur — il établit un précédent concordant, non le mécanisme.
+- **F-109** — **Mesure décisive.** **En HTTP, en direct au serveur, le même ticket est
+  ACCEPTÉ** : réponse SPNEGO décodée par `openssl asn1parse` — **état `00`**, mécanisme
+  **Kerberos**, **réponse d'authentification mutuelle** — puis **`403`** parce que le site
+  exige HTTPS. **La seule différence avec l'échec est le canal TLS.** P-47.
+- **F-110** — Courriels envoyés à l'équipe ADCS ; **son administrateur revient le
+  2026-09-28** : la confirmation côté serveur est datée, non indéfinie.
 
 ---
 
@@ -938,6 +1039,11 @@ l'opérateur, et le push est le seul acte irréversible du dépôt.
 **Qui peut la produire :** l'opérateur seul.
 
 ### PO-008 — Quelle identité Kerberos l'ADCS accepte-t-elle pour l'enrôlement ?
+`[RÉVISÉE le 2026-09-24]` — **la part « quel principal la machine présente » est répondue
+par mesure : son nom de compte, `<MACHINE>$@<REALM>`** ; `host/<MACHINE-FQDN>` est refusé
+comme **client** bien que sa clé soit au keytab (F-094). Reste ouverte la part
+« l'ADCS l'autorise-t-il à enrôler » : une ACL, qui ne se lit pas depuis la machine.
+
 `[RÉVISÉE le 2026-09-22]` — **l'inventaire apporte une réponse partielle, et une seule.**
 `PKI_enrolment.yml:105` pose `-K host/{{ ansible_fqdn }}@{{ ad_domain | upper }}` : le
 principal inscrit en SAN Kerberos est donc un **principal de service `host/`**, et non le
@@ -1150,6 +1256,9 @@ Un sujet à un seul `CN` sans composants `DC=` signe une construction par l'annu
 en `[ÉCRAN-…]`.
 
 ### PO-017 — Ce qu'une restauration d'instantané ne défait pas *(ouvert le 2026-09-21)*
+`[RÉVISÉE le 2026-09-24]` **Contrôle appliqué sur `host01`, sans échec** : version de clé
+**3** des deux côtés, dates concordant à la minute (F-093). Le point reste ouvert pour les
+essais à venir ; il a servi une fois et a tenu.
 **Statut :** conséquence de F-049, à énoncer **avant** le premier essai, pas après.
 L'instantané borne les effets **dans** la machine. Deux effets lui échappent :
 1. **Chaque essai laisse un certificat émis dans la base de la CA.** Restaurer la VM
@@ -1250,7 +1359,17 @@ Réponse attendue sous forme de capture de la configuration. Ce que la procédur
 faire de son côté reste l'élimination décrite à son étape 5 — qui **désigne**, mais ne
 **prouve** pas.
 
-`[RÉVISÉE le 2026-09-24]` — **sort du chemin critique sur la seule foi de F-077, et c'est
+`[RÉVISÉE le 2026-09-24, second amendement]` — **ce n'est plus une cause hors chemin
+critique : c'est LA cause désignée**, en attente de confirmation côté serveur.
+L'authentification échoue en HTTPS et **réussit en HTTP avec le même ticket** (F-109) :
+SPNEGO `00`, Kerberos, authentification mutuelle, puis `403` parce que le site exige
+HTTPS — **la seule différence est le canal TLS**. S'y ajoutent `0xC000035B` au journal IIS
+(F-106) et le précédent concordant de S-7 (F-108).
+**Raisonné, non mesuré :** derrière un F5 qui termine TLS, **aucun client ne peut
+satisfaire une liaison de canal exigée**, le canal qu'il voit n'étant pas celui du serveur.
+**Ce qui manque :** la confirmation de l'équipe ADCS, attendue le 2026-09-28 (F-110).
+
+`[RÉVISÉE le 2026-09-24]` — **sortait du chemin critique sur la seule foi de F-077, et c'est
 mince** : une déclaration au conditionnel (« I think »), non mesurée, donnant les réglages
 aux valeurs par défaut. **Pas clos**, et pour une raison qui n'est pas celle inscrite la
 veille. **ÉTAIT** (`[RÉVISÉE le 2026-09-23]`) : « … F-076 … **soit la condition que S-6
@@ -1384,6 +1503,9 @@ procédure de diagnostic actuelle, qui n'installe rien.
 
 
 ### PO-021 — L'entrée de bouclage masque une résolution DNS qui fonctionne : est-ce voulu, et que faire des machines déjà déployées ? *(ouvert le 2026-09-22)*
+`[RÉVISÉE le 2026-09-24]` **Élargi : deux mécanismes, pas un** (F-091). Corriger le seul
+fichier local pourrait **démasquer** la source `myhostname` en IPv6 — hypothèse non
+mesurée. **Non tranché ici.**
 **Statut :** origine **établie**, motif **absent**, correction **non arbitrée**.
 **Ce qui est établi (F-064 à F-068) :** l'ordre mesuré — bouclage, nom court, puis FQDN —
 est celui qu'écrivait `shell/ad_pki.sh:91`, **supprimé le 2026-07-08**. Le chemin Ansible
@@ -1448,6 +1570,36 @@ Mesure : `grep -rn 'ansible_user' <inventaire>` sur le seed.
 ### PO-026 — `openldap-clients` installé à la main sur le seed *(ouvert le 2026-09-23)*
 Installé depuis le dépôt de base RHEL 9 pour F-081, **décrit dans aucun code** (P-42) ; à
 reprendre par la chaîne qui configure le seed, ou à retirer.
+
+
+### PO-028 — Distribuer `<ROOT-CA>` comme ancre de confiance aux machines RHEL *(ouvert le 2026-09-24)*
+**Statut :** blocage **mesuré** (F-098) qui **n'appartient pas à ce projet**. Aucun
+mécanisme ne distribue les autorités de l'entreprise aux machines RHEL (F-099) : c'est une
+**propriété de tout le parc**, donc de `rhel_post_install` (R-09 : lecture seule ici).
+**Contrainte qui commande la conception :** le certificat porte le nom de l'entreprise —
+**il ne peut pas être versionné dans un dépôt public** (R-07) ; il doit venir d'une
+**source non publiée au déploiement** (vault F-070, annuaire, artefact interne).
+**Acquis :** la racine est identifiée sans ambiguïté et **une seule ancre couvre le VIP et
+l'autorité d'enrôlement** (F-100, D-013). **Qui :** l'opérateur pour la conception,
+l'équipe de `rhel_post_install` pour la mise en œuvre.
+
+### PO-029 à PO-040 — Douze défauts de la procédure, relevés en la jouant *(ouverts le 2026-09-24)*
+**Constat seul : aucun n'est corrigé ici** — le périmètre exclut la procédure.
+
+| Réf | Défaut relevé en jouant |
+|---|---|
+| PO-029 | L'étape 1 attend de `getent` l'adresse de l'interface ; il ne passe pas que par le DNS (F-090). |
+| PO-030 | L'étape 1 ignore la source de résolution `myhostname` (F-091). |
+| PO-031 | L'étape 2b désigne un **principal de service** comme identité client ; son repli ne peut pas se déclencher (F-094). |
+| PO-032 | L'étape 2a se contredit sur l'élévation : le texte relève les deux codes, la commande n'élève qu'en cas d'échec. |
+| PO-033 | Le nettoyage vérifie la survie du cache par défaut **sans avoir relevé son état préalable**. |
+| PO-034 | L'étape 0b.2 couvre plusieurs options par **un seul code de retour**, et ne cherche pas l'option de cache de `kinit` qu'elle déclare (F-089). |
+| PO-035 | La requête anonyme de l'étape 5 doit recevoir la racine, sinon elle échoue **avant** HTTP (F-098). |
+| PO-036 | L'étape 4 prétend répondre à PO-005 par l'émetteur ; un F5 qui termine TLS présente souvent un certificat d'entreprise. |
+| PO-037 | Dans IIS, un refus d'**autorisation** produit aussi un `401` ; seul le **sous-code** distingue (F-106). |
+| PO-038 | Aucune étape ne prévoit l'**absence de la racine** du magasin de confiance. |
+| PO-039 | Le chemin du cache dépend du processus du shell : **toute la procédure doit se jouer dans une seule session**. |
+| PO-040 | Sur cette version de `curl`, la sortie détaillée n'a pas les préfixes `>` et `<`. |
 
 
 ---
@@ -1616,6 +1768,14 @@ enrôlement.** Si le sujet du certificat est construit à partir du nom que la m
 donne, il sortirait avec le **nom court** — et PO-023 dit que la forme du sujet est
 précisément ce qu'on cherche. Diagnostiquer sur une machine faussée est sans risque ;
 enrôler ne l'est pas.
+
+
+### D-013 — La racine est établie par nos propres droits, non demandée à l'équipe PKI (2026-09-24)
+**Décision de l'opérateur.** `<ROOT-CA>` a été identifiée par lecture de l'annuaire sur un
+canal authentifié, confrontée à ce que le VIP envoie (F-100).
+*Motif :* deux sources indépendantes qui concordent valent mieux qu'une affirmation de
+tiers, et n'attendent personne. *Ce qu'elle ne fait pas :* autoriser à **poser** l'ancre —
+cela reste PO-028, et relève de `rhel_post_install`.
 
 
 ---

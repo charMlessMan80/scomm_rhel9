@@ -620,3 +620,39 @@ Fonde F-084 à F-086.
 installé **à la main** sur `seed01`, depuis le dépôt de base de RHEL 9, pour les lectures
 de P-40. **Cette installation n'est décrite dans aucun code** — ni dans
 `rhel_post_install`, ni ailleurs. Fonde PO-026.
+
+---
+
+*Preuves ajoutées le **2026-09-24** (livrable 11). **Aucune n'a été produite sur ce
+poste** (R-08).*
+
+> **Réserve de transmission — elle gouverne P-43 à P-47 et ne doit pas être oubliée.**
+> Ces mesures ont été **jouées par l'opérateur**, **lues sur capture par le pilote**, et
+> **transmises ici décrites**. Je n'ai vu aucune sortie : ni texte brut, ni capture, ni
+> code de retour relevé caractère par caractère. **Aucune sortie n'est donc reproduite**,
+> parce que la reproduire supposerait de l'inventer (R-01). Ces entrées consignent ce qui
+> a été **affirmé** de la mesure, et le nom de ce qui a été mesuré. Étiquette :
+> `[ÉCRAN-2026-09-24, relayé]` — plus faible qu'une capture, laquelle ne pourrait entrer
+> dans ce dépôt public qu'expurgée (R-07).
+
+**P-43** — `[ÉCRAN-2026-09-24, relayé]` **Étape 0b.2 sur `host01`** : pages de manuel des
+quatre outils Kerberos, lues sur la cible. Fonde F-089.
+
+**P-44** — `[ÉCRAN-2026-09-24, relayé]` **Étapes 1, 1b et 2a/2b sur `host01`** : nom,
+résolution par quatre voies distinctes, horloge ; puis keytab (propriétaire, mode,
+contenu, versions de clé) et obtention du ticket initial, **avec une élévation déclarée**.
+Fonde F-090 à F-096.
+
+**P-45** — `[ÉCRAN-2026-09-24, relayé]` **Étapes 3 et 4 sur `host01`** : ticket de service
+pour `HTTP/<VIP_FQDN>`, puis chaîne TLS présentée par le VIP et verdict du magasin de
+confiance de la machine. Fonde F-097 à F-099.
+
+**P-46** — `[ÉCRAN-2026-09-24, relayé]` **Établissement de la racine depuis `seed01`**,
+par interrogation de l'annuaire sur un canal authentifié par Kerberos, puis comparaison
+d'empreintes et vérification de signature. Fonde F-100 à F-102.
+
+**P-47** — `[ÉCRAN-2026-09-24, relayé]` **Étape 5 et ses variantes**, sur `host01` et sur
+`seed01` : requêtes anonymes et authentifiées, contre CEP et CES, par le F5 et en direct,
+en HTTPS puis en HTTP, avec décodage du jeton SPNEGO. Fonde F-103 à F-110.
+S'y ajoutent, de provenance distincte : `[TIERS-MESURÉ]` la configuration et le journal
+d'IIS relevés par l'équipe ADCS, `[TIERS-DÉCLARÉ]` sa lecture, et `[SOURCE-EXTERNE]` S-7.
