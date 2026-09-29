@@ -14,8 +14,12 @@ nommée**, les faits **déclarés par l'opérateur**, les **points ouverts** et 
 |---|---|---|
 | Règles de travail | `../CLAUDE.md` | Une règle vit à un seul endroit. |
 | Ce que le code du dépôt fait aujourd'hui — **F-008 à F-021 et F-038** | `scomm-depot-actuel.md` | Brouillon sans autorité (F-044), périmable en bloc par la réécriture (D-007). **Toute citation de ces numéros dans ce fichier renvoie là-bas.** |
-| Sorties de commande — **P-01 à P-28** | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
+| Sorties de commande — **P-01 à P-55** | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
 | Procédures jouées par l'opérateur sur les cibles | `procedures/` | Elles n'ont **aucune autorité propre** : tout ce qu'elles affirment vient d'ici, par renvoi `F-xxx` / `PO-xxx`. |
+
+`[RÉVISÉE le 2026-09-29]` Deuxième ligne du tableau **ÉTAIT :** « Sorties de commande —
+**P-01 à P-28** ». Déjà périmée avant ce livrable (P-47 existait) ; relevée par la
+recherche de renvois du 2026-09-29.
 
 Séparation appliquée le 2026-09-21 (D-006). **Aucun fait, aucune preuve, aucun point
 ouvert n'a été renuméroté** : les objets ont été déplacés, pas réécrits (R-11). Les
@@ -27,7 +31,9 @@ faits, des points ouverts et des décisions. `CLAUDE.md` porte les règles de tr
 duplique rien d'ici. » Le principe — un objet, un seul endroit — est inchangé ; c'est le
 nombre d'endroits qui est passé de un à trois (D-006).
 
-Dernière mise à jour : **2026-09-21** (livrables 3 puis 4).
+Dernière mise à jour : **2026-09-29** (consignation du 2026-09-25 au 2026-09-28).
+`ÉTAIT : 2026-09-21 (livrables 3 puis 4).` — déjà périmée : des faits ont été ajoutés
+jusqu'au 2026-09-24 sans que cette ligne suive.
 `ÉTAIT : 2026-09-21 (livrable 3).`
 `ÉTAIT : 2026-09-18.`
 
@@ -143,6 +149,9 @@ Sources nommées :
   (le point d'entrée CEP), et `cas` — « a directory containing all CA certificates in
   your chain … or preferably a bundle file containing all CA certificates in the chain » (S-1).
   `cas` est le point exact où la terminaison TLS du F5 devient déterminante (PO-005).
+  `[NOTE du 2026-09-29]` Complété par **F-120** : le `cepces.conf` livré par le paquet
+  RHEL 9 **ne définit pas `cas`** ; la conséquence qu'en tire le pilote (confiance
+  système) est consignée là-bas comme une déduction.
 - **F-030** — **Renouvellement.** certmonger est « a service that monitors certificates,
   tracks their expiration, and automatically renews them before they expire » (S-2).
   Une requête suivie affiche `track: yes` / `auto-renew: yes` (S-2). L'option
@@ -163,6 +172,10 @@ Sources nommées :
   `3 CONNECTERROR`, `4 UNDERCONFIGURED`, `5 WAITMORE`, `6 UNSUPPORTED` (S-2). `3` et `4`
   sont les deux codes qu'un F5 mal traversé ou un `cas` incomplet produiront —
   ce sont eux qu'une procédure de diagnostic doit afficher.
+  `[NOTE du 2026-09-29]` **Incomplet :** `rc=4` a aussi été obtenu sur une réponse
+  `500` **à corps vide** du serveur, à travers le F5, Kerberos obtenu (F-123) ; le même
+  appel rejoué par `curl` est authentifié (F-124).
+  Un `4` ne désigne donc pas à lui seul le F5 ni `cas`.
 - **F-034** — Version disponible **sur Fedora 44, à titre indicatif seulement** :
   `cepces 0.5.0-2.fc44` (source amont `https://github.com/openSUSE/cepces`, licence
   GPL-3.0-or-later) et `certmonger 0.79.21-4.fc44` (P-08, P-12).
@@ -497,6 +510,8 @@ Source nommée, lue intégralement en texte brut (P-34) :
   - `getcert add-ca` n'est **jamais** appelé ; le dépôt se borne à vérifier que
     `getcert list-cas` mentionne `cepces` et échoue sinon (`:78-88`). Il suppose donc que
     le paquet enregistre lui-même la CA.
+    `[NOTE du 2026-09-29]` **Le paquet RHEL 9 échoue à le faire** (F-121). Ce contrôle
+    échouerait donc aujourd'hui — et c'est ce qu'on attend d'une garde. Cf. PO-041.
   - Demande : `getcert request -c cepces -k /etc/pki/tls/private/<fqdn>.key
     -f /etc/pki/tls/certs/<fqdn>.crt -g 2048 -N "CN=<fqdn>" -D <fqdn>
     -K host/<fqdn>@<REALM> -T {{ adcs_cert_template | default('Machine') }}
@@ -555,7 +570,7 @@ Aucun de ces points n'a été établi par un artefact, sauf mention contraire.
 | D-P-02 | Aucun des deux dépôts ne porte de `CLAUDE.md` | **VÉRIFIÉE pour `scomm_rhel9`** (F-007) ; **non vérifiable** pour `rhel_post_install` (PO-002) | `ls CLAUDE.md` à la racine de `rhel_post_install` |
 | D-P-03 | `rhel_post_install` joint les machines au domaine aujourd'hui | **NON VÉRIFIABLE** — dépôt absent du poste (PO-002). `[RÉVISÉE le 2026-09-21]` Repris et **restreint à la recette** par F-046 ; toujours non mesuré | Lecture du dépôt ; `realm list` sur un hôte provisionné `[ÉCRAN-…]` |
 | D-P-04 | Le rôle est joué actuellement par le seed, en ansible-core | **NON VÉRIFIABLE** depuis ce poste. `[RÉVISÉE le 2026-09-21]` Redéclaré par F-050 ; la mesure reste due | `ansible --version` sur le nœud de contrôle `[ÉCRAN-…]` |
-| D-P-05 | `cepces` est installable via `rhel_post_install` | **NON VÉRIFIABLE** — dépôt absent ; et `cepces` n'est pas dans les dépôts RHEL 9 de base à ma connaissance mesurée (F-023 ne mesure que Fedora) | `dnf info cepces` sur une cible RHEL 9 `[ÉCRAN-…]` ; PO-006 |
+| D-P-05 | `cepces` est installable via `rhel_post_install` | `[RÉVISÉE le 2026-09-29]` **Moitié « paquet disponible » établie** : `cepces` est dans AppStream de RHEL 9 (F-119, `[ÉCRAN-2026-09-28, relayé]`). « **Via `rhel_post_install`** » reste non exercé (F-071 : tâche sautée par défaut). **ÉTAIT :** « **NON VÉRIFIABLE** — dépôt absent ; et `cepces` n'est pas dans les dépôts RHEL 9 de base à ma connaissance mesurée (F-023 ne mesure que Fedora) » — **infirmé** sur le second point | `dnf info cepces` sur une cible RHEL 9 `[ÉCRAN-…]` ; PO-006 |
 | D-P-06 | CEP et CES sont configurés en Kerberos | **NON VÉRIFIABLE** depuis ce poste | PO-008 |
 | D-P-07 | Le F5 est en reverse proxy devant l'ADCS ; terminaison TLS ou passthrough inconnue | **NON VÉRIFIABLE** ; l'opérateur déclare lui-même l'inconnue | PO-005 |
 | D-P-08 | Les valeurs sensibles vivent dans un vault atteint par des tâches HPAM dans `rhel_post_install` | **NON VÉRIFIABLE** — dépôt absent. Constat contraire **dans `scomm_rhel9`** : aucun vault, aucune tâche HPAM (F-019) | Lecture de `rhel_post_install` |
@@ -720,6 +735,11 @@ seulement — vit dans la procédure, § 1 bis. Elle n'est pas recopiée ici.
 - **F-077** — `[TIERS-DÉCLARÉ]`, non mesuré, formulé au conditionnel (« I think ») :
   réglages de protection étendue supposés **aux valeurs par défaut**, ce que S-6 donne
   comme `None` (F-062).
+  `[RÉVISÉE le 2026-09-29 — INFIRMÉE]` L'administrateur ADCS déclare que `tokenChecking`
+  **valait `Require`** avant le 2026-09-25 (F-112), et la configuration relevée donne
+  aujourd'hui `Allow` (F-111). **La déclaration a bien été faite** : elle reste consignée
+  comme telle ; c'est son **contenu** qui est infirmé. **ÉTAIT :** le paragraphe
+  ci-dessus, sans réserve.
 - **F-078** — `[TIERS-DÉCLARÉ]`, oral, en réunion : le serveur d'administration SCOM **de
   QA** fait confiance à la chaîne ADCS. **Non rejouable** : première piste à rouvrir si
   l'agent est refusé.
@@ -843,6 +863,9 @@ seulement — vit dans la procédure, § 1 bis. Elle n'est pas recopiée ici.
   combinaisons** : machine **et** opérateur, CEP **et** CES, URL réécrites **et**
   officielles, par le F5 **et en direct au serveur**. **Écartés :** le F5, l'identité,
   l'appartenance aux groupes.
+  `[NOTE du 2026-09-29]` **Vrai au 2026-09-24, dépassé depuis** : à partir du 2026-09-25,
+  le ticket de la machine est accepté (F-115 à F-117). La mesure reste vraie à sa date ;
+  ce qui a changé est la configuration du serveur (F-112).
 - **F-104** — **Le jeton est bien envoyé** : sortie détaillée, **envoi anticipé dès la
   première requête**, et **même refus** s'il est envoyé **après** le défi du serveur.
 - **F-105** — `[TIERS-MESURÉ]` Équipe ADCS : SPN **unique** ; les **deux pools** tournent
@@ -863,6 +886,189 @@ seulement — vit dans la procédure, § 1 bis. Elle n'est pas recopiée ici.
   exige HTTPS. **La seule différence avec l'échec est le canal TLS.** P-47.
 - **F-110** — Courriels envoyés à l'équipe ADCS ; **son administrateur revient le
   2026-09-28** : la confirmation côté serveur est datée, non indéfinie.
+  `[NOTE du 2026-09-29]` Échéance tenue : configuration relevée le 2026-09-28 (F-111 à
+  F-114). Nouvelle échéance : F-127.
+
+### 2.6 Du 2026-09-25 au 2026-09-28 — tests, configuration du serveur, premier essai de `cepces`
+
+**Aucune mesure de la recette ni du serveur n'a été vue par l'agent.** Provenance et
+réserve de transmission : **P-48 à P-54, à lire avant cette section** ; la réserve de P-43
+à P-47 s'y applique à l'identique. Libellés réduits (R-07) : cf. P-48. **Seule exception :**
+les lectures des sources S-8 à S-10, faites sur le poste de rédaction (P-55).
+
+**Machine.** Les faits du 2026-09-25 au 2026-09-28 portent sur **`host02`**, une autre
+machine de recette que celle du 2026-09-24 (`host01`, § 2.5) `[PILOTE-DÉCLARÉ, opérateur,
+2026-09-29]`. **Seule exception :** la requête CES de 13:22 le 2026-09-25, partie d'une
+**troisième** machine de recette (F-115).
+
+**Heures.** Toutes en **UTC**. Les en-têtes `Date` HTTP et le journal IIS sont en UTC ;
+l'observateur d'événements de l'administrateur est en heure locale **+02:00** — aucun
+de ses horodatages n'est repris ici.
+
+**Classes de source.** `[TIERS-MESURÉ]` : sorties brutes transmises par l'administrateur
+ADCS (`appcmd`, lignes du journal IIS, capture des pools). `[TIERS-DÉCLARÉ]` : ses
+affirmations sans sortie. `[ÉCRAN-AAAA-MM-JJ, relayé]` : écrans de l'opérateur, lus par le
+pilote. `[PILOTE-DÉCLARÉ]` : interprétations et corrections du pilote.
+
+**A — Configuration du serveur, relevée le 2026-09-28.**
+- **F-111** — `[TIERS-MESURÉ]` (`appcmd` et captures, P-54) Les deux applications — CEP,
+  `ADPolicyProvider_CEP_Kerberos`, et CES, `<CA-N3>_CES_Kerberos` — portent
+  `windowsAuthentication` avec `enabled="true"`, `authPersistNonNTLM="true"`,
+  `useKernelMode="true"`, `useAppPoolCredentials="true"`, **le seul fournisseur
+  `Negotiate`**, et `extendedProtection tokenChecking="Allow"`. **Ni `flags` ni collection
+  `<spn>` ne sont affichés.** Concorde avec F-105 sur `useKernelMode` et
+  `useAppPoolCredentials`.
+- **F-112** — `[TIERS-DÉCLARÉ]` `tokenChecking` **valait `Require`** avant le 2026-09-25 ;
+  l'administrateur l'a passé à `Allow`, puis a redémarré IIS **après** le test de 13:22
+  UTC. **Ni l'heure du changement ni celle du redémarrage ne sont communiquées.**
+  Infirme F-077. C'est le cas que PO-018 décrivait comme « une erreur de configuration,
+  pas le cas général ».
+- **F-113** — `[TIERS-MESURÉ]` (capture des pools, P-54) Pools `WSEnrollmentPolicyServer`
+  (CEP) et `WSEnrollmentServer` (CES) : **démarrés**, sous **la même identité**,
+  `<COMPTE-SVC-CES>` — le compte qui porte le SPN `HTTP/<VIP_FQDN>` (F-076, F-105).
+- **F-114** — `[TIERS-DÉCLARÉ]` « Rien de pertinent » dans les journaux d'événements
+  consultés. Formulation de l'administrateur, **sans liste des journaux consultés** : ne
+  vaut pas absence d'erreur dans le journal Application (cf. F-125).
+
+**B — Tests de l'opérateur.**
+- **F-115** — **2026-09-25, vers 13:22 UTC** (P-48).
+  `[TIERS-MESURÉ]` Journal IIS : CEP **sans** ticket → `401 2 5` ; CEP **avec** le ticket de
+  `host02$` → **`500 0 0`**, `cs-username` = `<DOMAINE>\host02$` ; CES → `401 1`,
+  `sc-win32-status` `3221226331` = `0xC000035B` ; événement **4625** sur `<SERVEUR-ADCS>`,
+  paquet Kerberos, même statut.
+  `[ÉCRAN-2026-09-25, relayé]` + `[PILOTE-DÉCLARÉ, opérateur]` La requête CES est partie
+  d'**une autre machine de recette** que `host02` : déclaration de l'opérateur,
+  corroborée par l'historique shell de cette machine, qui contient les commandes CES.
+  **Le journal IIS ne le prouve pas** : le F5 traduit les adresses (F-118).
+  `[PILOTE-DÉCLARÉ]` Identité de la requête CES **non établie** — probablement le ticket
+  utilisateur de l'opérateur.
+- **F-116** — **2026-09-25 à 15:33:15 UTC**, depuis `host02`, sous `host02$` (P-49).
+  `[TIERS-MESURÉ]` Journal IIS : CES **sans** ticket → `401 2 5` ; CES **avec** ticket →
+  **`500 0 0`**, `cs-username` = compte machine ; CEP **avec** ticket → `401 1`,
+  `sc-win32-status` `2148074254` = `0x8009030E` = `SEC_E_NO_CREDENTIALS` (S-8).
+  **Même statut que F-106**, relevé le 2026-09-24 sur `host01`.
+- **F-117** — **2026-09-28, de 13:39:05 à 13:39:11 UTC**, depuis `host02`, **un seul
+  ticket**, dans l'ordre CEP, CES, CEP, CES (P-50). `[ÉCRAN-2026-09-28, relayé]` Les
+  quatre → **`500`**, avec `Persistent-Auth: true` ; sans ticket → `401`.
+  **`SEC_E_NO_CREDENTIALS` non reproduit** : l'incident de F-116 reste **non expliqué**
+  (PO-045).
+- **F-118** — **Réseau.**
+  - **Traduction d'adresse source au F5.** `[ÉCRAN-2026-09-25, relayé]` Les deux machines
+    de F-115 ont des adresses **différentes** ; `[TIERS-MESURÉ]` IIS voit pour elles
+    **la même** adresse client. Aucune adresse n'est écrite ici (R-07).
+    **Conséquence :** l'adresse client du journal IIS et la source d'un événement 4625
+    **ne désignent pas l'hôte d'origine**.
+  - **Réécriture des chemins.** `[PILOTE-DÉCLARÉ]`, appuyé sur le `cs-uri-stem` du journal
+    IIS `[TIERS-MESURÉ]` : le F5 publie **un chemin court par service**
+    (`<CHEMIN-CEP-PUBLIÉ>`, `<CHEMIN-CES-PUBLIÉ>`) et le réécrit vers le chemin interne
+    de l'application.
+  - **Chaîne du VIP.** `[ÉCRAN-2026-09-28, relayé]` certificat ← `<CA-N2>` ← `<ROOT-CA>` ;
+    le certificat serveur est émis par `<CA-N2>`, **pas** par `<CA-N3>`. Concorde avec
+    F-097.
+- **S-8** `[SOURCE-EXTERNE]` — page « Windows error 0x8009030E, -2146893042:
+  SEC_E_NO_CREDENTIALS », `windows-hexerror.linestarve.com/0x8009030E`, lue le
+  **2026-09-29** (`http_code=200`, P-55). Lignes lues : « SEC_E_NO_CREDENTIALS »,
+  « No credentials are available in the security package », « Declared in winerror.h ».
+  *Réserve, celle de S-7 :* ce n'est pas une documentation d'éditeur ; elle nomme le code,
+  elle n'en donne pas la cause dans ce contexte.
+
+**C — `cepces` sur `host02`, 2026-09-28.** `[ÉCRAN-2026-09-28, relayé]` sauf mention.
+- **F-119** — **RHEL 9.8.** `cepces`, `cepces-certmonger`, `cepces-selinux`
+  **0.3.17-1.el9**, `python3-gssapi` et `python3-requests-gssapi` sont dans le dépôt
+  **AppStream** de RHEL : **aucun dépôt tiers n'est nécessaire**. `certmonger`
+  **0.79.21-1.el9** est lui aussi dans AppStream. **EPEL n'est pas joignable** depuis la
+  recette (connexion réinitialisée). **Clôt PO-006** ; infirme D-P-05 sur la disponibilité
+  du paquet. P-51.
+- **F-120** — **`cepces.conf` livré par le paquet**, lu **avant installation** par
+  `rpm2cpio` (P-51) : `type=Policy`, `auth=Kerberos`, `endpoint` par défaut
+  `https://${server}/ADPolicyProvider_CEP_${auth}/service.svc/CEP`, **`cas` non défini** ;
+  section `[kerberos]` : keytab système, `principals` = `${shortname}$ ${SHORTNAME}$
+  host/${SHORTNAME} host/${fqdn}`, **`delegate=True`** — commentaire du paquet : nécessaire
+  si CES et l'autorité ne sont pas sur la même machine —, `enctypes` incluant des **types
+  faibles**. `[PILOTE-DÉCLARÉ]` Déduction du pilote, **non lue dans le fichier** : `cas` non
+  défini ⇒ confiance du **magasin système**. Complète F-029.
+- **F-121** — **DÉFAUT DU PAQUET `cepces-certmonger`.** Son script `%post` exécute
+  `getcert add-ca -c cepces -e /usr/libexec/certmonger/cepces-submit --install >/dev/null || :`.
+  **Observé :** après installation, `getcert list-cas -c cepces` est **vide**, et
+  `certmonger` est actif. `cepces-submit --help` : « --install  Installation mode: handle
+  authentication errors gracefully ». P-51.
+  `[PILOTE-DÉCLARÉ]` Lecture du mécanisme : `--install` n'étant pas dans les guillemets de
+  `-e`, il est lu comme une option de `getcert` ; l'enregistrement échoue, et
+  `>/dev/null || :` en efface la trace. **Échec silencieux** — exactement la forme que
+  R-03 décrit.
+- **F-122** — **DÉRIVE sur `host02`** : cinq gestes faits à la main, dans cet ordre (P-52,
+  sur le modèle de P-42). Autorisés par D-014.
+  1. **`/etc/hosts`** — sauvegarde `/etc/hosts.avant-scomm` ; la ligne « bouclage, nom
+     court, FQDN » remplacée par la ligne `localhost` standard, et la ligne `::1`
+     standard ajoutée. `hostname -f` rend désormais le **FQDN** (il rendait le nom court).
+     `nsswitch` : `files dns myhostname`.
+  2. **Ancre** — `<ROOT-CA>` prise **sur le VIP après contrôle de l'empreinte**, posée sous
+     `/etc/pki/ca-trust/source/anchors/`, puis `update-ca-trust`. `curl` **sans**
+     `--cacert` → `ssl_verify=0`. Nom du fichier non écrit (R-07).
+  3. **Paquets** — transaction `dnf` **5** : `certmonger`, puis
+     `systemctl enable --now certmonger` ; transaction **6** : `cepces`,
+     `cepces-certmonger`, `cepces-selinux` et leurs dépendances, **12 paquets modifiés**.
+     La transaction précédente est la **4** (jonction au domaine).
+  4. **`cepces.conf`** — sauvegarde `cepces.conf.avant-scomm` ; `server = <VIP_FQDN>`,
+     `endpoint = https://<VIP_FQDN>/<CHEMIN-CEP-PUBLIÉ>/CEP`.
+  5. **Autorité** — `getcert add-ca -c cepces -e '/usr/libexec/certmonger/cepces-submit --install'`.
+     **`--install` a été inclus PAR ERREUR du pilote** `[PILOTE-DÉCLARÉ]` : le helper
+     enregistré **masque les erreurs d'authentification**. **À corriger avant toute
+     demande de certificat** (PO-042).
+  **Retours arrière disponibles.** Ciblés : les sauvegardes `.avant-scomm`, le retrait de
+  l'ancre, `dnf history undo 6` puis `undo 5`. **Complet :** un instantané Hyper-V de
+  `host02` pris **avant** le 2026-09-28, date exacte non communiquée
+  `[PILOTE-DÉCLARÉ, opérateur]` (cf. F-049).
+- **F-123** — **Premier appel de `cepces-submit`** :
+  `CERTMONGER_OPERATION=GET-SUPPORTED-TEMPLATES cepces-submit` (P-53). **Kerberos obtenu
+  sous `host02$`** — après l'échec de la forme en **minuscules**, que le keytab ne porte
+  pas (il ne porte que la forme en majuscules). Le `POST GetPolicies` vers CEP rend un
+  **corps vide** → `ParseError`, **`rc=4`**. **Aucun refus SELinux.**
+- **F-124** — **Rejeu du même `POST` par `curl`**, **2026-09-28 à 14:29:01 et 14:29:03
+  UTC**, avec deux valeurs de l'en-tête WS-Addressing `To` : chemin publié, puis chemin
+  interne (P-53). Les deux → `HTTP/1.1 500 System.ServiceModel.ServiceActivationException`,
+  `Content-Length: 0`, `Persistent-Auth: true`, jeton `Negotiate` envoyé. **L'en-tête
+  `To` n'est pas en cause.**
+
+**D — Interprétations. Aucune n'est mesurée.**
+- **F-125** — **Hypothèse** `[PILOTE-DÉCLARÉ]`, appuyée sur `[SOURCE-EXTERNE]` S-9 et S-10 :
+  depuis le passage à `Allow`, le réglage de protection étendue **de WCF**, dans le
+  `web.config` des services, ne correspond plus à celui **d'IIS**, et WCF refuse
+  d'activer le service. **Non confirmée.** La preuve serait le journal **Application** du
+  serveur, source `System.ServiceModel`, **demandé à l'administrateur le 2026-09-28**.
+  **Ce que les sources ne disent pas :** la correspondance entre les valeurs d'IIS
+  (`None`, `Allow`, `Require`) et celles de WCF (`Never`, `WhenSupported`, `Always`)
+  **n'est énoncée par aucune source lue**.
+- **S-9** `[SOURCE-EXTERNE]` — `support.gfi.com/article/114306-error-the-extendedprotectionpolicy-policyenforcement-values-do-not-match-iis-has-a-value-of-whensupported-while-the-wcf-transport-has-a-value-of-never`.
+  **Citée par le pilote, NON LUE** : `http_code=404` le 2026-09-29 (P-55). Seule l'URL
+  est connue ; son libellé **n'est pas** un contenu lu.
+- **S-10** `[SOURCE-EXTERNE]` — billet « WCF Error The ExtendedProtectionPolicy.PolicyEnforcement
+  values do not match », `mydevtalks.blogspot.com/2016/07/wcf-error-extendedprotectionpolicypolic.html`,
+  daté du 2016-07-20, lu le **2026-09-29** (`http_code=200`, P-55). Message cité : « The
+  extended protection settings configured on IIS do not match the settings configured on
+  the transport. The ExtendedProtectionPolicy.PolicyEnforcement values do not match. IIS
+  has a value of Never while the WCF Transport has a value of Always. » Liaison citée :
+  `<extendedProtectionPolicy policyEnforcement="Always"/>`. Solution donnée : régler la
+  protection étendue d'IIS à « Required ».
+  *Réserve :* un billet de blog, pas une documentation d'éditeur. Son cas est **l'inverse
+  du nôtre** (IIS plus faible que WCF) : il établit que le **désaccord** produit ce
+  message, pas le sens du désaccord ici.
+- **F-126** — **CORRECTION D'INTERPRÉTATION** `[PILOTE-DÉCLARÉ]`. Les `500` sur `GET` du
+  2026-09-25 et du 2026-09-28 avaient été lus comme l'effet probable d'un `GET` envoyé à
+  un service SOAP. **Cette lecture est RETIRÉE** : depuis `tokenChecking=Allow`, ces `500`
+  sont vraisemblablement **la même erreur d'activation** que F-124.
+  **« Authentifié » reste établi** (`cs-username` au journal IIS, `Persistent-Auth: true`) ;
+  **« service fonctionnel » ne l'est pas.**
+  *Sans antécédent écrit retrouvé :* au commit `be1a70b`, le motif `500` n'apparaît dans
+  **aucun des 21 fichiers suivis** (`git grep`, rc=1 ; témoin `401` trouvé, rc=0) ni dans
+  **aucun commit de l'historique** (`git log -G'500'`, sortie vide ; témoin `F-106`
+  trouvé) ; « erreur interne », « internal server », « 5xx » et « ServiceActivation » en
+  sont absents aussi (rc=1). **Ces recherches n'excluent pas** une formulation qui
+  n'emploierait aucun de ces termes. Aucun texte retrouvé, donc pas d'`ÉTAIT` à poser.
+  Le texte voisin le plus proche est l'hypothèse du `405` dans la procédure (PO-047).
+- **F-127** — **État.** Blocage **côté serveur**, hors des droits de l'équipe.
+  L'administrateur a été sollicité le 2026-09-28 ; **retour annoncé le 2026-10-01**
+  `[TIERS-DÉCLARÉ]`.
 
 ---
 
@@ -882,7 +1088,7 @@ statut a changé ; rien n'a été effacé (R-11).
 | PO-003 | **Requalifié** en défaut de brouillon | F-044 : le code n'a aucune autorité et sera réécrit. Ce n'est pas un risque d'exploitation mais une chose **à ne pas reconduire**. R-10 réécrite en conséquence — voir la contestation partielle en fiche. |
 | PO-004 | **Maintenu** | SAN et taille de clé restent non spécifiés par S-4 (F-036) ; F-042 n'y change rien. |
 | PO-005 | **Requalifié**, rétréci | Reste entier sur la terminaison TLS ; F-047 retire la joignabilité de l'inconnue. Devient le cœur du livrable 4 avec PO-008. |
-| PO-006 | **Maintenu** | Versions RHEL 9 de `certmonger`/`cepces` toujours non mesurées ; F-050 désigne où mesurer, pas quoi. |
+| PO-006 | **Maintenu** | Versions RHEL 9 de `certmonger`/`cepces` toujours non mesurées ; F-050 désigne où mesurer, pas quoi. `[RÉVISÉE le 2026-09-29]` Depuis : **CLOS** par F-119 — voir la fiche. |
 | PO-007 | **Maintenu** | Aucun `credential.helper` ; rien n'a été modifié. Affiné mais non rouvert par P-25. |
 | PO-008 | **Requalifié**, scindé | F-048 déclare la moitié « ACL du gabarit » résolue ; la moitié « quel principal est réellement présenté, et le F5 le laisse-t-il passer » reste entière. C'est elle qui va au livrable 4. |
 | PO-009 | **CLOS le 2026-09-21** | Un inventaire vide est une propriété normale d'un brouillon (F-044). Rien à trancher. La mesure F-010 reste au dossier du brouillon et continue d'illustrer R-03. |
@@ -991,6 +1197,22 @@ sur un agent sain, section *X509v3 Subject Alternative Name* et *Public-Key*.
 **Qui peut la produire :** l'opérateur `[ÉCRAN-…]`.
 
 ### PO-005 — Le F5 termine-t-il le TLS, ou est-il en passthrough ?
+`[RÉVISÉE le 2026-09-29]` — **un élément nouveau, non une clôture.** Le F5 réécrit les
+chemins publiés vers les chemins internes (F-118). **Raisonné, non mesuré :** réécrire un
+chemin HTTP suppose de lire la requête, donc de **déchiffrer le TLS** au F5 — terminaison,
+éventuellement suivie d'un rechiffrement vers le serveur. Ce raisonnement **ne tranche pas**
+entre terminaison simple et ré-chiffrement ; la configuration du F5 seule le ferait.
+
+`[PILOTE-DÉCLARÉ]` **Indice plus fort, toujours non mesuré :** sous `tokenChecking=Require`
+(avant le 2026-09-25, F-112), les tickets de la machine et de l'opérateur ont été refusés
+(F-103), avec `0xC000035B` au journal (F-106), statut attribué à un échec de liaison de
+canal (F-108, S-7, source non éditeur) ; sous `Allow`, le ticket de la machine est accepté
+(F-116, F-117). Réserve : machines différentes (`host01` le 24, `host02` ensuite). C'est
+l'effet attendu si le canal TLS vu par IIS n'est pas celui du client — terminaison au F5,
+avec ou sans rechiffrement. **Ne tranche pas** entre ces deux cas, et ne vaut pas mesure de
+la configuration du F5. F-115 n'est pas retenu : l'heure du passage à `Allow` n'est pas
+connue (F-112), et la requête CES de 13:22 ne portait pas le ticket de la machine.
+
 `[RÉVISÉE le 2026-09-21]` — **requalifié, rétréci ; cœur du livrable 4.** F-047 déclare le
 VIP joignable depuis la zone de recette : la joignabilité sort de l'inconnue — **par
 déclaration, non par mesure**, et peut donc y revenir. Ce qui reste est plus étroit et
@@ -1011,7 +1233,14 @@ L'`issuer` désigne qui a émis le certificat présenté : l'ADCS/PKI interne (p
 ré-émission) ou l'autorité du F5 (terminaison). Rapport en `[ÉCRAN-…]`.
 **Qui peut la produire :** l'opérateur, ou l'équipe F5 sur simple question.
 
-### PO-006 — Versions de `certmonger` et `cepces` disponibles sur RHEL 9
+### PO-006 — Versions de `certmonger` et `cepces` disponibles sur RHEL 9 — **CLOS le 2026-09-29**
+`[RÉVISÉE le 2026-09-29]` — **CLOS** par **F-119** `[ÉCRAN-2026-09-28, relayé]` : sur RHEL
+9.8, `cepces` **0.3.17-1.el9** et `certmonger` **0.79.21-1.el9** sont dans **AppStream** ;
+aucun dépôt tiers n'est nécessaire, et EPEL n'est pas joignable depuis la recette. La
+supposition « EPEL ou autre » du `@VERIF` ci-dessous est donc tranchée : **ni l'un ni
+l'autre**. Titre **ÉTAIT :** « PO-006 — Versions de `certmonger` et `cepces` disponibles
+sur RHEL 9 ».
+
 `[RÉVISÉE le 2026-09-22]` — **maintenu ; l'inventaire ne l'instruit pas, il en déplace
 l'enjeu.** `PKI_enrolment.yml:16-22` installe `certmonger`, `cepces` et `ca-certificates
 ` en `state: present`, **sans version épinglée et sans déclarer de dépôt** : le paquet est
@@ -1039,6 +1268,13 @@ l'opérateur, et le push est le seul acte irréversible du dépôt.
 **Qui peut la produire :** l'opérateur seul.
 
 ### PO-008 — Quelle identité Kerberos l'ADCS accepte-t-elle pour l'enrôlement ?
+`[RÉVISÉE le 2026-09-29]` — **un élément s'ajoute côté client.** Les `principals` par
+défaut du `cepces.conf` livré sont `${shortname}$ ${SHORTNAME}$ host/${SHORTNAME}
+host/${fqdn}` (F-120) ; sur `host02`, la forme en **minuscules** échoue d'abord (absente du
+keytab), la forme en **majuscules** réussit (F-123). Le ticket de `host02$` est **accepté**
+par IIS (F-115 à F-117). **Reste ouverte, inchangée :** la part ACL — l'autorisation
+d'enrôler ne se voit qu'à une demande de certificat.
+
 `[RÉVISÉE le 2026-09-24]` — **la part « quel principal la machine présente » est répondue
 par mesure : son nom de compte, `<MACHINE>$@<REALM>`** ; `host/<MACHINE-FQDN>` est refusé
 comme **client** bien que sa clé soit au keytab (F-094). Reste ouverte la part
@@ -1316,6 +1552,20 @@ l'état et la révocation des certificats émis.
 
 ### PO-018 — Sous quel mode la protection étendue est-elle configurée sur CEP/CES, et le SPN du VIP y figure-t-il ? *(ouvert le 2026-09-21 — **sourcé et REQUALIFIÉ le 2026-09-21**)*
 
+`[RÉVISÉE le 2026-09-29]` — **requalifié, pas clos.** Les trois questions ci-dessous
+(« `tokenChecking` vaut-il … ? », « `flags` porte-t-il `Proxy` ? », « la collection
+`<spn>` … ? ») ont reçu leur réponse : **`Require` jusqu'au 2026-09-25, `Allow` depuis**
+(F-112, F-111), **ni `flags` ni `<spn>` affichés** (F-111). Le cas décrit plus bas comme
+« une erreur de configuration, pas le cas général » — `Require` sans `Proxy` — **était
+bien celui-ci**. La phrase « Ce qui manque : la confirmation de l'équipe ADCS, attendue le
+2026-09-28 » est satisfaite.
+**Depuis `Allow`, le ticket de la machine est accepté** (F-115 à F-117) : le blocage
+d'authentification est levé. **Pourquoi pas clos :** rien ne dit que `Allow` soit le
+réglage **durable** — aucune déclaration de l'équipe ADCS n'en fait état ; le passage à
+`Allow` est soupçonné d'avoir fait naître un désaccord avec WCF (F-125, hypothèse,
+PO-046) ; et l'autre voie que S-6 décrit pour un intermédiaire — `flags` `Proxy` et
+collection `<spn>` (F-062) — n'a pas été examinée. Le choix appartient à l'équipe ADCS.
+
 `[RÉVISÉE le 2026-09-21]` **ÉTAIT :** « La protection étendue de l'authentification
 est-elle active sur CEP/CES, et que devient-elle derrière un F5 ? — **Statut : affirmé
 par l'énoncé du livrable 4, non sourcé, non mesuré.** … si la protection étendue est
@@ -1425,6 +1675,12 @@ au fil d'un livrable qui l'applique.
 
 
 ### PO-020 — Sous `ansible_admin`, compte local sans identité dans l'annuaire, comment une tâche prendra-t-elle l'identité de la machine ? *(ouvert le 2026-09-21)*
+`[RÉVISÉE le 2026-09-29]` — **en partie instruit.** La condition « **mesurable seulement
+une fois `cepces` configuré sur la recette** » est remplie sur `host02` (F-122). F-123
+établit que `cepces-submit`, **lancé à la main**, obtient Kerberos sous `host02$` avec les
+`principals` par défaut (F-120). **Ce qui n'est toujours pas mesuré :** l'identité et le
+contexte du **démon `certmonger`** quand c'est lui qui appelle le helper — la mesure
+`systemctl show` / `ps` ci-dessous n'a pas été produite.
 `[RÉVISÉE le 2026-09-23]` — **requalifié : il n'y a pas de problème d'identité côté
 Ansible.** F-074 infirme la prémisse (F-059) : l'opérateur joue sous son compte AD, avec
 ticket. Et la tâche d'enrôlement n'a de toute façon **aucune identité Kerberos à prendre** :
@@ -1503,6 +1759,12 @@ procédure de diagnostic actuelle, qui n'installe rien.
 
 
 ### PO-021 — L'entrée de bouclage masque une résolution DNS qui fonctionne : est-ce voulu, et que faire des machines déjà déployées ? *(ouvert le 2026-09-22)*
+`[RÉVISÉE le 2026-09-29]` — **corrigé À LA MAIN sur `host02` seulement** (F-122, geste 1 ;
+D-014). **Rien n'est porté dans `rhel_post_install`** : la question du parc — motif,
+machines déjà déployées, correction — reste **entière**, et la phrase « Aucune correction
+n'est écrite ici » reste vraie **du dossier**. Non mesuré après la correction : le rôle de
+la source `myhostname` (F-091), que `nsswitch` sur `host02` porte (F-122, geste 1 ;
+relevé non daté par rapport à la correction).
 `[RÉVISÉE le 2026-09-24]` **Élargi : deux mécanismes, pas un** (F-091). Corriger le seul
 fichier local pourrait **démasquer** la source `myhostname` en IPv6 — hypothèse non
 mesurée. **Non tranché ici.**
@@ -1573,6 +1835,9 @@ reprendre par la chaîne qui configure le seed, ou à retirer.
 
 
 ### PO-028 — Distribuer `<ROOT-CA>` comme ancre de confiance aux machines RHEL *(ouvert le 2026-09-24)*
+`[RÉVISÉE le 2026-09-29]` — **posée À LA MAIN sur `host02` seulement** (F-122, geste 2 ;
+D-014), prise sur le VIP après contrôle de l'empreinte. **La distribution au parc reste
+entière**, ainsi que la source non publiée au déploiement.
 **Statut :** blocage **mesuré** (F-098) qui **n'appartient pas à ce projet**. Aucun
 mécanisme ne distribue les autorités de l'entreprise aux machines RHEL (F-099) : c'est une
 **propriété de tout le parc**, donc de `rhel_post_install` (R-09 : lecture seule ici).
@@ -1599,8 +1864,75 @@ l'équipe de `rhel_post_install` pour la mise en œuvre.
 | PO-037 | Dans IIS, un refus d'**autorisation** produit aussi un `401` ; seul le **sous-code** distingue (F-106). |
 | PO-038 | Aucune étape ne prévoit l'**absence de la racine** du magasin de confiance. |
 | PO-039 | Le chemin du cache dépend du processus du shell : **toute la procédure doit se jouer dans une seule session**. |
-| PO-040 | Sur cette version de `curl`, la sortie détaillée n'a pas les préfixes `>` et `<`. |
+| PO-040 | `[RÉVISÉE le 2026-09-29 — INFIRMÉE dans un périmètre délimité]` **Sur `host02`, sous la forme `curl -v --stderr <fichier>`, les préfixes `>` sont présents** : le compteur `grep -c '^> Authorization: Negotiate'` rend **0 sur chaque requête sans ticket et 1 sur chaque requête avec** — 2026-09-25 à 15:33 (1 sans, 2 avec), 2026-09-28 à 13:39 (1 sans, 4 avec), 2026-09-28 à 14:29 (2 avec) `[ÉCRAN, relayé]`, P-49, P-50, P-53. Il discrimine donc dans les deux sens. **Limite de la révision :** PO-040 **ne consignait pas sa forme d'appel** ; il portait sur `host01` le 2026-09-24, dont le `curl` est `7.76.1-40.el9_8.5` (F-087). La version de `curl` sur `host02` **n'est pas au dossier**. Pour une autre forme d'appel, ou sur `host01`, PO-040 **n'est pas révisé**. **ÉTAIT :** « Sur cette version de `curl`, la sortie détaillée n'a pas les préfixes `>` et `<`. » |
 
+
+### PO-041 — Contourner le défaut du `%post` de `cepces-certmonger` dans `rhel_post_install` *(ouvert le 2026-09-29)*
+Le paquet n'enregistre pas l'autorité, et en silence (F-121). **À porter dans
+`rhel_post_install`** (R-09 : rien n'y est écrit d'ici) : un `getcert add-ca` **explicite**,
+**sans `--install`**, suivi d'une **garde** sur `getcert list-cas` — ce que
+`PKI_enrolment.yml:78-88` fait déjà en partie (F-071, note du 2026-09-29). La garde devra
+être démontrée dans les deux sens (R-12). Le moment relève de D-001 et de la logique de
+D-010.
+
+### PO-042 — Corriger l'autorité `cepces` enregistrée sur `host02` *(ouvert le 2026-09-29)*
+L'autorité a été enregistrée **avec `--install`**, par erreur (F-122, geste 5) : les
+erreurs d'authentification sont masquées. **À corriger avant toute demande de
+certificat** — retrait de `--install` de la ligne du helper, puis relevé de
+`getcert list-cas -c cepces` montrant le helper corrigé.
+
+### PO-043 — Quelle adresse de CES la politique CEP annonce-t-elle ? *(ouvert le 2026-09-29)*
+`[PILOTE-DÉCLARÉ]` Avec `type=Policy` (F-120), `cepces` obtient l'adresse de CES **de la
+réponse de CEP**. Le F5 réécrit les chemins (F-118) : la politique annoncera-t-elle
+`<CHEMIN-CES-PUBLIÉ>` ou le chemin interne, et ce dernier est-il joignable par le VIP ?
+**À observer au premier `GetPolicies` réussi** — impossible tant que PO-046 bloque.
+Repli possible, selon le pilote : `type=Enrollment`. **Aucune source lue ici ne décrit
+ces deux modes** ; S-1 et S-2 sont à relire sur ce point avant d'en dépendre.
+
+### PO-044 — La délégation Kerberos (`delegate=True`) est-elle nécessaire ? *(ouvert le 2026-09-29)*
+Le paquet l'active, avec ce motif en commentaire : nécessaire si CES et l'autorité ne
+sont pas sur la même machine (F-120). **Non établi** pour cet environnement : où tourne
+l'autorité par rapport à CES, et le compte `<COMPTE-SVC-CES>` est-il autorisé à déléguer ?
+Question à l'équipe ADCS.
+
+### PO-045 — `SEC_E_NO_CREDENTIALS` sur CEP le 2026-09-25 à 15:33 : non expliqué *(ouvert le 2026-09-29)*
+`401 1`, `0x8009030E` (F-116, S-8) ; **non reproduit** le 2026-09-28 (F-117). Le **même
+statut** figurait déjà au journal le 2026-09-24 (F-106), sous l'ancien réglage. **À
+surveiller** : s'il revient, relever l'heure exacte, pour que l'administrateur la retrouve
+au journal IIS.
+
+### PO-046 — Erreur d'activation WCF sur CEP et CES *(ouvert le 2026-09-29)*
+`500 System.ServiceModel.ServiceActivationException`, corps vide (F-124), et
+vraisemblablement les `500` sur `GET` (F-126). Hypothèse : désaccord de protection
+étendue entre WCF et IIS (F-125). **Blocage côté serveur, hors des droits de l'équipe**
+(F-127). En attente de l'administrateur, **retour annoncé le 2026-10-01**. Mesure qui
+tranche : le journal **Application** du serveur, source `System.ServiceModel`.
+
+### PO-047 — Passages de `procedures/diagnostic-enrolement.md` que les faits du 2026-09-25 au 2026-09-28 rendent faux ou incomplets *(ouvert le 2026-09-29)*
+**Constat seul : la procédure n'est pas modifiée par ce livrable.** Numéros de ligne
+relevés sur le fichier au commit `be1a70b`.
+
+| Ligne(s) | Passage | Ce qui le rend faux ou incomplet |
+|---|---|---|
+| `:43-46` | « n'installe rien … ne modifie aucun magasin » | Vrai de la procédure, mais `host02` ne représente plus le parc (F-122) : E1, E4 et E5 y rendent désormais d'autres résultats qu'une machine du parc. |
+| `:79-81`, `:89-94` | `<CES_URL>` « non employée » | CES est testé (F-115 à F-117) ; la table ne distingue pas chemin publié et chemin interne (F-118). |
+| `:140` | Matrice, étape 5 : « ne dit rien … ni de CES » | CES testé hors de la procédure. |
+| `:151-152` | Ticket de session ≠ contexte de `certmonger` | Toujours vrai ; F-123 a lancé le helper à la main, pas `certmonger` (PO-020). |
+| `:328-335` | « ⚠ Sur cette machine, `hostname -f` rend le NOM COURT. C'est normal et connu » | **Faux sur `host02`** depuis F-122, geste 1. |
+| `:345-349` | Paragraphe D-012 | La correction a été faite à la main sur `host02` (D-014). |
+| `:411` | L'entrée locale « fausse » le nom (PO-021) | Plus vrai sur `host02`. |
+| `:546`, `:605`, `:820` | L'étape 4 instruirait PO-005 par l'émetteur | F-118 l'instruit autrement (réécriture des chemins) ; PO-036 déjà ouvert. |
+| `:611-614` | `@VERIF` : `cepces` emploie-t-il le magasin système ou le bundle `cas` ? | En partie instruit par la configuration livrée (F-120 : `cas` non défini). |
+| `:638-639` | « un `GET` sans corps SOAP » | Vrai, mais un `GET` ne teste pas le service : le `POST` aboutit au même `500` (F-124). |
+| `:676-680` | Table du témoin : « code différent (200, 405, 403…) ⇒ authentification » | Il manque `500` ; et « authentifié » ≠ « fonctionnel » (F-126). |
+| `:682-684` | Hypothèse du `405` | Jamais observée ; c'est un `500` qui l'a été. |
+| `:691-697` | Table des échecs | Pas de ligne pour `500` ; ligne `401`, cause (a) : « ce qui l'écarte est F-077 seul » — **F-077 est infirmée** ; `401 1` avec `0x8009030E` vu de façon intermittente (F-116). |
+| `:699-707` | « `tokenChecking` et `flags` … fournis au conditionnel (F-077) ; reste à demander `<spn>` » | Répondu par F-111 et F-112. |
+| `:648`, `:650` | Requêtes sans `--cacert` (PO-035) | Sans effet sur `host02` depuis F-122, geste 2 ; toujours vrai pour le parc. |
+| `:77-87` | Table des valeurs à substituer | N'a pas les libellés `<DOMAINE>`, `<SERVEUR-ADCS>`, `<CHEMIN-CEP-PUBLIÉ>`, `<CHEMIN-CES-PUBLIÉ>`, `<CA-N3>`, `<CA-N2>`, `<ROOT-CA>`, `<COMPTE-SVC-CES>` (P-48). |
+| `:813` | § 11, PO-006 : « `dnf info` ne fait pas partie » | PO-006 est clos (F-119). |
+| `:815` | § 11, PO-020 : « `certmonger` n'est pas installé ici » | **Faux sur `host02`** depuis F-122, geste 3. |
+| `:823` | § 11, PO-018 : « par élimination seulement — la configuration ne se lit que côté IIS » | Lue par l'administrateur (F-111). |
 
 ---
 
@@ -1768,6 +2100,8 @@ enrôlement.** Si le sujet du certificat est construit à partir du nom que la m
 donne, il sortirait avec le **nom court** — et PO-023 dit que la forme du sujet est
 précisément ce qu'on cherche. Diagnostiquer sur une machine faussée est sans risque ;
 enrôler ne l'est pas.
+`[NOTE du 2026-09-29]` Sur `host02`, la correction a été faite **avant** l'essai de
+`cepces` (F-122, geste 1), par décision de l'opérateur : D-014.
 
 
 ### D-013 — La racine est établie par nos propres droits, non demandée à l'équipe PKI (2026-09-24)
@@ -1776,6 +2110,23 @@ canal authentifié, confrontée à ce que le VIP envoie (F-100).
 *Motif :* deux sources indépendantes qui concordent valent mieux qu'une affirmation de
 tiers, et n'attendent personne. *Ce qu'elle ne fait pas :* autoriser à **poser** l'ancre —
 cela reste PO-028, et relève de `rhel_post_install`.
+
+
+### D-014 — Sur `host02`, la recette est préparée à la main (2026-09-28)
+**Décisions de l'opérateur**, prises le 2026-09-28 `[PILOTE-DÉCLARÉ]` et inscrites le
+2026-09-29 :
+1. les paquets `certmonger` et `cepces*` sont pris dans **AppStream** (F-119) ;
+2. `<ROOT-CA>` est posée en **ancre système** (F-122, geste 2) ;
+3. `/etc/hosts` est corrigé **avant** l'essai (F-122, geste 1) ;
+4. le **suivi `certmonger` est conservé** après un enrôlement réussi.
+**Portée : la recette `host02` seulement.** Rien de cela ne vaut pour le parc ni pour
+`rhel_post_install` (R-09), sur le modèle de D-010.
+*Tension, constatée et non résolue ici :* D-013 dit de l'identification de la racine
+qu'elle n'autorise **pas** à poser l'ancre (« cela reste PO-028 ») ; PO-021 dit
+qu'« aucune correction n'est écrite ici ». Ni D-013 ni PO-021 ne sont réécrits : **D-014
+les dépasse pour `host02` seulement**, par une décision explicite de l'opérateur ; pour le
+parc, ils restent vrais.
+*Retour arrière :* voir F-122 — retours ciblés et instantané complet.
 
 
 ---

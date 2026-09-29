@@ -656,3 +656,83 @@ d'empreintes et vérification de signature. Fonde F-100 à F-102.
 en HTTPS puis en HTTP, avec décodage du jeton SPNEGO. Fonde F-103 à F-110.
 S'y ajoutent, de provenance distincte : `[TIERS-MESURÉ]` la configuration et le journal
 d'IIS relevés par l'équipe ADCS, `[TIERS-DÉCLARÉ]` sa lecture, et `[SOURCE-EXTERNE]` S-7.
+
+---
+
+*Preuves ajoutées le **2026-09-29**. **P-48 à P-54 n'ont pas été produites sur ce poste**
+(R-08) ; **P-55 l'a été**.*
+
+> **Réserve de transmission — elle gouverne P-48 à P-54, à l'identique de P-43 à P-47.**
+> Mesures **jouées par l'opérateur** sur la recette, **lues sur capture par le pilote**,
+> et **transmises ici décrites** ; ou sorties **transmises par l'administrateur ADCS**. Je
+> n'ai vu aucune sortie : **aucune n'est reproduite**, la reproduire supposerait de
+> l'inventer (R-01). Étiquettes : `[ÉCRAN-AAAA-MM-JJ, relayé]` pour les écrans de
+> l'opérateur, `[TIERS-MESURÉ]` pour les sorties de l'administrateur.
+> **Heures en UTC.** Les en-têtes `Date` HTTP et le journal IIS sont en UTC ;
+> l'observateur d'événements de l'administrateur est en heure locale **+02:00**.
+
+**P-48** — `[ÉCRAN-2026-09-25, relayé]` + `[TIERS-MESURÉ]` **Test du 2026-09-25 vers 13:22
+UTC.** Requêtes CEP depuis `host02` sous `host02$` ; requête CES depuis **une autre
+machine de recette** ; lignes du journal IIS et événement 4625 sur `<SERVEUR-ADCS>`,
+transmis par l'administrateur. Relevé de l'opérateur : l'historique shell de l'autre
+machine contient les commandes CES, et les deux machines ont des adresses différentes.
+Fonde F-115 et la part « traduction d'adresse » de F-118.
+**Libellés réduits (R-07), introduits ici :** `host02` (machine de recette des
+2026-09-25 à 28, **distincte de `host01`**), `<DOMAINE>` (préfixe de domaine du champ
+`cs-username`), `<SERVEUR-ADCS>`, `<CHEMIN-CEP-PUBLIÉ>`, `<CHEMIN-CES-PUBLIÉ>` (chemins
+publiés par le F5). Déjà en usage : `<CA-N3>`, `<CA-N2>`, `<ROOT-CA>`, `<COMPTE-SVC-CES>`,
+`<VIP_FQDN>`. **Aucune adresse IP n'est écrite.**
+
+**P-49** — `[ÉCRAN-2026-09-25, relayé]` + `[TIERS-MESURÉ]` **Test du 2026-09-25 à
+15:33:15 UTC**, depuis `host02`, sous `host02$`, `curl -v --stderr <fichier>` : CES sans
+ticket, CES avec ticket, CEP avec ticket ; lignes du journal IIS correspondantes.
+Compteur `grep -c '^> Authorization: Negotiate'` : **0** sur la requête sans ticket,
+**1** sur chacune des deux requêtes avec. Fonde F-116 et la révision de PO-040.
+
+**P-50** — `[ÉCRAN-2026-09-28, relayé]` **Test du 2026-09-28, de 13:39:05 à 13:39:11
+UTC**, depuis `host02`, un seul ticket, CEP, CES, CEP, CES, plus un témoin sans ticket.
+Compteur : **0** sur le témoin, **1** sur chacune des quatre requêtes avec ticket. Fonde
+F-117 et la révision de PO-040.
+
+**P-51** — `[ÉCRAN-2026-09-28, relayé]` **Paquets sur `host02`.** Version de RHEL ;
+disponibilité et version de `cepces`, `cepces-certmonger`, `cepces-selinux`,
+`python3-gssapi`, `python3-requests-gssapi` et `certmonger` dans AppStream ; échec de
+connexion à EPEL ; contenu de `cepces.conf` lu **avant installation** par `rpm2cpio` ;
+texte du `%post` de `cepces-certmonger` ; `getcert list-cas -c cepces` vide après
+installation ; aide de `cepces-submit`. Fonde F-119 à F-121.
+
+**P-52** — `[ÉCRAN-2026-09-28, relayé]` **Dérive constatée sur `host02`**, sur le modèle de
+P-42 : les cinq gestes faits à la main — `/etc/hosts` et sa sauvegarde, ancre
+`<ROOT-CA>` et `update-ca-trust`, transactions `dnf` 5 et 6, `cepces.conf` et sa
+sauvegarde, `getcert add-ca`. Relevés associés : `hostname -f` après correction ;
+`curl` sans `--cacert` → `ssl_verify=0` ; historique `dnf` (transaction précédente : 4).
+**Aucun de ces gestes n'est décrit dans un code.** Fonde F-122 ; autorisés par D-014.
+
+**P-53** — `[ÉCRAN-2026-09-28, relayé]` **Premier appel de `cepces-submit`**
+(`CERTMONGER_OPERATION=GET-SUPPORTED-TEMPLATES`) : échec du principal en minuscules,
+réussite en majuscules, `ParseError`, `rc=4`, aucun refus SELinux. Puis **rejeu du `POST`
+par `curl`**, 2026-09-28 à 14:29:01 et 14:29:03 UTC, deux valeurs de l'en-tête `To` :
+`HTTP/1.1 500 System.ServiceModel.ServiceActivationException`, `Content-Length: 0`,
+`Persistent-Auth: true`. Compteur : **1** sur chacune des deux requêtes. Fonde F-123,
+F-124 et la révision de PO-040.
+
+**P-54** — `[TIERS-MESURÉ]` **Configuration IIS relevée par l'administrateur ADCS le
+2026-09-28** : sorties `appcmd` des deux applications et capture des deux pools. S'y
+ajoutent, sans sortie, `[TIERS-DÉCLARÉ]` : l'ancienne valeur `Require`, le redémarrage
+d'IIS après le test de 13:22, et « rien de pertinent » dans les journaux d'événements.
+**Statut de la preuve :** une mesure, mais ni rejouable ni vérifiable en contexte par
+l'agent. Fonde F-111 à F-114.
+
+**P-55** — **Lecture des sources S-8 à S-10**, le **2026-09-29 à 07:14:37 UTC**, sur le
+poste de rédaction, sans élévation, dans le répertoire temporaire de la session (hors
+dépôt). Trois commandes de la forme
+`curl -sS -L -o <fichier> -m 30 -w '… http_code=%{http_code} size=%{size_download}\n' <URL>` :
+```
+s8 http_code=200 size=27963    rc_curl_s8=0
+s9 http_code=404 size=14876    rc_curl_s9=0
+s10 http_code=200 size=74186   rc_curl_s10=0
+```
+Conversion en texte par `sed`, puis recherche par `grep -n` (`rc=0` pour S-8 et S-10).
+Lignes citées : S-8, lignes 1, 8, 11 et 12-13 du texte extrait ; S-10, lignes 644, 657
+et 663-670. **S-9 non lue** : `404`, titre de la page `GFI Support`. Fonde S-8 à S-10
+(F-116, F-125).
