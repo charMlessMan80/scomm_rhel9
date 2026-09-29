@@ -66,6 +66,8 @@ dans ce fichier : les exemples emploient `ca.example.com`, `EXAMPLE.COM`, `host0
   (`5f0eca9 Project init`, `b0c3426 Initial commit`). Source : P-01.
 - **F-004** — Le remote `origin` est en `https://` (`https://github.com/charMlessMan80/scomm_rhel9`),
   en fetch comme en push. Source : `git remote -v`, rc=0 (P-01).
+  `[NOTE du 2026-09-29]` Vrai au 2026-09-18 ; depuis le 2026-09-29, `origin` est en SSH
+  (`git@github.com:…`). Voir PO-007.
 - **F-005** — **Aucun `credential.helper` n'est configuré**, à aucune portée :
   `git config --show-origin --get-all credential.helper` → rc=1, sortie vide (P-02).
   Conséquence : un `git push` sur ce remote échouera faute d'identifiants. Cf. PO-007.
@@ -1089,7 +1091,7 @@ statut a changé ; rien n'a été effacé (R-11).
 | PO-004 | **Maintenu** | SAN et taille de clé restent non spécifiés par S-4 (F-036) ; F-042 n'y change rien. |
 | PO-005 | **Requalifié**, rétréci | Reste entier sur la terminaison TLS ; F-047 retire la joignabilité de l'inconnue. Devient le cœur du livrable 4 avec PO-008. |
 | PO-006 | **Maintenu** | Versions RHEL 9 de `certmonger`/`cepces` toujours non mesurées ; F-050 désigne où mesurer, pas quoi. `[RÉVISÉE le 2026-09-29]` Depuis : **CLOS** par F-119 — voir la fiche. |
-| PO-007 | **Maintenu** | Aucun `credential.helper` ; rien n'a été modifié. Affiné mais non rouvert par P-25. |
+| PO-007 | **Maintenu** | Aucun `credential.helper` ; rien n'a été modifié. Affiné mais non rouvert par P-25. `[RÉVISÉE le 2026-09-29]` Depuis : **CLOS** — remote passé en SSH, push fait ; voir la fiche. |
 | PO-008 | **Requalifié**, scindé | F-048 déclare la moitié « ACL du gabarit » résolue ; la moitié « quel principal est réellement présenté, et le F5 le laisse-t-il passer » reste entière. C'est elle qui va au livrable 4. |
 | PO-009 | **CLOS le 2026-09-21** | Un inventaire vide est une propriété normale d'un brouillon (F-044). Rien à trancher. La mesure F-010 reste au dossier du brouillon et continue d'illustrer R-03. |
 | PO-010 | **Requalifié** — change d'objet | F-050 : le nœud de contrôle est le seed, pas ce poste. La mesure se joue là-bas. F-041 reste vrai **de ce poste**, mais cesse d'être un obstacle au projet. |
@@ -1261,7 +1263,26 @@ echo "=== FIN PO-006 ==="
 ```
 **Qui peut la produire :** l'opérateur sur une cible RHEL 9 `[ÉCRAN-…]`.
 
-### PO-007 — Aucun `credential.helper` : le push échouera
+### PO-007 — Aucun `credential.helper` : le push échouera — **CLOS le 2026-09-29**
+`[RÉVISÉE le 2026-09-29]` — **CLOS : le push a eu lieu, par SSH.**
+`[PILOTE-DÉCLARÉ, opérateur, 2026-09-29, sorties relues par le pilote]` `origin` était en
+HTTPS, sans identifiant dans l'adresse ; `fetch` fonctionnait sans authentification,
+`push` demandait identifiant et mot de passe, que GitHub n'accepte pas pour Git en HTTPS
+— d'où `59edd05` et `be1a70b` jamais poussés. Aucun identifiant enregistré : ni donnée
+d'authentification dans `.git/config`, ni `~/.git-credentials`. Vers **11:05 +02:00**
+(09:05 UTC), l'opérateur a passé `origin` en SSH (`git remote set-url origin
+git@github.com:…`), vérifié par `ls-remote` que le distant était à `5f0eca9`, puis poussé
+`5f0eca9..9698734`.
+**Relevé sur le poste de rédaction, le 2026-09-29, après coup :** `git remote get-url
+origin` → `git@github.com:…/scomm_rhel9.git`, rc=0 ; `git config --show-origin --get-all
+credential.helper` → vide, **rc=1** ; `ls ~/.git-credentials` → rc=2 ; `git rev-parse HEAD
+origin/main` → deux fois `9698734`, rc=0 (réf. locale mise à jour par le push, aucun `fetch`).
+**Motif de la clôture :** le blocage était propre au remote HTTPS sans `credential.helper`
+(P-25) ; il n'a pas été levé par un `credential.helper` — **toujours absent** — mais en
+changeant de transport. **Ce qui reste vrai :** F-005 (aucun `credential.helper`), et le
+push reste un acte réservé à l'opérateur (R-05).
+Titre **ÉTAIT :** « PO-007 — Aucun `credential.helper` : le push échouera ».
+
 **Statut :** mesuré (F-004, F-005). Non corrigé : configuration d'accès réservée à
 l'opérateur, et le push est le seul acte irréversible du dépôt.
 **Mesure qui tranche :** l'opérateur configure son accès, puis `git push`.
