@@ -13,8 +13,8 @@ nommée**, les faits **déclarés par l'opérateur**, les **points ouverts** et 
 | Nature | Fichier | Pourquoi ailleurs |
 |---|---|---|
 | Règles de travail | `../CLAUDE.md` | Une règle vit à un seul endroit. |
-| Ce que le code du dépôt fait aujourd'hui — **F-008 à F-021 et F-038** | `scomm-depot-actuel.md` | Brouillon sans autorité (F-044), périmable en bloc par la réécriture (D-007). **Toute citation de ces numéros dans ce fichier renvoie là-bas.** |
-| Sorties de commande — **P-01 à P-55** | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
+| Ce que le code du dépôt fait aujourd'hui — **F-008 à F-021, F-038, et F-155 à F-161** (ajoutés le 2026-10-08 ; **ÉTAIT :** « F-008 à F-021 et F-038 ») | `scomm-depot-actuel.md` | Brouillon sans autorité (F-044), périmable en bloc par la réécriture (D-007). **Toute citation de ces numéros dans ce fichier renvoie là-bas.** |
+| Sorties de commande — **P-01 à P-65** (**ÉTAIT :** « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
 | Procédures jouées par l'opérateur sur les cibles | `procedures/` | Elles n'ont **aucune autorité propre** : tout ce qu'elles affirment vient d'ici, par renvoi `F-xxx` / `PO-xxx`. |
 
 `[RÉVISÉE le 2026-09-29]` Deuxième ligne du tableau **ÉTAIT :** « Sorties de commande —
@@ -31,7 +31,8 @@ faits, des points ouverts et des décisions. `CLAUDE.md` porte les règles de tr
 duplique rien d'ici. » Le principe — un objet, un seul endroit — est inchangé ; c'est le
 nombre d'endroits qui est passé de un à trois (D-006).
 
-Dernière mise à jour : **2026-09-29** (consignation du 2026-09-25 au 2026-09-28).
+Dernière mise à jour : **2026-10-08** (consignation du 2026-10-01 au 2026-10-08).
+`ÉTAIT : 2026-09-29 (consignation du 2026-09-25 au 2026-09-28).`
 `ÉTAIT : 2026-09-21 (livrables 3 puis 4).` — déjà périmée : des faits ont été ajoutés
 jusqu'au 2026-09-24 sans que cette ligne suive.
 `ÉTAIT : 2026-09-21 (livrable 3).`
@@ -571,7 +572,7 @@ Aucun de ces points n'a été établi par un artefact, sauf mention contraire.
 | D-P-01 | `scomm_rhel9` est cloné sur ce poste | **VÉRIFIÉE** — F-001, F-002 | — |
 | D-P-02 | Aucun des deux dépôts ne porte de `CLAUDE.md` | **VÉRIFIÉE pour `scomm_rhel9`** (F-007) ; **non vérifiable** pour `rhel_post_install` (PO-002) | `ls CLAUDE.md` à la racine de `rhel_post_install` |
 | D-P-03 | `rhel_post_install` joint les machines au domaine aujourd'hui | **NON VÉRIFIABLE** — dépôt absent du poste (PO-002). `[RÉVISÉE le 2026-09-21]` Repris et **restreint à la recette** par F-046 ; toujours non mesuré | Lecture du dépôt ; `realm list` sur un hôte provisionné `[ÉCRAN-…]` |
-| D-P-04 | Le rôle est joué actuellement par le seed, en ansible-core | **NON VÉRIFIABLE** depuis ce poste. `[RÉVISÉE le 2026-09-21]` Redéclaré par F-050 ; la mesure reste due | `ansible --version` sur le nœud de contrôle `[ÉCRAN-…]` |
+| D-P-04 | Le rôle est joué actuellement par le seed, en ansible-core | **NON VÉRIFIABLE** depuis ce poste. `[RÉVISÉE le 2026-09-21]` Redéclaré par F-050 ; la mesure reste due. `[RÉVISÉE le 2026-10-08]` **Mesurée** : `ansible-core 2.14.18` sur `seed01`, d'où le rôle a été joué contre `host02` (F-145, F-149) `[ÉCRAN-2026-10-08, relayé]` ; « actuellement » ne vaut que pour cet essai | `ansible --version` sur le nœud de contrôle `[ÉCRAN-…]` |
 | D-P-05 | `cepces` est installable via `rhel_post_install` | `[RÉVISÉE le 2026-09-29]` **Moitié « paquet disponible » établie** : `cepces` est dans AppStream de RHEL 9 (F-119, `[ÉCRAN-2026-09-28, relayé]`). « **Via `rhel_post_install`** » reste non exercé (F-071 : tâche sautée par défaut). **ÉTAIT :** « **NON VÉRIFIABLE** — dépôt absent ; et `cepces` n'est pas dans les dépôts RHEL 9 de base à ma connaissance mesurée (F-023 ne mesure que Fedora) » — **infirmé** sur le second point | `dnf info cepces` sur une cible RHEL 9 `[ÉCRAN-…]` ; PO-006 |
 | D-P-06 | CEP et CES sont configurés en Kerberos | **NON VÉRIFIABLE** depuis ce poste | PO-008 |
 | D-P-07 | Le F5 est en reverse proxy devant l'ADCS ; terminaison TLS ou passthrough inconnue | **NON VÉRIFIABLE** ; l'opérateur déclare lui-même l'inconnue | PO-005 |
@@ -665,6 +666,8 @@ une case « aucune » est un aveu, pas un oubli.
   *Vérifiable, et par quoi :* @VERIF — `ansible --version` sur le seed, en `[ÉCRAN-…]`.
   C'est la mesure déjà demandée par F-022 et par D-P-04 ; elle n'a toujours pas été
   produite.
+  `[NOTE du 2026-10-08]` **Produite** : `ansible-core 2.14.18` sur `seed01`
+  `[ÉCRAN-2026-10-08, relayé]` (F-145, P-61). Le `@VERIF` ci-dessus est levé.
 
 ### 2.3 Les trois identités en présence (2026-09-21) — `[PILOTE-DÉCLARÉ]`
 
@@ -964,6 +967,8 @@ pilote. `[PILOTE-DÉCLARÉ]` : interprétations et corrections du pilote.
     IIS `[TIERS-MESURÉ]` : le F5 publie **un chemin court par service**
     (`<CHEMIN-CEP-PUBLIÉ>`, `<CHEMIN-CES-PUBLIÉ>`) et le réécrit vers le chemin interne
     de l'application.
+    `[NOTE du 2026-10-08]` Le chemin **interne** de CEP, appelé par le VIP, est lui aussi
+    transmis tel quel (F-135).
   - **Chaîne du VIP.** `[ÉCRAN-2026-09-28, relayé]` certificat ← `<CA-N2>` ← `<ROOT-CA>` ;
     le certificat serveur est émis par `<CA-N2>`, **pas** par `<CA-N3>`. Concorde avec
     F-097.
@@ -1031,6 +1036,10 @@ pilote. `[PILOTE-DÉCLARÉ]` : interprétations et corrections du pilote.
   interne (P-53). Les deux → `HTTP/1.1 500 System.ServiceModel.ServiceActivationException`,
   `Content-Length: 0`, `Persistent-Auth: true`, jeton `Negotiate` envoyé. **L'en-tête
   `To` n'est pas en cause.**
+  `[RÉVISÉE le 2026-10-08]` **Vrai seulement tant que le service ne s'activait pas.** Une
+  fois CEP activé (F-132), WCF filtre `To` sur sa propre adresse, le chemin **interne** :
+  `To` = chemin publié → faute `AddressFilter mismatch` ; `To` = chemin interne → `200`
+  (F-134, F-135). **ÉTAIT :** « L'en-tête `To` n'est pas en cause. », sans réserve.
 
 **D — Interprétations. Aucune n'est mesurée.**
 - **F-125** — **Hypothèse** `[PILOTE-DÉCLARÉ]`, appuyée sur `[SOURCE-EXTERNE]` S-9 et S-10 :
@@ -1038,6 +1047,12 @@ pilote. `[PILOTE-DÉCLARÉ]` : interprétations et corrections du pilote.
   `web.config` des services, ne correspond plus à celui **d'IIS**, et WCF refuse
   d'activer le service. **Non confirmée.** La preuve serait le journal **Application** du
   serveur, source `System.ServiceModel`, **demandé à l'administrateur le 2026-09-28**.
+  `[RÉVISÉE le 2026-10-08]` **Confirmée pour CEP, par intervention, non par le journal
+  Application** (qui n'a pas été transmis) : désaccord constaté — IIS `Allow`, WCF
+  `Always` (F-129, F-130) — puis, après passage de WCF à `WhenSupported`, CEP rend `200`
+  (F-131, F-132). **Pour CES : non établie** — application du `web.config` relevé non
+  établie, fichiers modifiés non communiqués, CES non rejoué après. **ÉTAIT :** « **Non
+  confirmée.** »
   **Ce que les sources ne disent pas :** la correspondance entre les valeurs d'IIS
   (`None`, `Allow`, `Require`) et celles de WCF (`Never`, `WhenSupported`, `Always`)
   **n'est énoncée par aucune source lue**.
@@ -1071,6 +1086,236 @@ pilote. `[PILOTE-DÉCLARÉ]` : interprétations et corrections du pilote.
 - **F-127** — **État.** Blocage **côté serveur**, hors des droits de l'équipe.
   L'administrateur a été sollicité le 2026-09-28 ; **retour annoncé le 2026-10-01**
   `[TIERS-DÉCLARÉ]`.
+  `[NOTE du 2026-10-08]` Retour tenu le 2026-10-01 (F-129 à F-133). L'état a changé
+  depuis : CEP s'active, sa politique est vide (PO-048), et CEP/CES sont en réinstallation
+  (F-143). Voir § 2.7.
+
+### 2.7 Du 2026-10-01 au 2026-10-08 — CEP activé, politique vide, agent SCOM sur `host02`
+
+**Aucune mesure de la recette, du nœud de contrôle ni des serveurs n'a été vue par
+l'agent.** Provenance et réserve de transmission : **P-56 à P-64, à lire avant cette
+section** ; la réserve de P-43 à P-47 s'y applique à l'identique. Libellés réduits
+(R-07) : cf. P-56, P-58, P-59. **Seule exception :** les lectures de sources faites sur
+le poste de rédaction (P-65).
+
+**Heures.** Chacune porte son fuseau. Les en-têtes `Date` HTTP sont en **UTC** ; les
+écrans Windows et Teams sont en heure locale **+02:00**.
+
+**Machines.** `host02` (recette, § 2.6) ; `seed01`, le nœud de contrôle (F-050) ;
+`<SERVEUR-CEPCES>`, le serveur unique qui porte CEP et CES ; `<SERVEUR-CA>`, celui de
+l'autorité `<CA-N3>` ; `<DC>`, un contrôleur de domaine. **Relation non établie** entre
+`<SERVEUR-CEPCES>` et `<SERVEUR-ADCS>` (P-48, le serveur IIS qui a journalisé
+l'événement 4625) : raisonné, il s'agit probablement du même serveur ; **non confirmé,
+les deux libellés restent distincts**.
+
+**A — 2026-10-01.**
+- **F-128** — `[ÉCRAN-2026-10-01, relayé]` **09:29:48 et 09:29:50 UTC** : rejeu du `POST
+  GetPolicies`, `To` = chemin publié puis chemin interne → les deux en `500
+  ServiceActivationException`, corps vide. **Reproduit F-124.** P-56.
+- **F-129** — `[ÉCRAN-2026-10-01, relayé]` *Configuration Editor* d'IIS, application CES :
+  `windowsAuthentication` / `extendedProtection` `tokenChecking=Allow`, `flags=None`,
+  collection `<spn>` **vide** (`Count=0`), `providers` `Count=1`. **Concorde avec F-111.**
+- **F-130** — `[ÉCRAN-2026-10-01, relayé]` `web.config` d'**une** des deux applications —
+  **CEP ou CES : non établi** : liaison `wsHttpBinding`
+  « TransportWithHeaderClientAuth », `security mode="Transport"`,
+  `transport clientCredentialType="Windows"`,
+  **`extendedProtectionPolicy policyEnforcement="Always"`**.
+  Deux autres liaisons (`UserName`, `Certificate`) sans `extendedProtectionPolicy`.
+  **Désaccord IIS `Allow` / WCF `Always` constaté** : c'est l'hypothèse F-125.
+- **F-131** — `[TIERS-DÉCLARÉ]` L'administrateur a passé `policyEnforcement` à
+  **`WhenSupported`** pendant l'appel du 2026-10-01. @VERIF : fichiers modifiés (CEP,
+  CES ou les deux) et heure de la modification — **non communiqués**.
+- **F-132** — `[ÉCRAN-2026-10-01, relayé]` Après la modification : **13:25:27 UTC**, `To` =
+  chemin publié → **`401`**, page HTML d'IIS « invalid credentials », jeton envoyé ;
+  **13:25:31 UTC**, `To` = chemin interne → **`200 GetPoliciesResponse`**, `policyID`
+  `<ID-POLITIQUE>`, `nextUpdateHours` 8, `policies`, `cAs` et `oIDs` **nil**.
+  **CEP s'active.** Le `401` est isolé et **non expliqué** (PO-049).
+- **F-133** — `[TIERS-DÉCLARÉ, Teams, 2026-10-01 15:42 +02:00]` **Un seul serveur porte CEP
+  et CES** (`<SERVEUR-CEPCES>`) ; l'autorité `<CA-N3>` est sur un autre (`<SERVEUR-CA>`) ;
+  le F5 est là « pour des questions de standardisation et de sécurité, ainsi que pour un
+  futur scaling ». `[PILOTE-DÉCLARÉ]` Cela **infirme** l'hypothèse du pilote du
+  2026-10-01 — une répartition entre plusieurs nœuds expliquant le `401` de F-132 —,
+  hypothèse **jamais consignée** au dossier : pas d'`ÉTAIT` à poser. Hypothèse restante,
+  **non établie** : le `401` est survenu pendant le redémarrage de l'application après la
+  modification.
+
+**B — 2026-10-02.**
+- **F-134** — `[ÉCRAN-2026-10-02, relayé]` **07:36:48 UTC**, `To` = chemin publié → `500`
+  SOAP Fault, *Subcode* `a:DestinationUnreachable`, « The message with To
+  '<CHEMIN-CEP-PUBLIÉ>' cannot be processed at the receiver, due to an AddressFilter
+  mismatch at the EndpointDispatcher » ; **07:36:50 UTC**, `To` = chemin interne → `200`,
+  politique vide. **Révise F-124.** P-57.
+- **F-135** — `[ÉCRAN-2026-10-02, relayé]` **07:40:49 et 07:40:51 UTC**, même script,
+  **URL appelée = chemin interne de CEP par le VIP** (ligne de l'URL contrôlée par
+  `grep`) : `To` publié → même faute `AddressFilter` ; `To` interne → `200`, politique
+  vide. **Le F5 transmet le chemin interne de CEP tel quel.** Complète F-118.
+- **F-136** — `[ÉCRAN-2026-10-02, relayé]` Politique **toujours vide** : **10:05:14 UTC**
+  (`clientVersion=0`, `serverVersion=0`), **10:07:12 UTC** (`clientVersion=6`),
+  **10:08:54 UTC** (`clientVersion=6`, `serverVersion=6`).
+  `[SOURCE-EXTERNE]` S-12 : une valeur `0` de `clientVersion` ou de `serverVersion` est
+  **ramenée au maximum** que le serveur supporte. **La valeur de version n'explique donc
+  pas notre cas.** Voir aussi S-11 et sa réserve.
+- **S-11** `[SOURCE-EXTERNE]` — projet `openSUSE/cepces`, *issue* **113**, « GetPolicies
+  with clientVersion/serverVersion = 0 returns an empty policy … — works with
+  clientVersion = 6 », ouverte le **2026-10-01 à 11:58:58 UTC**, **fermée**, 4
+  commentaires. Lue le **2026-10-08** par l'API GitHub (`http_code=200`, P-65).
+  **Contenu :** même symptôme (`policies` et `cAs` nil), cepces 0.3.17 et 0.5.0,
+  contournement `clientVersion=6`. **Réponse d'un collaborateur du projet** (deux
+  commentaires, 2026-10-01 12:21 et 12:25 UTC) : « clientVersion=0 should be exactly the
+  same as clientVersion=6 », citant la nouvelle version de MS-XCEP. **Rétractation de
+  l'auteur** (12:35 UTC) : « The empty policy I saw was most likely caused by our server
+  side: the CES URL was not registered in AD (msPKI-Enrollment-Servers was empty), and
+  the CEP cache kept returning an empty policy for the machine account after that was
+  fixed. » **Réserves :** un fil d'*issue*, pas une documentation d'éditeur ; son auteur
+  ne qualifie pas lui-même sa comparaison de contrôlée ; **l'origine de ce rapport n'est
+  pas établie** — ouvert le jour de F-132, il pourrait ne pas être une source
+  indépendante de ce projet. **Ce que S-11 apporte :** deux causes candidates côté
+  serveur pour PO-048 (adresse de CES non enregistrée, cache de CEP), non mesurées ici.
+- **S-12** `[SOURCE-EXTERNE]` — Microsoft, [MS-XCEP] § 3.1.4.1.3.22 « RequestFilter »,
+  `learn.microsoft.com/en-us/openspecs/windows_protocols/ms-xcep/7bb85751-076e-4015-ae31-92ca87d3fff8`,
+  mise à jour du 2026-03-06, lue le **2026-10-08** (`http_code=200`, P-65). Cité :
+  « If the element is specified with a value of 0, Z is set to the server's maximum
+  supported client version. » ; pour `serverVersion` : « If the element is specified
+  with a value of 0, Y is set to the server's maximum supported CA version. »
+- **F-137** — `[TIERS-MESURÉ, captures Teams, 2026-10-02 09:53 +02:00]` Chaîne de groupes :
+  `host02` ∈ `<GROUPE-SRV-T>` ∈ `<GROUPE-SRV-ALL>` ∈ `<GROUPE-ENROL>`. **Relation non
+  établie** avec `<GROUPE-T>` / `<GROUPE-ALL>` / `<GROUPE-PKI>` de F-080 (`host01`). P-58.
+- **F-138** — `[TIERS-MESURÉ, captures, 2026-10-02 09:57 +02:00]` Modèle `<GABARIT-SRV>` :
+  `<GROUPE-ENROL>` y a **Read** et **Enroll** ; validité 1 an, renouvellement 6 semaines ;
+  publié sur `<CA-N3>` (console de `<SERVEUR-CA>`). `<COMPTE-SVC-CES>` : « Trust this
+  user for delegation to specified services only », **Kerberos only**, services `HOST`
+  et `rpcss` de `<SERVEUR-CA>`. **Délégation constatée** (PO-044). **Relation non
+  établie** entre `<GABARIT-SRV>` et `<GABARIT>` de F-075. P-58.
+- **F-139** — `[ÉCRAN-2026-10-02, relayé]` Lecture de l'annuaire par ADSI, **11:57
+  +02:00** : **trois** autorités d'entreprise (`<CA-N1>`, `<CA-N2>`, `<CA-N3>`).
+  `<CA-N3>` publie `<GABARIT-SRV>`, `<GABARIT-CS>` et `<GABARIT-OCSP>` ; son
+  `msPKI-Enrollment-Servers` porte **une** entrée : priorité 1, authentification 2
+  (Kerberos), mode 0, **URL de CES sur `<SERVEUR-CEPCES>` en direct, pas sur le VIP**.
+  `<CA-N1>` et `<CA-N2>` : aucune adresse de CES. Concorde avec F-100 (trois autorités
+  émettrices). P-59.
+- **F-140** — `[ÉCRAN-2026-10-02, relayé]` `ldapsearch` est absent de `host02` ;
+  `adcli info` donne le domaine court et un contrôleur, `<DC>`.
+- **F-141** — `[ÉCRAN-2026-10-02, relayé]` Client Windows du domaine, **compte de
+  l'opérateur**, **12:16 +02:00** : `certutil -PolicyServer <URL interne de CEP par le
+  VIP> -Kerberos -Template` → `0x80094004 CERTSRV_E_PROPERTY_EMPTY`. Le même serveur de
+  politique ajouté dans `certmgr` est **validé**, mais l'identifiant `<ID-POLITIQUE>`
+  « conflicts with » la politique « Active Directory Enrollment Policy » déjà présente.
+  **La politique vide est reproduite hors de Linux et hors de `cepces`.**
+  `[PILOTE-DÉCLARÉ]` *Réserve :* sous le compte **de l'opérateur**, dont les droits sur
+  les modèles ne sont pas établis ; ce relevé ne sépare donc pas une cause d'ACL d'une
+  cause propre à CEP.
+- **F-142** — `[PILOTE-DÉCLARÉ, opérateur, 2026-10-02 12:11 +02:00]` Ce CEP n'avait jamais
+  servi : **nous sommes ses premiers clients.**
+- **F-143** — `[TIERS-DÉCLARÉ, via l'opérateur, 2026-10-02 15:23 +02:00]` L'administrateur
+  ADCS **réinstalle CEP et CES de zéro**. Le pilote lui a remis une procédure, **document
+  hors dépôt** : désinstallation, test de CEP avant et après le passage au compte de
+  service, paire cohérente de protection étendue, chemins internes par le VIP,
+  réenregistrement de l'adresse de CES sur le VIP, recette par `certutil`.
+
+**C — 2026-10-08.**
+- **F-144** — `[TIERS-DÉCLARÉ]` + `[ÉCRAN-2026-10-08, relayé]` Certificat **émis à la main**
+  par l'équipe ADCS, livré en PFX : déposé sur un poste Windows d'administration,
+  transféré par SFTP vers `host02`, **SHA-256 identique aux deux bouts**, mode 600. Contenu
+  vérifié : sujet `C`, `ST`, `L`, `O`, `OU`, `CN=<FQDN>` ; SAN `DNS:<FQDN>`,
+  `DNS:<nom court>` ; EKU *TLS Web Server Authentication* seul ; KU *Digital Signature*,
+  *Key Encipherment* ; émetteur `<CA-N3>`, chaîne `<CA-N3>` ← `<ROOT-CA>` incluse ;
+  validité du 2026-10-06 au 2027-10-06 ; RSA 2048 ; clé publique identique dans la clé et
+  dans le certificat ; `openssl verify` OK contre le magasin de `host02`. **Le sujet ne
+  suit pas S-4:63-71** (pas de second `CN`, pas de `DC=`) : testé tel quel (D-015,
+  PO-023). P-60.
+- **F-145** — `[ÉCRAN-2026-10-08, relayé]` `seed01` : **`ansible-core 2.14.18`** ;
+  `ansible.posix` **2.2.2** dans les collections de l'utilisateur **et** dans
+  `/usr/share/ansible/collections`, ce second exemplaire **n'appartenant à aucun paquet**
+  (`rpm -qf`) ; clone de ce dépôt resté à `5f0eca9`, mis à jour en *fast-forward* à
+  `31a536c`. `rhel_post_install` n'a pas de copie locale d'`ansible.posix` ; son
+  `requirements.yml` cite en commentaire l'avertissement « does not support Ansible
+  version 2.14.18 ». Lève le `@VERIF` de F-050. P-61.
+- **F-146** — `[ÉCRAN-2026-10-08, relayé]` `ansible-galaxy` vers `galaxy.ansible.com` →
+  `CERTIFICATE_VERIFY_FAILED` — **non contourné**, aucune option désactivant TLS.
+  `ansible.posix` **1.6.2** installé depuis le dépôt GitHub officiel (étiquette 1.6.2),
+  dans un chemin dédié hors dépôt, désigné par `ANSIBLE_COLLECTIONS_PATH`.
+  `[SOURCE-EXTERNE]` S-15, lu ici : `requires_ansible` vaut `'>=2.9'` en 1.5.4,
+  `">=2.15.0"` en **1.6.0**, `">=2.14.0"` en **1.6.1**, `">=2.15.0"` en **1.6.2**.
+  **Conséquences :** (1) la version employée pour l'exécution de F-149, 1.6.2, **ne
+  déclare pas** `ansible-core 2.14` ; (2) `<1.6.0` est une borne **sûre** pour 2.14, mais
+  **pas la seule** : 1.6.1 déclare `>=2.14.0`. P-61, P-65.
+- **S-15** `[SOURCE-EXTERNE]` — `ansible-collections/ansible.posix`, fichier
+  `meta/runtime.yml` aux étiquettes 1.5.4, 1.6.0, 1.6.1 et 1.6.2, lu le **2026-10-08**
+  (`http_code=200` ×4, P-65). Ce que le fichier **déclare**, pas une compatibilité
+  mesurée.
+- **F-147** — `[ÉCRAN-2026-10-08, relayé]` Le `stdout_callback = yaml` de ce dépôt
+  (`ansible.cfg:6`) est **introuvable** sur `seed01` : il est fourni par
+  `community.general`, absent du chemin de collections. Exécution avec
+  `ANSIBLE_STDOUT_CALLBACK=default`. Voir F-161.
+- **F-148** — `[ÉCRAN-2026-10-08, relayé]` Clé d'hôte ED25519 de `host02` vérifiée :
+  l'empreinte annoncée sur la machine **égale** celle qu'accepte SSH depuis `seed01`.
+- **F-149** — `[ÉCRAN-2026-10-08, relayé]` **Exécution du rôle** depuis `seed01`, compte
+  AD de l'opérateur avec `-K`, **inventaire hors dépôt**, `--skip-tags register,users`.
+  `--list-tasks` joué d'abord : garde RHEL 9, `install`, `configure` ; **aucune tâche
+  `register` ni `users`**. Résultat : `ok=10`, `changed=6`, `failed=0`, avertissement
+  `ansible.posix` sur 2.14.18. Sur `host02` : transaction `dnf` **7** (2026-10-08 14:06
+  +02:00), `omi` et `scx` **1.9.4-0** ; `microsoft-scom.repo` ajouté ; firewalld :
+  `1270/tcp` ouvert ; `omid` actif ; certificat auto-signé généré à l'installation
+  (14:07 +02:00) : `omi-host-<FQDN>.pem`, `omikey.pem` (`omi:omi`, 400), lien `omi.pem`.
+  P-62. **Branches exercées** (R-04) : `install`, `configure` ; **non exercées** :
+  `users`, `register`.
+- **F-150** — `[ÉCRAN-2026-10-08, relayé]` **`omid` n'écoutait sur aucun port** :
+  `omiserver.conf` porte `httpport=0`, `httpsport=0` ; `scxadmin -status` : `omiserver`
+  *running*, `omiagent` *stopped*. P-63.
+  `[SOURCE-EXTERNE]` S-13 et S-14 : depuis 2017, le port 1270 est **fermé par défaut** ;
+  l'installeur ne l'ouvre que si `/etc/scxagent-enable-port` existe, fichier que crée le
+  *bundle* `.sh` lancé avec `--enable-opsmgr`. **Une installation par RPM ne l'ouvre
+  donc pas.** Toujours selon S-14, le certificat n'est régénéré à l'installation **que
+  si** `/etc/opt/omi/ssl/.omi_cert_marker` existe, et ce marqueur est supprimé après la
+  première génération.
+- **S-13** `[SOURCE-EXTERNE]` — `Microsoft/SCXcore`, *commit* `056ebea`, 2017-03-24,
+  « Pick OMI packages from omi-kits repo and disable port 1270 by default », lu le
+  **2026-10-08** (`.patch`, `http_code=200`, P-65). Cité : « we are disabling port 1270 by
+  default and have added a flag --enable-opsmgr » ; dans les *bundles*,
+  `--enable-opsmgr` crée `/etc/scxagent-enable-port`.
+- **S-14** `[SOURCE-EXTERNE]` — `microsoft/SCXcore`,
+  `installer/datafiles/Base_SCXCore.data`, lu le **2026-10-08** sur `master` **et** sur
+  l'étiquette `v1.9.1-0` — **fichiers identiques** (`diff`, rc=0), 343 lignes (P-65).
+  `:211-217` : port 1270 ajouté par `omiconfigeditor httpsport -a 1270` **seulement si**
+  `/etc/scxagent-enable-port` existe, puis `mv` d'un fichier temporaire. `:220-268`
+  (fonction `GenerateCertificate`) : retour immédiat sans marqueur
+  (« This means that OM has installed certificates to this folder ») ; marqueur supprimé
+  après génération (`:261`). **Réserve :** il n'existe **aucune étiquette 1.9.4** dans
+  ce dépôt (la plus récente : `v1.9.1-0`) et le dernier *commit* de `master` date du
+  2025-04-29, avant la publication de `scx 1.9.4-0` (2026-08-21) : **ce code n'est pas
+  établi comme celui du paquet installé**.
+- **F-151** — `[ÉCRAN-2026-10-08, relayé]` **DÉRIVE sur `host02`** : port ouvert à la main
+  par la commande de l'installeur (`omiconfigeditor httpsport -a 1270`, fichier
+  temporaire puis `mv`), sauvegarde `omiserver.conf.avant-1270` ; `diff` : **seule** la
+  ligne `httpsport` change (`0` → `0,1270`). Le `mv` a changé les attributs (444
+  `root:sys` `system_u:…:etc_t` → 644 `root:root` `unconfined_u:…:etc_t`) ; attributs
+  d'origine **rétablis** (`chown`, `chmod`, `restorecon -F`). `omiengine` écoute sur
+  `*:1270` ; marqueur `.omi_cert_marker` **absent**. **Aucune décision ne couvre ce
+  geste** (D-015 couvre la pose du certificat, pas le port). P-63.
+- **F-152** — `[ÉCRAN-2026-10-08, relayé]` **DÉRIVE sur `host02`** : pose du certificat du
+  PFX selon S-4, méthode 1, avec **trois écarts** : mot de passe passé par variable
+  d'environnement (`-passin env:`) et non en ligne de commande ; extraction sous le compte
+  de l'opérateur dans un dossier privé, puis `install` ; clé et certificat réécrits en
+  PEM nu (`openssl pkey` / `x509`). Droits : certificat 640 `root:omi`, clé 600 `omi:omi`
+  (S-4:108-111) ; lien `omi.pem` conservé ; `restorecon` ; redémarrage d'`omid` ;
+  sauvegarde `/etc/opt/omi/ssl.avant-pfx`. Vérification sur `localhost:1270` : sujet et
+  émetteur attendus, **empreinte SHA-256 égale à celle du certificat du PFX**. Dossier
+  temporaire supprimé. Autorisée par D-015. P-64.
+  *Au sens de R-12 et R-14 :* le contrôle « clés publiques identiques » et la
+  comparaison d'émetteur n'ont été montrés **que dans le cas convergent** — contrôles
+  manuels **écrits, non démontrés** dans le sens de l'échec.
+- **F-153** — `[ÉCRAN-2026-10-08, relayé]` Depuis `seed01` : `openssl s_client` vers
+  `host02:1270` → certificat présenté, « Verify return code: 21 (unable to verify the
+  first certificate) » ; le magasin de `seed01` ne contient ni `<ROOT-CA>` ni `<CA-N3>`
+  (*trust list*). **L'agent ne présente que son certificat, sans l'intermédiaire.**
+  Confirme PO-028 sur `seed01`. Côté SCOM, `<ROOT-CA>` **et** `<CA-N3>` doivent être
+  dans le magasin *root* des serveurs de gestion (S-4:75). P-64.
+- **F-154** — `[PILOTE-DÉCLARÉ]` **L'équipe SCOM est une équipe distincte, anglophone.**
+  Questions préparées pour elle le 2026-10-08 : version de SCOM et version de `scx` à
+  viser ; `<ROOT-CA>` et `<CA-N3>` dans les magasins des serveurs de gestion et des
+  passerelles ; comportement de la découverte face à un certificat d'autorité ; comptes
+  d'exécution et leur authentification ; flux réseau. @VERIF : **envoi non confirmé au
+  pilote**.
 
 ---
 
@@ -1289,6 +1534,12 @@ l'opérateur, et le push est le seul acte irréversible du dépôt.
 **Qui peut la produire :** l'opérateur seul.
 
 ### PO-008 — Quelle identité Kerberos l'ADCS accepte-t-elle pour l'enrôlement ?
+`[RÉVISÉE le 2026-10-08]` — **part ACL : vérifiée côté annuaire, non conclusive côté
+service.** `host02` appartient, par imbrication, à `<GROUPE-ENROL>` (F-137), qui a
+**Read** et **Enroll** sur `<GABARIT-SRV>` (F-138). Mais la politique de CEP est **vide
+pour tous** — pour `host02$` comme pour le compte de l'opérateur sous Windows (F-136,
+F-141) : aucune demande n'a pu éprouver ces droits. Voir PO-048.
+
 `[RÉVISÉE le 2026-09-29]` — **un élément s'ajoute côté client.** Les `principals` par
 défaut du `cepces.conf` livré sont `${shortname}$ ${SHORTNAME}$ host/${SHORTNAME}
 host/${fqdn}` (F-120) ; sur `host02`, la forme en **minuscules** échoue d'abord (absente du
@@ -1573,6 +1824,12 @@ l'état et la révocation des certificats émis.
 
 ### PO-018 — Sous quel mode la protection étendue est-elle configurée sur CEP/CES, et le SPN du VIP y figure-t-il ? *(ouvert le 2026-09-21 — **sourcé et REQUALIFIÉ le 2026-09-21**)*
 
+`[RÉVISÉE le 2026-10-08]` — **toujours requalifié, pas clos.** Au 2026-10-01 : IIS
+`tokenChecking=Allow`, `flags=None`, `<spn>` vide (F-129) ; WCF passé à `WhenSupported`
+sur au moins une application (F-131). **Le réglage durable reste à décider par l'équipe
+ADCS**, et la réinstallation en cours (F-143) le remet en jeu : la procédure remise
+demande une **paire cohérente** IIS/WCF.
+
 `[RÉVISÉE le 2026-09-29]` — **requalifié, pas clos.** Les trois questions ci-dessous
 (« `tokenChecking` vaut-il … ? », « `flags` porte-t-il `Proxy` ? », « la collection
 `<spn>` … ? ») ont reçu leur réponse : **`Require` jusqu'au 2026-09-25, `Allow` depuis**
@@ -1830,6 +2087,10 @@ signaler à l'équipe qui maintient ce dépôt, hors périmètre de ce projet.
 
 
 ### PO-023 — La forme du sujet est une variable à découvrir par essai, pas une contrainte connue *(ouvert le 2026-09-23)*
+`[RÉVISÉE le 2026-10-08]` — **premier essai en cours.** Le certificat posé sur `host02`
+a pour sujet `C, ST, L, O, OU, CN=<FQDN>` — pas de second `CN`, pas de `DC=`, contre
+S-4:63-71 (F-144). Testé tel quel par décision (D-015). **L'acceptation par le serveur de
+gestion n'est pas encore observée** : c'est elle qui tranchera.
 **Statut :** conséquence de F-079 et F-075. Le gabarit prend le sujet dans la requête, donc
 la chaîne doit le produire — mais **personne ne sait quelle forme l'agent acceptera**, et
 F-036 est une documentation générique, pas l'exigence de cette installation.
@@ -1847,15 +2108,25 @@ SCOM, par essais successifs.
 D-010, dans `rhel_post_install` (R-09), pas ici.
 
 ### PO-025 — Sous quel compte Ansible se connecte-t-il à la cible ? *(ouvert le 2026-09-23)*
+`[RÉVISÉE le 2026-10-08]` — **répondu pour l'essai sur `host02`, pas en général.**
+L'exécution de F-149 s'est faite sous le **compte AD de l'opérateur** (`-K`), avec un
+inventaire hors dépôt (D-015) : ni l'`ansible_user=ansible` de ce dépôt (F-157), ni
+l'`ansible_admin` de `rhel_post_install` (F-072). Pour le parc : **toujours ouvert**.
 Non mesuré : F-074 établit l'identité de la **session** sur `seed01`, pas de la connexion.
 Mesure : `grep -rn 'ansible_user' <inventaire>` sur le seed.
 
 ### PO-026 — `openldap-clients` installé à la main sur le seed *(ouvert le 2026-09-23)*
+`[RÉVISÉE le 2026-10-08]` — **deux autres dérives sur `seed01`**, même nature : un
+`ansible.posix` 2.2.2 dans `/usr/share/ansible/collections` **qui n'appartient à aucun
+paquet** (F-145), et l'`ansible.posix` 1.6.2 installé depuis GitHub dans un chemin dédié
+(F-146). Aucune n'est décrite dans un code.
 Installé depuis le dépôt de base RHEL 9 pour F-081, **décrit dans aucun code** (P-42) ; à
 reprendre par la chaîne qui configure le seed, ou à retirer.
 
 
 ### PO-028 — Distribuer `<ROOT-CA>` comme ancre de confiance aux machines RHEL *(ouvert le 2026-09-24)*
+`[RÉVISÉE le 2026-10-08]` — **confirmé sur `seed01`** : ni `<ROOT-CA>` ni `<CA-N3>` dans
+son magasin ; la vérification du certificat de `host02` y échoue (code 21, F-153).
 `[RÉVISÉE le 2026-09-29]` — **posée À LA MAIN sur `host02` seulement** (F-122, geste 2 ;
 D-014), prise sur le VIP après contrôle de l'empreinte. **La distribution au parc reste
 entière**, ainsi que la source non publiée au déploiement.
@@ -1897,12 +2168,19 @@ Le paquet n'enregistre pas l'autorité, et en silence (F-121). **À porter dans
 D-010.
 
 ### PO-042 — Corriger l'autorité `cepces` enregistrée sur `host02` *(ouvert le 2026-09-29)*
+`[RÉVISÉE le 2026-10-08]` — **toujours ouvert** : rien dans F-128 à F-154 ne le corrige.
 L'autorité a été enregistrée **avec `--install`**, par erreur (F-122, geste 5) : les
 erreurs d'authentification sont masquées. **À corriger avant toute demande de
 certificat** — retrait de `--install` de la ligne du helper, puis relevé de
 `getcert list-cas -c cepces` montrant le helper corrigé.
 
 ### PO-043 — Quelle adresse de CES la politique CEP annonce-t-elle ? *(ouvert le 2026-09-29)*
+`[RÉVISÉE le 2026-10-08]` — **instruit, non mesuré au `GetPolicies`.** L'annuaire porte,
+pour `<CA-N3>`, l'URL de CES **sur `<SERVEUR-CEPCES>` en direct, pas sur le VIP** (F-139).
+`[PILOTE-DÉCLARÉ]` C'est donc l'adresse du serveur que la politique annoncera — lecture
+du pilote : la section lue de MS-XCEP (S-12) ne décrit pas cette correspondance, et
+aucune politique non vide n'a encore été reçue. La procédure remise pour la
+réinstallation prévoit de **réenregistrer cette adresse sur le VIP** (F-143).
 `[PILOTE-DÉCLARÉ]` Avec `type=Policy` (F-120), `cepces` obtient l'adresse de CES **de la
 réponse de CEP**. Le F5 réécrit les chemins (F-118) : la politique annoncera-t-elle
 `<CHEMIN-CES-PUBLIÉ>` ou le chemin interne, et ce dernier est-il joignable par le VIP ?
@@ -1911,18 +2189,31 @@ Repli possible, selon le pilote : `type=Enrollment`. **Aucune source lue ici ne 
 ces deux modes** ; S-1 et S-2 sont à relire sur ce point avant d'en dépendre.
 
 ### PO-044 — La délégation Kerberos (`delegate=True`) est-elle nécessaire ? *(ouvert le 2026-09-29)*
+`[RÉVISÉE le 2026-10-08]` — **les deux conditions sont constatées.** CES et l'autorité sont
+sur des machines distinctes (`<SERVEUR-CEPCES>`, `<SERVEUR-CA>`, F-133), et
+`<COMPTE-SVC-CES>` est autorisé à une délégation **contrainte**, Kerberos seul, vers
+`HOST` et `rpcss` de `<SERVEUR-CA>` (F-138). **Non mesuré :** qu'une demande de
+certificat aboutisse ainsi — aucune n'a encore été faite par CES.
 Le paquet l'active, avec ce motif en commentaire : nécessaire si CES et l'autorité ne
 sont pas sur la même machine (F-120). **Non établi** pour cet environnement : où tourne
 l'autorité par rapport à CES, et le compte `<COMPTE-SVC-CES>` est-il autorisé à déléguer ?
 Question à l'équipe ADCS.
 
 ### PO-045 — `SEC_E_NO_CREDENTIALS` sur CEP le 2026-09-25 à 15:33 : non expliqué *(ouvert le 2026-09-29)*
+`[RÉVISÉE le 2026-10-08]` — **toujours non expliqué** ; un second `401` isolé est survenu
+le 2026-10-01 à 13:25:27 UTC (F-132), sans statut Windows relevé. Suivi en PO-049.
 `401 1`, `0x8009030E` (F-116, S-8) ; **non reproduit** le 2026-09-28 (F-117). Le **même
 statut** figurait déjà au journal le 2026-09-24 (F-106), sous l'ancien réglage. **À
 surveiller** : s'il revient, relever l'heure exacte, pour que l'administrateur la retrouve
 au journal IIS.
 
 ### PO-046 — Erreur d'activation WCF sur CEP et CES *(ouvert le 2026-09-29)*
+`[RÉVISÉE le 2026-10-08]` — **requalifié : cause établie pour CEP, rouvert par la
+réinstallation.** Désaccord IIS `Allow` / WCF `Always` constaté (F-129, F-130) ; après
+`WhenSupported`, CEP s'active (F-131, F-132). **Pour CES : non établi** (F-125 révisé).
+La réinstallation de zéro (F-143) remet la configuration à neuf : **à reprendre en
+recette** après elle. Le statut « en attente de l'administrateur » ci-dessous **ÉTAIT**
+l'état au 2026-09-29.
 `500 System.ServiceModel.ServiceActivationException`, corps vide (F-124), et
 vraisemblablement les `500` sur `GET` (F-126). Hypothèse : désaccord de protection
 étendue entre WCF et IIS (F-125). **Blocage côté serveur, hors des droits de l'équipe**
@@ -1954,6 +2245,59 @@ relevés sur le fichier au commit `be1a70b`.
 | `:813` | § 11, PO-006 : « `dnf info` ne fait pas partie » | PO-006 est clos (F-119). |
 | `:815` | § 11, PO-020 : « `certmonger` n'est pas installé ici » | **Faux sur `host02`** depuis F-122, geste 3. |
 | `:823` | § 11, PO-018 : « par élimination seulement — la configuration ne se lit que côté IIS » | Lue par l'administrateur (F-111). |
+| `:79-81` *(ajout du 2026-10-08)* | `<CEP_URL>`, une seule URL de CEP | Deux chemins mènent à CEP par le VIP, publié et interne (F-135) ; CEP activé, seul le chemin **interne** est accepté dans l'en-tête `To` (F-134). |
+| `:81`, `:89-94` *(ajout du 2026-10-08)* | `<CES_URL>` prise dans le courriel | En mode `Policy`, l'adresse de CES vient de l'annuaire (`msPKI-Enrollment-Servers`) et désigne le serveur **en direct**, pas le VIP (F-139). |
+| `:676-680`, `:691-697` *(ajout du 2026-10-08)* | Tables de lecture des codes | Aucune ligne pour la faute `AddressFilter mismatch` (`500`, F-134), ni pour un `200` à **politique vide** (F-132, F-136). |
+
+`[RÉVISÉE le 2026-10-08]` Trois lignes ajoutées ci-dessus, tirées de F-134, F-135 et
+F-139. Titre inchangé : il dit « du 2026-09-25 au 2026-09-28 », et les trois ajouts sont
+datés à part.
+
+### PO-048 — La politique de CEP est vide : cause non établie *(ouvert le 2026-10-08)*
+CEP s'active et authentifie, mais rend `policies`, `cAs` et `oIDs` **nil** (F-132,
+F-134 à F-136), quelle que soit la version demandée (S-12), **et aussi sous Windows**, avec
+`certutil` (F-141). Ce CEP n'avait jamais servi (F-142).
+**Candidats, aucun mesuré :** (a) un défaut de l'installation de CEP, que la réinstallation
+de zéro (F-143) pourrait lever ; (b) le **cache** de CEP, cause avancée par la
+rétractation de S-11 — `nextUpdateHours` vaut 8 (F-132) ; (c) les droits de l'appelant :
+pour `host02$`, ils sont constatés dans l'annuaire (F-137, F-138), mais le relevé Windows
+a été fait sous le compte de l'opérateur (réserve de F-141). Le défaut d'adresse de CES
+qu'invoque S-11 ne vaut pas ici : l'attribut est renseigné (F-139).
+**Mesure qui tranche :** après la réinstallation, `GetPolicies` sous `host02$` et
+`certutil -PolicyServer` sous un compte dont les droits sont connus. **Qui :** l'opérateur
+pour les deux appels, l'équipe ADCS pour la réinstallation.
+
+### PO-049 — `401` isolé sur CEP le 2026-10-01 à 13:25:27 UTC *(ouvert le 2026-10-08)*
+`To` = chemin publié, page HTML d'IIS « invalid credentials », jeton envoyé (F-132),
+quatre secondes avant un `200` sur le chemin interne. Hypothèse **non établie** : le
+redémarrage de l'application après la modification de F-131. L'hypothèse de plusieurs
+nœuds est infirmée (F-133). À suivre avec PO-045 : relever l'heure exacte et le
+sous-statut IIS s'il revient.
+
+### PO-050 à PO-055 — Défauts du rôle relevés en l'exécutant sur `host02` *(ouverts le 2026-10-08)*
+**Constat seul : aucun code n'est modifié par ce livrable.** Le brouillon sera réécrit
+(D-007) ; ces lignes disent ce que la réécriture ne doit pas reconduire.
+
+| Réf | Défaut | Source |
+|---|---|---|
+| PO-050 | Installé par RPM, `scx` **n'ouvre pas le port 1270** (`httpsport=0`) ; le rôle ouvre le pare-feu (`configure.yml:8-15`) pour un port sur lequel personne n'écoute. | F-150, S-13, S-14 |
+| PO-051 | `register.yml:13-24` **régénère** le certificat (`scxsslconfig -f`) dès que le domaine est connu, et `scom_sudoers.j2:11` donne au compte de supervision le droit de lancer `scxsslconfig` : contraire à R-10 sur un hôte dont le certificat vient de l'autorité. | F-155, R-10 |
+| PO-052 | `requirements.yml:4` demande `ansible.posix >=1.5.0`, sans borne haute ; sur `ansible-core 2.14`, il faut une version qui **déclare** 2.14 : `<1.6.0` est sûr (1.6.1 la déclare aussi). | F-145, F-146, S-15 |
+| PO-053 | `ansible.cfg:6` impose `stdout_callback = yaml`, fourni par `community.general`, **absent** de `requirements.yml` : dépendance cachée. | F-147, F-161 |
+| PO-054 | Ouvrir le port par la commande de l'installeur (`omiconfigeditor` puis `mv`) **change le mode, le propriétaire et le contexte SELinux** d'`omiserver.conf` : ces attributs sont à préserver. | F-151, S-14:211-217 |
+| PO-055 | `scomm_manage_firewall` vaut `true` par défaut (`defaults/main.yml:19`), alors que firewalld va être désactivé sur les serveurs (D-016) : le défaut devra suivre la variable de `rhel_post_install`. | D-016 |
+
+### PO-056 — Nettoyage après validation par SCOM *(ouvert le 2026-10-08)*
+À retirer une fois l'agent accepté par le serveur de gestion : le **PFX** sur `host02` et
+sur le poste Windows d'administration (F-144) ; `/etc/opt/omi/ssl.avant-pfx` (F-152) ;
+`omiserver.conf.avant-1270` (F-151). Le PFX contient la **clé privée** : sa présence
+prolongée est un risque, pas un détail. **Qui :** l'opérateur, et l'équipe ADCS pour le
+poste Windows.
+
+### PO-057 — Épingler `ansible.posix` dans `rhel_post_install` *(ouvert le 2026-10-08)*
+Son `requirements.yml` épingle `<2.0.0` (F-073) ; or 1.6.0 et 1.6.2 déclarent
+`>=2.15.0` (S-15, F-146). L'épinglage sûr pour `ansible-core 2.14` est `<1.6.0`. **À
+porter dans `rhel_post_install`** — R-09 : rien n'y est écrit d'ici.
 
 ---
 
@@ -2148,6 +2492,32 @@ qu'« aucune correction n'est écrite ici ». Ni D-013 ni PO-021 ne sont réécr
 les dépasse pour `host02` seulement**, par une décision explicite de l'opérateur ; pour le
 parc, ils restent vrais.
 *Retour arrière :* voir F-122 — retours ciblés et instantané complet.
+
+
+### D-015 — Essai de l'agent SCOM sur `host02` avec un certificat émis à la main (2026-10-08)
+**Décisions de l'opérateur**, 2026-10-08 à 11:22 +02:00 `[PILOTE-DÉCLARÉ]`, pour l'essai
+sur `host02` seulement :
+- **(a)** certificat posé **à la main** (F-152) ; pas de mode « certificat fourni » dans
+  le rôle pour l'instant ;
+- **(b)** rôle lancé **avant** la pose, et **toujours** avec `--skip-tags register` sur
+  `host02` (R-10, PO-051) ;
+- **(c)** sujet du certificat **testé tel quel** (F-144, PO-023) ;
+- **(d)** **inventaire hors dépôt**, compte AD de l'opérateur (R-07, PO-025) ;
+- **(e)** `ansible.posix` **épinglé** ; précisé par F-146 : `<1.6.0`.
+*Constats sur l'application, faits ici et non arbitrés :* l'exécution de F-149 a aussi
+sauté `users`, ce que (b) n'exige pas ; elle s'est faite avec `ansible.posix` **1.6.2**,
+qui ne déclare pas 2.14 (F-146), donc **avant** l'épinglage de (e) ; l'ouverture du port
+1270 à la main (F-151) n'est couverte par **aucun** des points (a) à (e).
+*Motif :* même logique que D-010 et D-014 — la recette avance à la main, le parc attend
+qu'un mécanisme ait été exercé.
+
+### D-016 — Firewalld désactivé sur les serveurs, au profit du pare-feu réseau (2026-10-08)
+**Décision de l'opérateur** `[PILOTE-DÉCLARÉ]`. Une variable de `rhel_post_install` la
+pilotera — travail à venir, **R-09 : rien n'y est écrit d'ici**.
+*Conséquences pour ce dépôt :* le défaut de `scomm_manage_firewall` devra suivre cette
+variable (PO-055) ; les flux **1270** — et **22** si la découverte l'exige, ce qui n'est
+pas établi — depuis les serveurs de gestion devront être ouverts **sur le pare-feu
+réseau**, hors de la machine.
 
 
 ---

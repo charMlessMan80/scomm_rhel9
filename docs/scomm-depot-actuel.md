@@ -16,6 +16,9 @@ Les faits gardent leur numéro d'origine (F-008 à F-021, F-038) : ils ont été
 pas renumérotés (R-11). Le dossier d'autorité renvoie ici ; il ne les recopie pas.
 
 Faits mesurés le **2026-09-18** ; preuves dans `scomm-journal-preuves.md` (P-05, P-06).
+`[NOTE du 2026-10-08]` Complété par **F-155 à F-161**, relevés le 2026-10-08 (relevé S2-a
+et exécution du rôle sur `host02`), en fin de fichier. Le code n'a pas changé entre les
+deux dates.
 
 ---
 
@@ -37,6 +40,11 @@ Faits mesurés le **2026-09-18** ; preuves dans `scomm-journal-preuves.md` (P-05
   `https://packages.microsoft.com/rhel/9/prod/`
   (`roles/scomm_agent/defaults/main.yml:8`, redite en `group_vars/scomm_agents.yml:8`).
   Le `README.md:75-76` qualifie lui-même cette URL de *placeholder*.
+  `[RÉVISÉE le 2026-10-08]` **Ce n'est pas un *placeholder* :** ce dépôt publie `omi` et
+  `scx` (« Microsoft System Center Operations Manager for UNIX/Linux agent »), jusqu'à
+  **1.9.4-0** (F-156) ; le rôle s'y est installé sur `host02` (F-149, dossier). Et le
+  renvoi est **périmé** : depuis `59edd05`, le passage est à `README.md:148-149`.
+  **ÉTAIT :** la phrase ci-dessus, sans réserve.
 - **F-012** — Paquets installés : `omi` et `scx` (`defaults/main.yml:12-14`),
   via `ansible.builtin.dnf … state: present, update_cache: true`
   (`install.yml:25-30`). Aucune version n'est épinglée : `state: present`, pas de `version:`.
@@ -46,11 +54,16 @@ Faits mesurés le **2026-09-18** ; preuves dans `scomm-journal-preuves.md` (P-05
   (`configure.yml:2-6`, nom depuis `scomm_service_name`, `defaults/main.yml:16`) et
   ouverture de `1270/tcp` dans firewalld (`configure.yml:8-14`), conditionnée par
   `scomm_manage_firewall` (défaut `true`, `defaults/main.yml:19`).
+  `[NOTE du 2026-10-08]` Renvoi à compléter : le `notify` de cette tâche est à
+  `configure.yml:15` (tâche entière : `:8-15`). Ouvrir le pare-feu n'ouvre pas le port de
+  l'agent installé par RPM (PO-050, dossier).
 - **F-015** — Un compte local de supervision est créé (`users.yml:5-19`) avec un
   fichier sudoers `/etc/sudoers.d/scom` validé par `visudo -cf %s`
   (`users.yml:21-28`, gabarit `templates/scom_sudoers.j2`). Le mot de passe est attendu
   **pré-haché** et par défaut **vide** (`defaults/main.yml:40` : `scomm_monitoring_user_password: ""`),
   donc `default(omit)` s'applique (`users.yml:18`) et aucun mot de passe n'est posé.
+  `[NOTE du 2026-10-08]` Renvoi à compléter : la condition `when:` du sudoers est à
+  `users.yml:29` (tâche entière : `:21-29`).
 - **F-016** — **Ce que le dépôt fait aujourd'hui d'un certificat.** Tout est dans
   `roles/scomm_agent/tasks/register.yml` et se résume à trois choses :
   1. `stat` sur `/opt/microsoft/scx/bin/tools/scxsslconfig` (`register.yml:8-11`) ;
@@ -62,6 +75,10 @@ Faits mesurés le **2026-09-18** ; preuves dans `scomm-journal-preuves.md` (P-05
 - **F-017** — **Aucune brique ADCS, CEP, CES, certmonger, cepces ou F5 n'existe dans ce
   dépôt.** Vérifié par lecture intégrale des 15 fichiers suivis (P-05). Il n'y a rien à
   lire sur ces points : le projet est à écrire, pas à corriger.
+  `[NOTE du 2026-10-08]` « 15 fichiers suivis » vaut au 2026-09-18. Le dépôt en suit 21
+  aujourd'hui ; les 6 ajoutés sont de la documentation (`CLAUDE.md`, `.gitignore`,
+  `docs/…`). Des 15 fichiers d'origine, seul `README.md` a changé (73 lignes ajoutées par
+  `59edd05`, aucune retirée) : `git diff --stat 5f0eca9 HEAD`, rc=0. Le constat tient.
 - **F-018** — Les deux tâches de `register.yml` qui touchent au certificat sont
   **conditionnelles et non prouvées** :
   `register.yml:21-23` exige `scomm_scxsslconfig.stat.exists` **et**
@@ -89,3 +106,35 @@ Faits mesurés le **2026-09-18** ; preuves dans `scomm-journal-preuves.md` (P-05
   exécute `scxsslconfig -f`, dont `-f` signifie « force certificate to be generated even
   if one exists » (S-5, aide de l'outil). Appliqué après un enrôlement ADCS, il
   **écrase** le certificat et la clé installés. Cf. PO-003.
+
+
+### Constats du 2026-10-08 (relevé S2-a, exécution sur `host02`)
+
+Lecture du code à `31a536c`, identique à `5f0eca9` pour ces fichiers. Exécution relayée
+`[ÉCRAN-2026-10-08, relayé]` ; dépôt de paquets lu sur le poste de rédaction (P-65).
+
+- **F-155** — **Le rôle peut écraser un certificat posé à la main.** `register.yml:13-24`
+  lance `scxsslconfig -f` si l'outil existe **et** si `scomm_agent_domain` n'est pas vide
+  (`:21-23`). `templates/scom_sudoers.j2:11` donne en plus au compte de supervision le
+  droit de lancer `scxsslconfig -*` par `sudo`. Contraire à R-10 ; cf. PO-051, D-015 (b).
+- **F-156** — **Le dépôt par défaut est réel.** `packages.microsoft.com/rhel/9/prod`
+  publie huit versions d'`omi` et de `scx`, de 1.7.0-0 à **1.9.4-0** (2026-08-21) ;
+  résumé de `scx` : « Microsoft System Center Operations Manager for UNIX/Linux agent »
+  (P-65). Révise F-011 ; `README.md:148-149` dit encore « placeholder ».
+- **F-157** — **Deux réglages absents de cette description.** `ansible.cfg:4` :
+  `host_key_checking = False`. `inventory/hosts.ini:11` : `ansible_user=ansible`, quand
+  `rhel_post_install` désigne `ansible_admin` comme compte de la cible (F-072, dossier).
+- **F-158** — **Message affiché même quand rien n'a été fait.** `register.yml:36-40`
+  (`debug`, sans `when:`) annonce « Agent certificate generated at
+  /etc/opt/omi/ssl/omi-host-… » même si la génération a été sautée (R-04).
+- **F-159** — **Deux chemins d'installation.** Le rôle installe des RPM depuis un dépôt
+  (`install.yml:25-30`) ; le sudoers autorise l'installation et la mise à jour par un
+  *bundle* `scx-1.*.universal….sh` déposé dans `/tmp` (`scom_sudoers.j2:14-16`). Seul le
+  *bundle* sait ouvrir le port 1270 (`--enable-opsmgr`, PO-050).
+- **F-160** — **`--tags` saute la garde RHEL 9.** L'`assert` de `integrate_scomm.yml:8-14`
+  n'a pas de tag ; `man ansible-playbook:124-125` (poste de rédaction, core 2.20.7) :
+  « -t, --tags  only run plays and tasks tagged with these values ». Avec
+  `--skip-tags`, elle s'exécute : l'exécution de `host02` l'a listée (F-149, dossier).
+- **F-161** — **Dépendance cachée.** `ansible.cfg:6` : `stdout_callback = yaml`, fourni par
+  `community.general` ; `requirements.yml:2-4` ne demande qu'`ansible.posix`. Sur
+  `seed01`, le *callback* est introuvable (F-147, dossier).

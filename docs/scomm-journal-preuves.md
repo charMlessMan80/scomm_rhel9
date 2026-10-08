@@ -736,3 +736,104 @@ Conversion en texte par `sed`, puis recherche par `grep -n` (`rc=0` pour S-8 et 
 Lignes citées : S-8, lignes 1, 8, 11 et 12-13 du texte extrait ; S-10, lignes 644, 657
 et 663-670. **S-9 non lue** : `404`, titre de la page `GFI Support`. Fonde S-8 à S-10
 (F-116, F-125).
+
+---
+
+*Preuves ajoutées le **2026-10-08**. **P-56 à P-64 n'ont pas été produites sur ce poste**
+(R-08) ; **P-65 l'a été**.*
+
+> **Réserve de transmission — elle gouverne P-56 à P-64, à l'identique de P-43 à P-47.**
+> Écrans de l'opérateur lus par le pilote, captures transmises par d'autres équipes :
+> **aucune sortie n'est reproduite**, la reproduire supposerait de l'inventer (R-01).
+> **Heures :** en-têtes `Date` HTTP en **UTC** ; écrans Windows et Teams en **+02:00**.
+
+**P-56** — `[ÉCRAN-2026-10-01, relayé]` + `[TIERS-DÉCLARÉ]` **Journée du 2026-10-01.**
+Rejeu du `POST GetPolicies` à 09:29:48 et 09:29:50 UTC ; *Configuration Editor* d'IIS
+(application CES) ; `web.config` d'une application (CEP ou CES, non établi) ; rejeu à
+13:25:27 et 13:25:31 UTC après la modification déclarée de l'administrateur ; message
+Teams de 15:42 +02:00. Fonde F-128 à F-133.
+**Libellés réduits (R-07), introduits ici :** `<SERVEUR-CEPCES>` (le serveur unique de CEP
+et CES), `<SERVEUR-CA>` (le serveur de l'autorité `<CA-N3>`), `<ID-POLITIQUE>`
+(l'identifiant de politique renvoyé par CEP). **`<SERVEUR-ADCS>` garde son sens de P-48**
+(le serveur IIS qui a journalisé l'événement 4625) ; sa relation avec `<SERVEUR-CEPCES>`
+n'est pas établie.
+
+**P-57** — `[ÉCRAN-2026-10-02, relayé]` **Rejeux du 2026-10-02** : 07:36:48 / 07:36:50 UTC
+(URL publiée, deux valeurs de `To`) ; 07:40:49 / 07:40:51 UTC (URL interne de CEP par le
+VIP, ligne de l'URL contrôlée par `grep`) ; 10:05:14, 10:07:12 et 10:08:54 UTC (trois
+couples `clientVersion` / `serverVersion`). Fonde F-134 à F-136.
+
+**P-58** — `[TIERS-MESURÉ]` **Captures de l'équipe ADCS, Teams, 2026-10-02** : 09:53 +02:00
+(appartenances de groupe) ; 09:57 +02:00 (sécurité et validité du modèle, publication sur
+`<CA-N3>`, délégation de `<COMPTE-SVC-CES>`). Fonde F-137, F-138.
+**Libellés introduits ici :** `<GROUPE-SRV-T>`, `<GROUPE-SRV-ALL>`, `<GROUPE-ENROL>` —
+relation **non établie** avec `<GROUPE-T>`, `<GROUPE-ALL>`, `<GROUPE-PKI>` de P-40 ;
+`<GABARIT-SRV>` (le modèle d'authentification serveur pour Linux) — relation **non
+établie** avec `<GABARIT>` de F-075.
+
+**P-59** — `[ÉCRAN-2026-10-02, relayé]` **Annuaire et client Windows, 2026-10-02** :
+lecture ADSI à 11:57 +02:00 (autorités d'entreprise, modèles publiés,
+`msPKI-Enrollment-Servers`) ; `ldapsearch` absent de `host02`, `adcli info` ; sur un
+client Windows, sous le compte de l'opérateur, `certutil -PolicyServer` et `certmgr` à
+12:16 +02:00. Fonde F-139 à F-141.
+**Libellés introduits ici :** `<CA-N1>` (la troisième autorité d'entreprise) ;
+`<GABARIT-CS>` (modèle client et serveur pour Linux) et `<GABARIT-OCSP>` (modèle de
+signature OCSP), tous deux publiés par `<CA-N3>` ; `<DC>` (un contrôleur de domaine).
+
+**P-60** — `[ÉCRAN-2026-10-08, relayé]` **Certificat émis à la main** : transfert du PFX
+(SHA-256 aux deux bouts, mode 600) et lecture de son contenu sur `host02`. Les valeurs
+des champs `C`, `ST`, `L`, `O`, `OU` ne sont pas écrites (R-07). Fonde F-144.
+
+**P-61** — `[ÉCRAN-2026-10-08, relayé]` **Nœud de contrôle `seed01`** : version
+d'`ansible-core`, exemplaires d'`ansible.posix` et `rpm -qf`, mise à jour du clone,
+échec TLS d'`ansible-galaxy`, installation d'`ansible.posix` 1.6.2 depuis GitHub, callback
+`yaml` introuvable, empreinte de la clé d'hôte de `host02`. Fonde F-145 à F-148.
+**`seed01` est le libellé déjà en usage** (P-38) ; aucun nouveau libellé n'est créé pour
+le nœud de contrôle.
+
+**P-62** — `[ÉCRAN-2026-10-08, relayé]` **Exécution du rôle** contre `host02` :
+`--list-tasks`, puis exécution avec `--skip-tags register,users` ; récapitulatif ;
+historique `dnf` (transaction 7, 14:06 +02:00), état d'`omid`, du pare-feu et de
+`/etc/opt/omi/ssl/`. Fonde F-149.
+
+**P-63** — `[ÉCRAN-2026-10-08, relayé]` **Port 1270 sur `host02`** : `omiserver.conf`
+avant (`httpport=0`, `httpsport=0`), `scxadmin -status` ; ouverture à la main, sauvegarde,
+`diff`, attributs avant et après le `mv`, rétablissement, écoute sur `*:1270`, absence de
+`.omi_cert_marker`. **Dérive constatée**, sur le modèle de P-42 et P-52. Fonde F-150,
+F-151.
+
+**P-64** — `[ÉCRAN-2026-10-08, relayé]` **Pose du certificat et vérifications** :
+extraction, comparaison des clés publiques, droits, `restorecon`, redémarrage, lecture du
+certificat servi sur `localhost:1270` et de son empreinte ; depuis `seed01`,
+`openssl s_client` vers `host02:1270` (code 21) et liste de confiance. **Dérive
+constatée.** Fonde F-152, F-153.
+
+**P-65** — **Lectures sur le poste de rédaction, le 2026-10-08**, sans élévation, dans le
+répertoire temporaire de la session (hors dépôt). Commandes de la forme
+`curl -sS -L -m 30|60 -o <fichier> -w '… http_code=%{http_code} size=%{size_download}\n' <URL>`.
+- **09:02:23 UTC — relevé S2-a.** S-4 relu deux fois : page Learn
+  (`http_code=200`, 58561 octets, `ms.date` 2024-04-15, `updated_at` 2025-12-09) et
+  source markdown (`http_code=200`, **10340 octets, 217 lignes**, `ms.date: 04/15/2024`) —
+  **identique** en taille et en lignes à P-14 et P-28. Dépôt
+  `packages.microsoft.com/rhel/9/prod` : `repomd.xml` puis `primary.xml.gz`
+  (`http_code=200`, 532140 octets, rc=0) ; témoin `<name>powershell</name>` → 53 ;
+  `omi` → 8, `scx` → 8. Fonde F-156.
+```
+omi 1.7.0-0 … 1.9.3-0 (2025-11-25), 1.9.4-0 (2026-08-21) x86_64
+scx 1.7.0-0 … 1.9.3-0 (2025-11-25), 1.9.4-0 (2026-08-21) x86_64
+```
+- **12:36:43 UTC.**
+```
+issue113.json          http_code=200 size=7959     rc=0   (API GitHub)
+issue113-comments.json http_code=200 size=9458     rc=0
+msxcep.html            http_code=200 size=39549    rc=0   (updated_at 2026-03-06)
+scx-commit.patch       http_code=200 size=13738    rc=0
+base-master.data       http_code=200 size=15054    rc=0   (343 lignes)
+base-v191.data         http_code=200 size=15054    rc=0   (343 lignes)
+diff base-v191.data base-master.data                rc=0   (identiques)
+tags SCXcore           http_code=200  → plus récente : v1.9.1-0 ; aucune v1.9.4
+master SCXcore         http_code=200  → dernier commit 088097a708e2, 2025-04-29T16:07:45Z
+ansible.posix meta/runtime.yml, étiquettes 1.5.4 / 1.6.0 / 1.6.1 / 1.6.2 : http_code=200 ×4
+  requires_ansible : '>=2.9' / ">=2.15.0" / ">=2.14.0" / ">=2.15.0"
+```
+  Fonde S-11 à S-15 (F-136, F-146, F-150).
