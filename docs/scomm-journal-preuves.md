@@ -837,3 +837,100 @@ ansible.posix meta/runtime.yml, étiquettes 1.5.4 / 1.6.0 / 1.6.1 / 1.6.2 : http
   requires_ansible : '>=2.9' / ">=2.15.0" / ">=2.14.0" / ">=2.15.0"
 ```
   Fonde S-11 à S-15 (F-136, F-146, F-150).
+
+---
+
+*Preuves ajoutées le **2026-10-20**. **P-66 à P-68 n'ont pas été produites sur ce poste**
+(R-08) ; **P-69 l'a été**.*
+
+> **Réserve de transmission — elle gouverne P-66 à P-68, à l'identique de P-56 à P-64.**
+> Courriels de l'équipe SCOM et écrans de l'opérateur, lus par le pilote : **aucun texte
+> ni aucune sortie n'est reproduit** au-delà des citations du dossier, qui sont celles
+> que le pilote a relayées. Rien n'a été vu par l'agent.
+
+**P-66** — `[TIERS-DÉCLARÉ]` **Premier courriel de l'équipe SCOM, 2026-10-13**, relayé en
+captures : version de SCOM, serveurs de gestion, état des prérequis, tableau des flux,
+kit sur le partage, comptes et renvois vers Learn. Fonde F-162 à F-166.
+**Libellés introduits ici :** `<MS-Q1>`, `<MS-Q2>` (serveurs de gestion de
+l'environnement Q) ; `<MS-P1>`, `<MS-P2>`, `<MS-P3>` (production) ; `<MS-*>` (l'un
+quelconque des cinq) ; `<PKI-HTTP>` (hôte HTTP des CRL, AIA et OCSP de `<CA-N3>`) ;
+`<PARTAGE-KIT>` (partage Windows du kit). L'auteur est désigné comme « l'interlocuteur
+de l'équipe SCOM », sans nom de personne.
+
+**P-67** — `[TIERS-DÉCLARÉ]` **Réponse de l'équipe SCOM, 2026-10-20**, relayée en
+captures : certificats, découverte, démarche en neuf étapes, version, flux, comptes. Elle
+cite les questions du pilote (F-154). Le renvoi « [learn.microsoft.com] » qui accompagne
+la phrase sur la réutilisation du certificat **ne désigne aucune page identifiable**.
+Fonde F-167 à F-172.
+
+**P-68** — `[ÉCRAN-2026-10-20, relayé]` **Relevé de l'opérateur sur `host02`** : paquets
+installés et versions disponibles d'`omi` et `scx` ; empreintes SHA-1 et SHA-256 du
+certificat servi, comparées à celles du 2026-10-08 (**non écrites**, R-07) ; extensions
+CRL, AIA, OCSP ; écoute sur 1270 ; DNS direct et inverse ; `sshd -T` (extrait, sans
+`usepam`) ; `access.conf` ; `authselect current` ; `/etc/pam.d/omi` ; `login.defs`.
+Fonde F-173 à F-181.
+
+**P-69** — **Lectures sur le poste de rédaction, le 2026-10-20**, sans élévation, dans le
+répertoire temporaire de la session (hors dépôt). Téléchargements de la forme
+`curl -sS -L -m 60 -o <fichier> -w '<fichier> http_code=%{http_code} size=%{size_download}\n' <URL>`,
+suivis de `echo rc=$?`.
+- **12:56:15 UTC — S-16 à S-18** (pages Learn) :
+```
+s16.html http_code=200 size=126927   rc_curl=0   updated_at 2026-04-15T11:04:00Z  ms.date 2026-04-15
+s17.html http_code=200 size=57194    rc_curl=0   updated_at 2026-05-11T17:35:00Z  ms.date 2024-11-01
+s18.html http_code=200 size=69552    rc_curl=0   updated_at 2026-05-11T17:35:00Z  ms.date 2024-11-01
+```
+  Conversion en texte par un script Python (`html.parser`, lancé avec `python3 -I`),
+  rc=0 ×3 ; 1151, 525 et 499 lignes. Les numéros de ligne cités en F-182 sont ceux de
+  ce texte extrait.
+- **12:56:42 UTC — basculement d'outil déclaré (R-15).** Source markdown cherchée sur
+  `raw.githubusercontent.com/MicrosoftDocs/SystemCenterDocs/main/SystemCenterDocs/scom/`
+  pour les trois pages : `http_code=404` ×3, rc=0 (le `original_content_git_url` des pages
+  désigne un dépôt `SystemCenterDocs-pr`, non public). **Voie abandonnée.** Outil retenu :
+  extraction des blocs `<pre>` de la page HTML par un second script Python
+  (`re` + `html.unescape`), rc=0 ; 24 blocs, chacun rattaché au titre qui le précède.
+  Bloc n°18, sous « Universal Linux », première ligne de contenu « # Example user
+  configuration for Operations Manager 2022 and above » :
+```
+lignes=43  vides=9  commentaires=22  actives=12
+sha256 a4e65ccd3ecacb94e03933d4e4d96e7a89de774d77086c2740252a508555f138
+```
+  Deux caractères non ASCII, dans des lignes déjà commentées par le modèle : un tiret
+  demi-cadratin (ligne 32) et une espace insécable après `&` (ligne 40). Conservés.
+- **12:58:15 à 12:58:35 UTC — S-19 :**
+```
+c9s-openssh.spec      http_code=200 size=136197  rc=0  → %global openssh_ver 9.9p1 (l. 49)
+auth-V_9_9_P1.c       http_code=200 size=21809   rc=0  → l. 110 : if (!options.use_pam && platform_locked_account(pw)) {
+auth-master.c         http_code=200 size=22032   rc=0  → l. 108 : même ligne
+platform-V_9_9_P1.c   http_code=200 size=5185    rc=0  → platform_locked_account, l. 159-198
+diff (allowed_user V_9_9_P1 / master)            rc=1  → seule différence : place de « u_int i; »
+```
+  Sources : `gitlab.com/redhat/centos-stream/rpms/openssh`, branche `c9s` ;
+  `raw.githubusercontent.com/openssh/openssh-portable/<réf>/`.
+- **Pages de manuel du poste** (Fedora 44 ; `sudo-1.9.17-10.p2.fc44`,
+  `shadow-utils-4.19.0-7.fc44`, relevés par `rpm -q`, rc=0), lues par
+  `MANWIDTH=100 man <page> | grep -n …` : `sudo` (`-l` l. 196-207, `-n` l. 219-221, `-U`
+  l. 281-286, *EXIT VALUE* l. 416-427), `sudoers` (`listpw` l. 2198-2211, `includedir`
+  l. 981-983), `chage` (`-E`, `-I`, `-m`, `-M`), `login.defs` (l. 204-220), `useradd`
+  (`-p`, l. 178-185), `getent` (*EXIT STATUS*, l. 120-127), `visudo` (`-c`, `-f`).
+- **Fichier sudoers produit**, contrôlé sur le poste :
+```
+/usr/sbin/visudo -cf scom-test.sudoers           → parsed OK            rc=0
+diff (fichier, motifs retirés et lignes écartées décommentées) / (bloc S-16, noms remplacés)   rc=0
+témoin : même diff contre le bloc S-16 sans remplacement des noms                             rc=1
+grep -c (scxadmin -status | scx_operations_manager | scxsslconfig) sur les 24 blocs et sur le texte de S-16 → 0
+```
+- **13:07:01 et 13:07:09 UTC — sens de l'échec de `visudo -cf`, et `readlink`.** Premier
+  témoin **mal construit**, déclaré (R-13) : `scom_adm ALL=(root) NOPASSWD` (sans « : »)
+  → « Cmnd_Alias "NOPASSWD" referenced but not defined », puis `parsed OK`, **rc=0** :
+  un avertissement, pas un échec. Second témoin, `scom_adm ALL=(root NOPASSWD: /bin/true`
+  → « syntax error » à 1:20, **rc=1**. `man readlink` : `-f` « all but the last
+  component must exist », `-e` « all components must exist » ; mesuré : `readlink -f`
+  sur un fichier absent → chemin affiché, **rc=0** ; `readlink -e` → **rc=1**.
+- **13:09:26 UTC — formes des contrôles de la procédure, rejouées sur le poste** sur une
+  copie du fichier sudoers : `sha256sum -c -` avec l'empreinte attendue →
+  `scom-test.sudoers: OK`, rc=0 ; avec une empreinte nulle → `FAILED` et « WARNING: 1
+  computed checksum did NOT match », rc=1 ; `diff <fichier> /dev/null` → rc=1 ;
+  `ls -la` sur deux fichiers absents → « cannot access », rc=2 (`man ls` : « 2 if
+  serious trouble (e.g., cannot access command-line argument) »).
+  Fonde S-16 à S-20 et F-181 à F-189.

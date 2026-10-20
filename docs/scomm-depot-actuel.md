@@ -19,6 +19,8 @@ Faits mesurés le **2026-09-18** ; preuves dans `scomm-journal-preuves.md` (P-05
 `[NOTE du 2026-10-08]` Complété par **F-155 à F-161**, relevés le 2026-10-08 (relevé S2-a
 et exécution du rôle sur `host02`), en fin de fichier. Le code n'a pas changé entre les
 deux dates.
+`[NOTE du 2026-10-20]` Complété par **F-188** (confrontation du gabarit sudoers à S-16),
+en fin de fichier. Le code n'a pas changé.
 
 ---
 
@@ -138,3 +140,18 @@ Lecture du code à `31a536c`, identique à `5f0eca9` pour ces fichiers. Exécuti
 - **F-161** — **Dépendance cachée.** `ansible.cfg:6` : `stdout_callback = yaml`, fourni par
   `community.general` ; `requirements.yml:2-4` ne demande qu'`ansible.posix`. Sur
   `seed01`, le *callback* est introuvable (F-147, dossier).
+
+
+### Constat du 2026-10-20 (confrontation à S-16)
+
+Code relu à `4eaf1db`, inchangé depuis `31a536c` pour ce fichier ; S-16 lu sur le poste
+de rédaction (P-69).
+
+- **F-188** — **Le gabarit sudoers ne reproduit pas le modèle Microsoft qu'il revendique.**
+  `templates/scom_sudoers.j2:3` : « Based on Microsoft's documented low-privileged
+  UNIX/Linux account sudo config ». Or `scxadmin -status *` (`:9`), `scxsslconfig -*`
+  (`:11`) et `/bin/sh /tmp/scx_operations_manager_*/*` (`:26`) n'apparaissent **dans
+  aucun** des blocs de S-16, toutes versions et tous systèmes confondus (`grep -c` = 0 sur
+  le texte de la page, P-69). Le gabarit donne en outre tout à **un seul** compte (F-015),
+  quand S-16 sépare maintenance (`scomadm`) et supervision (`scomuser`). Cf. PO-065,
+  D-017 (d), dossier.

@@ -13,8 +13,8 @@ nommée**, les faits **déclarés par l'opérateur**, les **points ouverts** et 
 | Nature | Fichier | Pourquoi ailleurs |
 |---|---|---|
 | Règles de travail | `../CLAUDE.md` | Une règle vit à un seul endroit. |
-| Ce que le code du dépôt fait aujourd'hui — **F-008 à F-021, F-038, et F-155 à F-161** (ajoutés le 2026-10-08 ; **ÉTAIT :** « F-008 à F-021 et F-038 ») | `scomm-depot-actuel.md` | Brouillon sans autorité (F-044), périmable en bloc par la réécriture (D-007). **Toute citation de ces numéros dans ce fichier renvoie là-bas.** |
-| Sorties de commande — **P-01 à P-65** (**ÉTAIT :** « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
+| Ce que le code du dépôt fait aujourd'hui — **F-008 à F-021, F-038, F-155 à F-161, et F-188** (F-188 ajouté le 2026-10-20 ; **ÉTAIT :** « F-008 à F-021, F-038, et F-155 à F-161 » ; F-155 à F-161 ajoutés le 2026-10-08 ; **ÉTAIT :** « F-008 à F-021 et F-038 ») | `scomm-depot-actuel.md` | Brouillon sans autorité (F-044), périmable en bloc par la réécriture (D-007). **Toute citation de ces numéros dans ce fichier renvoie là-bas.** |
+| Sorties de commande — **P-01 à P-69** (**ÉTAIT :** « P-01 à P-65 », jusqu'au 2026-10-20 ; avant : « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
 | Procédures jouées par l'opérateur sur les cibles | `procedures/` | Elles n'ont **aucune autorité propre** : tout ce qu'elles affirment vient d'ici, par renvoi `F-xxx` / `PO-xxx`. |
 
 `[RÉVISÉE le 2026-09-29]` Deuxième ligne du tableau **ÉTAIT :** « Sorties de commande —
@@ -31,7 +31,8 @@ faits, des points ouverts et des décisions. `CLAUDE.md` porte les règles de tr
 duplique rien d'ici. » Le principe — un objet, un seul endroit — est inchangé ; c'est le
 nombre d'endroits qui est passé de un à trois (D-006).
 
-Dernière mise à jour : **2026-10-08** (consignation du 2026-10-01 au 2026-10-08).
+Dernière mise à jour : **2026-10-20** (consignation du 2026-10-13 au 2026-10-20).
+`ÉTAIT : 2026-10-08 (consignation du 2026-10-01 au 2026-10-08).`
 `ÉTAIT : 2026-09-29 (consignation du 2026-09-25 au 2026-09-28).`
 `ÉTAIT : 2026-09-21 (livrables 3 puis 4).` — déjà périmée : des faits ont été ajoutés
 jusqu'au 2026-09-24 sans que cette ligne suive.
@@ -1292,6 +1293,9 @@ les deux libellés restent distincts**.
   d'origine **rétablis** (`chown`, `chmod`, `restorecon -F`). `omiengine` écoute sur
   `*:1270` ; marqueur `.omi_cert_marker` **absent**. **Aucune décision ne couvre ce
   geste** (D-015 couvre la pose du certificat, pas le port). P-63.
+  `[NOTE du 2026-10-20]` Statut fixé par **D-018** : dérive **maintenue comme non
+  couverte**, traitée à l'intégration du rôle dans `rhel_post_install`. Le constat
+  ci-dessus est inchangé.
 - **F-152** — `[ÉCRAN-2026-10-08, relayé]` **DÉRIVE sur `host02`** : pose du certificat du
   PFX selon S-4, méthode 1, avec **trois écarts** : mot de passe passé par variable
   d'environnement (`-passin env:`) et non en ligne de commande ; extraction sous le compte
@@ -1316,6 +1320,214 @@ les deux libellés restent distincts**.
   passerelles ; comportement de la découverte face à un certificat d'autorité ; comptes
   d'exécution et leur authentification ; flux réseau. @VERIF : **envoi non confirmé au
   pilote**.
+  `[NOTE du 2026-10-20]` **@VERIF levé** : la réponse de l'équipe SCOM du 2026-10-20 cite
+  ces questions (F-167 à F-172, P-67) ; l'envoi est donc attesté par le destinataire.
+  Le texte ci-dessus est conservé tel qu'écrit le 2026-10-08 (R-11).
+
+### 2.8 Du 2026-10-13 au 2026-10-20 — l'équipe SCOM répond, comptes de test sur `host02`
+
+**Aucun courriel, aucune capture, aucune mesure de `host02` n'a été vu par l'agent.**
+Provenance et réserve de transmission : **P-66 à P-68, à lire avant cette section** ; la
+réserve de P-56 à P-64 s'y applique à l'identique. **Seule exception :** les lectures de
+sources faites sur le poste de rédaction (P-69).
+
+**Libellés réduits (R-07)**, introduits en P-66 : `<MS-Q1>`, `<MS-Q2>` (serveurs de
+gestion SCOM de l'environnement Q) ; `<MS-P1>` à `<MS-P3>` (production) ; `<MS-*>` (l'un
+quelconque des cinq) ; `<PKI-HTTP>` (hôte HTTP des CRL, AIA et OCSP de `<CA-N3>`) ;
+`<PARTAGE-KIT>` (partage Windows du kit). L'auteur des courriels est désigné comme
+« l'interlocuteur de l'équipe SCOM ». `<ROOT-CA>` et `<CA-N3>` gardent leur sens antérieur.
+
+**A — 2026-10-13, premier courriel de l'équipe SCOM** `[TIERS-DÉCLARÉ]`, relayé en
+captures (P-66).
+- **F-162** — SCOM **2025** ; deux serveurs de gestion en Q (`<MS-Q1>`, `<MS-Q2>`), trois
+  en production (`<MS-P1>` à `<MS-P3>`).
+- **F-163** — État de leurs prérequis : *management packs* importés en Q ; pool de
+  ressources UNIX/Linux créé en Q ; certificats *Xplat* (export/import entre serveurs du
+  pool) « pending SCOM team » ; comptes *Run As* à créer sur le client Linux, « 2 users
+  (high privilege and standard) » ; sudoers « allow actions for local SCOM user » ;
+  installation de l'agent par l'équipe Linux, « certificates will be installed and
+  configured by Linux Team » ; découverte « pending SCOM team », idéalement incluse à
+  l'installation (PowerShell ou *playbook*), à confirmer.
+- **F-164** — Tableau des flux : `<MS-*>` → hôtes Linux **TCP 22** (installation, mise à
+  jour, certificat) ; `<MS-*>` → hôtes Linux **TCP 1270** (supervision) ; **hôtes Linux →
+  `<MS-*>` TCP 1270** (« Agent → Server communication »). Ce troisième flux n'a **aucun
+  appui** dans S-18 (F-182) ; voir F-171 et PO-061.
+- **F-165** — Kit sur `<PARTAGE-KIT>` : `scx-1.9.3-0.universald.1.s.x64.sh` et
+  `scx-1.9.3-0.universalr.1.s.x64.sh`, datés du 26/06/2026, 34 268 Ko chacun. Le dépôt de
+  paquets publie aussi `scx` 1.9.3-0 (F-156). *Rapprochement fait ici :* ces deux noms
+  sont de la forme de la première ligne d'installation de S-16
+  (`scx-1.[5-9].[0-9]-[0-9].universal[[\:alpha\:]].[[\:digit\:]].s.x[6-8][4-6].sh`).
+- **F-166** — Comptes : « Active Directory–based service accounts are not used for Linux
+  monitoring » ; renvois vers Learn (*plan security credentials*, *Run As*, *sudoers
+  templates*). Trois profils *Run As* cités (*Agent Maintenance*, *Privileged
+  Monitoring*, *Monitoring*) ; tableau à deux types de compte (*Action*, *Maintenance*).
+
+**B — 2026-10-20, réponse de l'équipe SCOM à nos questions** `[TIERS-DÉCLARÉ]`, captures
+(P-67). Les questions citées dans la réponse sont celles du pilote (F-154).
+- **F-167** — Certificats : ils vérifieront `<ROOT-CA>` dans « Trusted Root Certification
+  Authorities » et `<CA-N3>` dans « Intermediate Certification Authorities » du magasin
+  *Ordinateur local* de `<MS-Q1>` et `<MS-Q2>`, puis des serveurs de production du pool ;
+  et aussi : validité, chaîne complète, accès CRL/OCSP depuis les serveurs de gestion,
+  sujet/SAN contre le FQDN de découverte, DNS direct et inverse.
+- **F-168** — Découverte : l'assistant standard copie et installe l'agent, récupère le
+  certificat, le signe par SCOM, le recopie et redémarre l'agent. Cité : « When an agent
+  is manually installed and an existing certificate is present in the SCX certificate
+  location, the installation process reuses the existing certificate rather than
+  automatically generating a new one. » Renvoi « [learn.microsoft.com] » **sans page
+  identifiable** : affirmation `[TIERS-DÉCLARÉ]`, **source non établie**.
+  *Rapprochement :* S-14 (`GenerateCertificate`, retour immédiat sans marqueur) va dans
+  le même sens, **mais S-14 porte sur l'installation**, pas sur la signature lors de la
+  découverte ; et S-14 n'est pas établi comme le code du paquet installé (réserve de
+  S-14). Ce que fait la découverte d'un agent déjà installé à un certificat d'autorité
+  reste **non établi** (PO-059).
+- **F-169** — Démarche proposée : installation par le *playbook* (équipe Linux) ;
+  certificat ADCS posé ; écoute sur 1270 confirmée par l'équipe Linux ; découverte « as
+  an already installed agent » par l'équipe SCOM ; **empreinte du certificat comparée
+  avant et après la découverte**. Leurs étapes 1 à 9 : DNS depuis `<MS-Q1>`/`<MS-Q2>` ;
+  connexion TCP 1270 ; chaîne de confiance ; identité contre le FQDN ; assistant en
+  « already installed agent » ; affectation au pool ; validation de la supervision ;
+  comparaison d'empreinte ; bascule entre `<MS-Q1>` et `<MS-Q2>`.
+- **F-170** — Version : « SCX agent version for SCOM 2025 Update Rollup 1 is 1.9.3-0 » ;
+  1.9.4-0 n'est pas listée dans leur documentation de versions. **Pas de réponse
+  explicite** sur l'acceptation de 1.9.4-0 (D-017 b).
+- **F-171** — Flux : « Normal monitoring is initiated by the management servers. The
+  Linux agent listens on TCP 1270 and responds to the established WS-Man session. »
+  Concorde avec S-18 (F-182). La ligne « hôtes Linux → `<MS-*>` 1270 » de F-164 n'est
+  **pas explicitement retirée** (PO-061).
+- **F-172** — Comptes : maintenance — SSH, sudo contrôlé, « SSH-key authentication is
+  preferred », clé privée protégée et distribuée aux seuls serveurs de gestion
+  nécessaires ; supervision — WS-Man, « username/password authentication through PAM »,
+  pas de privilège d'administration général, sudo spécifique seulement pour les
+  traitements de supervision privilégiés. **Pas de réponse** sur la remise du mot de
+  passe par coffre (PO-060).
+
+**C — 2026-10-20, relevé de l'opérateur sur `host02`** `[ÉCRAN-2026-10-20, relayé]` (P-68).
+- **F-173** — `omi` et `scx` **1.9.4-0** installés (dépôt `@microsoft-scom`) ; le dépôt
+  propose, pour `omi` comme pour `scx`, les huit versions 1.7.0-0, 1.7.1-0, 1.7.3-0,
+  1.8.1-0, 1.9.0-0, 1.9.1-0, 1.9.3-0, 1.9.4-0. Concorde avec F-156 (huit versions). Le
+  retour à 1.9.3-0 est donc possible depuis le même dépôt (D-017 b).
+- **F-174** — Certificat servi (`/etc/opt/omi/ssl/omi.pem`) : empreintes SHA-1 et SHA-256
+  **égales à celles relevées le 2026-10-08** (F-152) ; l'empreinte SHA-1 est aussi celle
+  qui figure dans le nom du PFX livré (F-144). Les empreintes ne sont pas écrites ici
+  (R-07). **Le certificat n'a pas changé depuis la pose.**
+- **F-175** — Extensions du certificat : CRL `http://<PKI-HTTP>/crl/` suivi d'un nom de
+  fichier propre à `<CA-N3>`, en `.crl` ; AIA « CA Issuers » `http://<PKI-HTTP>/cert/`
+  suivi d'un nom propre à `<CA-N3>`, en `.crt` ; OCSP `http://<PKI-HTTP>/ocsp`. **Toutes
+  en HTTP.** Leur joignabilité depuis les serveurs de gestion relève de l'équipe SCOM
+  (D-017 a).
+- **F-176** — `omiengine` écoute sur `*:1270`.
+- **F-177** — DNS : le FQDN résout vers l'adresse de `host02`, et l'enregistrement
+  inverse revient au même FQDN.
+- **F-178** — `sshd -T` : `pubkeyauthentication yes`, `passwordauthentication yes`,
+  **aucune** ligne `allowgroups`, `allowusers`, `denyusers`. **`UsePAM` non relevé** :
+  c'est lui qui décide de la portée de S-19 (F-184) ; mesuré à l'étape 0 de la procédure.
+- **F-179** — `/etc/security/access.conf` : aucune ligne active ; `authselect current` :
+  profil `sssd`, seule option `with-mkhomedir` — donc pas de `pam_access` par
+  `authselect`. `[PILOTE-DÉCLARÉ]` pour cette conséquence : le contenu des fichiers
+  `password-auth` et `system-auth` n'a pas été relevé.
+- **F-180** — `/etc/pam.d/omi` (« generated by the omi installer ») : `auth substack
+  password-auth`, `auth include postlogin`, `account required pam_sepermit.so`, `account
+  required pam_nologin.so`, `account include password-auth`, `password include
+  password-auth`, `session include password-auth`. L'authentification par mot de passe
+  de `scom_mon` sur WS-Man passera donc par la pile `password-auth` (cf. F-172).
+- **F-181** — `/etc/login.defs` : `PASS_MAX_DAYS 99999`, `PASS_MIN_DAYS 0`.
+  `[SOURCE-EXTERNE]` `man login.defs` du **poste de rédaction** (shadow-utils 4.19.0,
+  Fedora) : « PASS_MAX_DAYS, PASS_MIN_DAYS and PASS_WARN_AGE are only used at the time
+  of account creation. Any changes to these settings won't affect existing accounts. »
+  (P-69). **Réserve de transposition :** la page de RHEL 9 n'a pas été lue. D'où PO-063.
+
+**D — 2026-10-20, sources lues par l'agent** sur le poste de rédaction (P-69).
+- **S-16** `[SOURCE-EXTERNE]` — Microsoft Learn, « Sudoers templates for elevation in
+  UNIX/Linux monitoring », `view=sc-om-2025`,
+  `learn.microsoft.com/en-us/system-center/scom/manage-security-unix-linux-sudoers-templates`,
+  `ms.date` et `updated_at` du **2026-04-15** (la version qu'a lue le pilote), lue le
+  **2026-10-20** (`http_code=200`). Bloc « Universal Linux » — « Example user
+  configuration for Operations Manager 2022 and above » : **43 lignes** (9 vides,
+  22 commentaires, **12 actives**), extrait du `<pre>` de la page, pas d'une source
+  markdown (404, P-69). Fonde le fichier `procedures/fichiers/scom-test.sudoers`.
+- **S-17** `[SOURCE-EXTERNE]` — Microsoft Learn, « Configure sudo elevation and SSH
+  keys », `manage-security-create-crossplat-sudo-sshkeys`, `ms.date` 2024-11-01,
+  `updated_at` 2026-05-11, lue le 2026-10-20 (`http_code=200`).
+- **S-18** `[SOURCE-EXTERNE]` — Microsoft Learn, « Operations Manager agents »,
+  `plan-planning-agent-deployment`, `view=sc-om-2025`, `ms.date` 2024-11-01,
+  `updated_at` 2026-05-11, lue le 2026-10-20 (`http_code=200`).
+- **S-19** `[SOURCE-EXTERNE]` — `openssh/openssh-portable`, `auth.c` (fonction
+  `allowed_user`) à l'étiquette **`V_9_9_P1`** et sur `master`, et `platform.c`
+  (`platform_locked_account`) à `V_9_9_P1`, lus le 2026-10-20 (`http_code=200` ×3).
+  **Choix de l'étiquette :** le fichier `openssh.spec` de **CentOS Stream 9** (branche
+  `c9s`) déclare `openssh_ver 9.9p1` (P-69). **Ce n'est ni RHEL 9 ni `host02`** : la
+  version installée sur `host02` n'est pas au dossier, et les correctifs Red Hat n'ont
+  pas été lus.
+- **S-20** `[SOURCE-EXTERNE]` — `man sudo` et `man sudoers` du **poste de rédaction**
+  (`sudo-1.9.17-10.p2.fc44`), lus le 2026-10-20. **Réserve de transposition** : la
+  version de `sudo` de `host02` n'est pas au dossier.
+- **F-182** — `[SOURCE-EXTERNE]` S-18 : « All agent maintenance tasks are performed over
+  SSH on port 22. All health monitoring is performed over WS-MAN on port 1270. The
+  management server requests performance and configuration data via WS-MAN » (texte
+  extrait, l. 247). **La lecture du pilote est confirmée** ; **aucune phrase** de la
+  page ne dit que l'agent UNIX/Linux ouvre une connexion vers le serveur — les phrases
+  sur le *heartbeat* et le port 5723 (l. 229-230) sont dans la partie de l'agent Windows.
+  « passes information to the Health Service on a management server » (l. 232) ne dit
+  pas qui ouvre la connexion. **Contradiction interne relevée :** l. 257 et 290 rangent
+  la *discovery* parmi les opérations de maintenance privilégiées par SSH ; l. 246 et
+  286 disent au contraire que WS-Management sert à « all monitoring operations and
+  include the discovery of agents that were already installed ». Le canal de la
+  découverte « as an already installed agent » (F-169) **n'est donc pas établi** par
+  S-18 (PO-059).
+- **F-183** — `[SOURCE-EXTERNE]` S-17 : « SSH keys are only used for agent maintenance
+  operations and are not used for monitoring » ; « Operations Manager supports SSH
+  Key-based authentication with key file data in the PuTTY Private Key (PPK) format.
+  Currently supports SSH v.1 RSA keys and SSH v.2 RSA and DSA keys. » ; « PPK file
+  version 2 is the only version currently supported ». *Known issue* : l'erreur « No
+  supported authentication methods available » vient de ce que « newer distributions of
+  Linux disable SSH-RSA and SSH-DSS by default » ; la résolution donnée est un bloc
+  `Match User` avec `PubkeyAcceptedAlgorithms +ssh-rsa,ssh-dss` et `AuthenticationMethods
+  publickey`. **Écart de méthode :** la procédure de S-17 engendre la paire de clés **sur
+  l'hôte Linux** et en exporte la clé privée ; la démarche retenue (clé publique reçue de
+  l'équipe SCOM, F-172) ne fait jamais sortir de clé privée de l'hôte. PO-066.
+- **F-184** — `[SOURCE-EXTERNE]` S-19, `auth.c:110` (`V_9_9_P1`) et `auth.c:108`
+  (`master`) : `if (!options.use_pam && platform_locked_account(pw)) {` → « User … not
+  allowed because account is locked ». **L'hypothèse du pilote est confirmée au niveau de
+  `sshd`** : avec `UsePAM yes`, `allowed_user` ne teste pas le verrouillage du mot de
+  passe. `platform.c:159-198` : ce test lit le champ de `shadow` et le compare à des
+  constantes de verrouillage, après un contrôle d'expiration du compte. Les deux versions
+  d'`allowed_user` ne diffèrent que par l'ordre d'une déclaration (`diff`, P-69).
+  **Ce que S-19 n'établit pas :** avec `UsePAM yes`, la décision passe à la pile PAM
+  `account` de `sshd`, **non relevée** sur `host02` ; que `scom_adm` se connecte par clé
+  avec un mot de passe verrouillé reste donc **à constater** (partie B de la procédure).
+  `man useradd` du poste (shadow-utils 4.19.0) : sans `-p`, le champ vaut « a single
+  exclamation mark » — **pas `!!`** ; la valeur sur RHEL 9 n'est pas au dossier.
+- **F-185** — `[SOURCE-EXTERNE]` S-20, `man sudo`, `-l` : « If a command is specified and
+  is permitted by the security policy for the invoking user (or the, user specified by
+  the -U option) on the current host, the fully-qualified path to the command is
+  displayed along with any args. […] If a command is specified but not allowed by the
+  policy, sudo will exit with a status value of 1. » La page **affiche** la commande ;
+  elle ne dit pas en toutes lettres qu'elle ne l'exécute pas. `-n` : « If a password is
+  required for the command to run, sudo will display an error message and exit. »
+  *EXIT VALUE* : le code **1** sert aussi à « an authentication failure, a
+  configuration/permission problem » — **un `rc=1` seul ne discrimine pas** un refus de
+  la politique d'un échec d'authentification (R-13). Sans `-l`, le code de sortie de
+  `sudo` est celui du programme exécuté. `-U` : réservé à root et aux utilisateurs
+  autorisés à tout exécuter. `man sudoers`, `listpw` (défaut non relevé ici) : la valeur
+  `any` exige qu'**au moins une** entrée de l'utilisateur porte `NOPASSWD` ; les fichiers
+  de `/etc/sudoers.d` dont le nom contient un « . » ou finit par « ~ » sont **ignorés**.
+- **F-186** — `[SOURCE-EXTERNE]` `man chage` du poste (shadow-utils 4.19.0) : `-M -1`
+  « will remove checking a password's validity » ; `-I -1` « will remove an account's
+  inactivity » ; `-E -1` « removes the account expiration date » ; `-m 0` : « the user
+  may change their password at any time ». **La sémantique prévue par le pilote est
+  confirmée.** La forme de la sortie de `chage -l` n'est pas décrite par la page.
+- **F-187** — Le fichier `procedures/fichiers/scom-test.sudoers` passe `visudo -cf` **sur
+  le poste de rédaction, sans élévation** (`parsed OK`, rc=0, `sudo` 1.9.17) ; il est
+  égal au bloc de S-16, noms remplacés et lignes écartées décommentées (`diff`, rc=0),
+  témoin négatif sans remplacement des noms : rc=1 (P-69). **Ce n'est pas le `visudo` de
+  `host02`** : le contrôle y est rejoué à l'étape A.
+- **F-189** — Sens de l'échec, mesuré sur le poste (P-69) : `visudo -cf` sur une ligne à
+  parenthèse non fermée → « syntax error », **rc=1**. **Mais** une ligne `… NOPASSWD`
+  sans « : » passe (`NOPASSWD` lu comme un alias non défini : avertissement, `parsed OK`,
+  rc=0) — `visudo -cf` ne garantit pas que le fichier dit ce qu'on croit, d'où le
+  contrôle par `sudo -l` de la procédure. `readlink -f` sur un fichier absent rend
+  **rc=0** (`man readlink` : « all but the last component must exist ») ; `readlink -e`
+  rend rc=1 : seul `-e` peut échouer sur l'absence.
 
 ---
 
@@ -2087,6 +2299,11 @@ signaler à l'équipe qui maintient ce dépôt, hors périmètre de ce projet.
 
 
 ### PO-023 — La forme du sujet est une variable à découvrir par essai, pas une contrainte connue *(ouvert le 2026-09-23)*
+`[RÉVISÉE le 2026-10-20]` — **le test de forme se fera à la découverte.** L'équipe SCOM
+vérifiera le sujet et le SAN contre le FQDN de découverte, et comparera l'empreinte du
+certificat avant et après la découverte (F-167, F-169). Le résultat est porté par
+PO-059. **ÉTAIT** (2026-10-08) : « premier essai en cours … L'acceptation par le serveur
+de gestion n'est pas encore observée » — toujours vrai, conservé ci-dessous.
 `[RÉVISÉE le 2026-10-08]` — **premier essai en cours.** Le certificat posé sur `host02`
 a pour sujet `C, ST, L, O, OU, CN=<FQDN>` — pas de second `CN`, pas de `DC=`, contre
 S-4:63-71 (F-144). Testé tel quel par décision (D-015). **L'acceptation par le serveur de
@@ -2108,6 +2325,11 @@ SCOM, par essais successifs.
 D-010, dans `rhel_post_install` (R-09), pas ici.
 
 ### PO-025 — Sous quel compte Ansible se connecte-t-il à la cible ? *(ouvert le 2026-09-23)*
+`[RÉVISÉE le 2026-10-20]` — **ne pas confondre avec les comptes de la cible SCOM.** Les
+comptes que SCOM emploiera sur `host02` sont désormais définis pour le test :
+`scom_adm` (maintenance, clé SSH) et `scom_mon` (supervision, mot de passe), D-017 (c).
+Ce sont des comptes **de SCOM** ; ils ne répondent pas à la question de ce point, qui
+porte sur le compte de connexion **d'Ansible**, toujours ouverte pour le parc.
 `[RÉVISÉE le 2026-10-08]` — **répondu pour l'essai sur `host02`, pas en général.**
 L'exécution de F-149 s'est faite sous le **compte AD de l'opérateur** (`-K`), avec un
 inventaire hors dépôt (D-015) : ni l'`ansible_user=ansible` de ce dépôt (F-157), ni
@@ -2125,6 +2347,10 @@ reprendre par la chaîne qui configure le seed, ou à retirer.
 
 
 ### PO-028 — Distribuer `<ROOT-CA>` comme ancre de confiance aux machines RHEL *(ouvert le 2026-09-24)*
+`[RÉVISÉE le 2026-10-20]` — **côté SCOM, en cours :** l'équipe SCOM vérifiera `<ROOT-CA>`
+et `<CA-N3>` dans les magasins de `<MS-Q1>`, `<MS-Q2>` puis des serveurs de production
+du pool (F-167). Cela ne touche **que** les serveurs de gestion : la distribution aux
+machines RHEL reste **entière**, comme ci-dessous.
 `[RÉVISÉE le 2026-10-08]` — **confirmé sur `seed01`** : ni `<ROOT-CA>` ni `<CA-N3>` dans
 son magasin ; la vérification du certificat de `host02` y échoue (code 21, F-153).
 `[RÉVISÉE le 2026-09-29]` — **posée À LA MAIN sur `host02` seulement** (F-122, geste 2 ;
@@ -2281,7 +2507,7 @@ sous-statut IIS s'il revient.
 | Réf | Défaut | Source |
 |---|---|---|
 | PO-050 | Installé par RPM, `scx` **n'ouvre pas le port 1270** (`httpsport=0`) ; le rôle ouvre le pare-feu (`configure.yml:8-15`) pour un port sur lequel personne n'écoute. | F-150, S-13, S-14 |
-| PO-051 | `register.yml:13-24` **régénère** le certificat (`scxsslconfig -f`) dès que le domaine est connu, et `scom_sudoers.j2:11` donne au compte de supervision le droit de lancer `scxsslconfig` : contraire à R-10 sur un hôte dont le certificat vient de l'autorité. | F-155, R-10 |
+| PO-051 | `register.yml:13-24` **régénère** le certificat (`scxsslconfig -f`) dès que le domaine est connu, et `scom_sudoers.j2:11` donne au compte de supervision le droit de lancer `scxsslconfig` : contraire à R-10 sur un hôte dont le certificat vient de l'autorité. `[RÉVISÉE le 2026-10-20]` **Renforcé par D-017 (d)** : même la ligne de signature du modèle Microsoft (S-16, `cp … scx.pem`) est écartée sur `host02` ; la réécriture ne doit donner `scxsslconfig` à aucun compte (PO-065). Texte antérieur conservé ; colonne *Source* **ÉTAIT :** « F-155, R-10 ». | F-155, R-10, D-017 |
 | PO-052 | `requirements.yml:4` demande `ansible.posix >=1.5.0`, sans borne haute ; sur `ansible-core 2.14`, il faut une version qui **déclare** 2.14 : `<1.6.0` est sûr (1.6.1 la déclare aussi). | F-145, F-146, S-15 |
 | PO-053 | `ansible.cfg:6` impose `stdout_callback = yaml`, fourni par `community.general`, **absent** de `requirements.yml` : dépendance cachée. | F-147, F-161 |
 | PO-054 | Ouvrir le port par la commande de l'installeur (`omiconfigeditor` puis `mv`) **change le mode, le propriétaire et le contexte SELinux** d'`omiserver.conf` : ces attributs sont à préserver. | F-151, S-14:211-217 |
@@ -2293,11 +2519,72 @@ sur le poste Windows d'administration (F-144) ; `/etc/opt/omi/ssl.avant-pfx` (F-
 `omiserver.conf.avant-1270` (F-151). Le PFX contient la **clé privée** : sa présence
 prolongée est un risque, pas un détail. **Qui :** l'opérateur, et l'équipe ADCS pour le
 poste Windows.
+`[COMPLÉTÉE le 2026-10-20]` La liste ci-dessus est **inchangée** ; rappel : le PFX
+contient la clé privée. S'y ajoutent, dans le dossier personnel de l'opérateur sur
+`host02`, les fichiers de travail de `procedures/comptes-scom-host02.md` :
+`scom-test.sudoers`, `scom_adm.pub`, `scom-comptes-avant.fp`, `scom-comptes-apres.fp`.
+Ils ne contiennent aucun secret ; leur retrait est prévu par la procédure elle-même.
 
 ### PO-057 — Épingler `ansible.posix` dans `rhel_post_install` *(ouvert le 2026-10-08)*
 Son `requirements.yml` épingle `<2.0.0` (F-073) ; or 1.6.0 et 1.6.2 déclarent
 `>=2.15.0` (S-15, F-146). L'épinglage sûr pour `ansible-core 2.14` est `<1.6.0`. **À
 porter dans `rhel_post_install`** — R-09 : rien n'y est écrit d'ici.
+
+### PO-058 — Sur `host02`, `/etc/opt/microsoft/scx/ssl/scx.pem` est-il un lien vers `omi.pem` ? *(ouvert le 2026-10-20)*
+La ligne de signature de S-16 **écrit** `/etc/opt/microsoft/scx/ssl/scx.pem`, et la
+ligne de lecture le **lit** ; le certificat servi est `/etc/opt/omi/ssl/omi.pem` (F-174).
+Si le premier chemin mène au second, la ligne de signature remplacerait le certificat
+ADCS (R-10) ; s'il n'existe pas, la lecture par `scom_adm` échouera à la découverte.
+**Mesure :** étape 0 de `procedures/comptes-scom-host02.md` (`ls -l`, `readlink -e` —
+pas `-f`, qui ne peut pas échouer sur un fichier absent, F-189).
+
+### PO-059 — Résultat du test SCOM sur `host02` *(ouvert le 2026-10-20)*
+À relever : empreinte du certificat avant et après la découverte (F-169) ; acceptation
+du sujet tel quel (PO-023) ; acceptation de 1.9.4-0 (D-017 b, F-170) ; canal employé par
+la découverte « already installed » — SSH ou WS-Man, S-18 se contredit (F-182) ;
+éventuelle demande de signature refusée par sudo (D-017 d), visible dans
+`/var/log/secure` selon S-16 (« Sudo error log »). **Qui :** l'équipe SCOM, puis
+l'opérateur pour le relevé sur `host02`.
+
+### PO-060 — Remise des secrets des deux comptes *(ouvert le 2026-10-20)*
+Clé **publique** de `scom_adm` à recevoir de l'équipe SCOM, avec son **empreinte
+transmise par un autre canal** ; type de clé contraint par S-17 (F-183, PO-066). Remise
+du mot de passe de `scom_mon` : la provenance (coffre) **n'est pas confirmée** (D-017 e)
+et l'équipe SCOM n'a pas répondu sur ce point (F-172).
+
+### PO-061 — Flux « hôtes Linux → serveurs de gestion TCP 1270 » *(ouvert le 2026-10-20)*
+Demandé le 2026-10-13 (F-164), **non retiré explicitement** le 2026-10-20 (F-171), et
+**sans appui dans S-18** (F-182). À faire confirmer ou retirer par l'équipe SCOM **avant
+toute demande d'ouverture pour le parc** ; les demandes de flux sont à sa charge (D-017 a).
+
+### PO-062 — Découverte à l'échelle du parc *(ouvert le 2026-10-20)*
+Une centaine d'hôtes : assistant manuel ou script (F-163 évoque PowerShell ou
+*playbook*). Le choix décide de ce que le *playbook* doit remettre à l'équipe SCOM
+(noms, empreintes, état d'écoute). **Qui :** l'équipe SCOM et l'opérateur.
+
+### PO-063 — Non-expiration de `scom_mon` : à fixer explicitement dans le rôle *(ouvert le 2026-10-20)*
+`login.defs` ne vaut qu'à la création du compte (F-181), et `rhel_post_install` pourrait
+le durcir. La réécriture du rôle doit poser la non-expiration **explicitement** (`chage`,
+F-186), et la vérifier par une garde (R-12) — pas la déduire de `login.defs`.
+
+### PO-064 — Exposition SSH de `scom_mon` *(ouvert le 2026-10-20)*
+`PasswordAuthentication yes` et aucun `AllowUsers` ni `DenyUsers` (F-178) : `scom_mon`
+pourrait ouvrir une session SSH par mot de passe, **sans besoin établi** — la
+supervision passe par WS-Man (F-182). Voies possibles : shell, `DenyUsers`, `Match
+User`. **À instruire après le premier test ; rien n'est changé maintenant.**
+
+### PO-065 — Réécriture du rôle : comptes et sudoers *(ouvert le 2026-10-20)*
+`users.yml` crée **un seul** compte (F-015) ; `scom_sudoers.j2` lui donne `scxsslconfig`
+et l'installation par *bundle* (F-155, F-159), et ne reproduit pas S-16 (F-188). La
+réécriture devra suivre D-017 (c) et (d), et PO-063.
+
+### PO-066 — Type de clé et algorithmes SSH pour `scom_adm` *(ouvert le 2026-10-20)*
+S-17 : SCOM n'accepte que des clés RSA ou DSA, en PPK version 2, et signale que des
+distributions récentes refusent `ssh-rsa` — résolution par `PubkeyAcceptedAlgorithms
++ssh-rsa,ssh-dss` dans un `Match User` (F-183). **Non établi pour `host02` :** la
+politique cryptographique de RHEL 9 n'a pas été lue, et rien n'est changé dans `sshd`
+par la procédure. Si la découverte échoue sur « No supported authentication methods
+available », c'est une **décision** à prendre, pas un correctif à appliquer.
 
 ---
 
@@ -2508,6 +2795,9 @@ sur `host02` seulement :
 sauté `users`, ce que (b) n'exige pas ; elle s'est faite avec `ansible.posix` **1.6.2**,
 qui ne déclare pas 2.14 (F-146), donc **avant** l'épinglage de (e) ; l'ouverture du port
 1270 à la main (F-151) n'est couverte par **aucun** des points (a) à (e).
+`[NOTE du 2026-10-20]` Ce dernier constat a reçu son statut : **D-018** maintient
+l'ouverture du port comme dérive non couverte, à traiter à l'intégration dans
+`rhel_post_install`. Le constat est inchangé.
 *Motif :* même logique que D-010 et D-014 — la recette avance à la main, le parc attend
 qu'un mécanisme ait été exercé.
 
@@ -2518,6 +2808,50 @@ pilotera — travail à venir, **R-09 : rien n'y est écrit d'ici**.
 variable (PO-055) ; les flux **1270** — et **22** si la découverte l'exige, ce qui n'est
 pas établi — depuis les serveurs de gestion devront être ouverts **sur le pare-feu
 réseau**, hors de la machine.
+
+### D-017 — Comptes SCOM de test sur `host02`, créés à la main (2026-10-20)
+**Décisions de l'opérateur**, 2026-10-20 `[PILOTE-DÉCLARÉ]`, pour l'essai sur `host02` :
+- **(a)** les demandes de flux réseau vers `host02` sont **à la charge de l'équipe
+  SCOM** ; l'équipe Linux n'intervient qu'en conseil en cas de problème. La vérification
+  des CRL et de l'OCSP depuis les serveurs de gestion relève aussi d'eux (F-167, F-175).
+- **(b)** le test se fait en **1.9.4-0**, la version installée ; retour à 1.9.3-0
+  **seulement** en cas de problème côté SCOM — version disponible dans le même dépôt
+  (F-173). L'équipe SCOM n'a pas dit accepter 1.9.4-0 (F-170).
+- **(c)** deux comptes locaux, **`scom_adm`** (maintenance, clé SSH) et **`scom_mon`**
+  (supervision, mot de passe), créés **à la main** sur `host02` pour le test, sur le
+  modèle de D-015. Le rôle n'est pas modifié ; sa tâche `users` reste sautée.
+- **(d)** sudoers : **partir du modèle S-16** (« 2022 and above »), noms remplacés
+  (`scomadm` → `scom_adm`, `scomuser` → `scom_mon`, donc `/tmp/scx-scomadm` →
+  `/tmp/scx-scom_adm`), avec **mises en commentaire motivées** : la ligne de signature du
+  certificat (`cp … scx.pem …`) — R-10, F-155 : un refus bruyant de sudo plutôt qu'un
+  remplacement silencieux du certificat ADCS ; les lignes d'installation, de mise à jour
+  et de désinstallation par *bundle* — l'équipe SCOM a écrit que l'équipe Linux installe
+  par le *playbook*, et une mise à jour depuis SCOM sortirait la version du contrôle du
+  *playbook* ; les lignes `omsagent` — sans objet. Restent actives : `Defaults:scom_adm !requiretty`, la lecture du
+  certificat par `scom_adm` (`cat`), `scxlogfilereader -p` pour `scom_mon`. **Aucune
+  autre élévation** pour `scom_mon` tant que l'équipe SCOM n'a pas listé ses besoins.
+  Si la découverte exige une ligne commentée, elle sera réactivée **par décision**,
+  après avoir vu l'erreur.
+  *Précision de l'agent, à valider :* la ligne de désinstallation active du modèle n'est
+  **pas** une désinstallation par *bundle* (elle appelle `omsadmin.sh` ou
+  `/opt/microsoft/scx/bin/uninstall`) ; le motif retenu pour elle est celui du cycle de
+  vie de l'agent tenu par le *playbook*, et `omsagent` pour sa première branche.
+- **(e)** mot de passe de `scom_mon` saisi en interactif (`passwd`), **jamais** en ligne
+  de commande. Provenance proposée par le pilote : engendré et rangé dans le coffre.
+  @VERIF : **non confirmé par l'opérateur** (PO-060).
+*Portée :* `host02` seulement ; rien de cela ne vaut pour le parc ni pour
+`rhel_post_install` (R-09). Procédure : `procedures/comptes-scom-host02.md`.
+*Motif :* même logique que D-010, D-014 et D-015 — la recette avance à la main, le parc
+attend qu'un mécanisme ait été exercé.
+
+### D-018 — L'ouverture du port 1270 dans `omiserver.conf` reste une dérive non couverte (2026-10-08, inscrite le 2026-10-20)
+**Décision de l'opérateur**, 2026-10-08 `[PILOTE-DÉCLARÉ]`. L'ouverture à la main de
+F-151 **n'est pas régularisée** : elle sera traitée à l'intégration du rôle dans
+`rhel_post_install`, avec la gestion finale du pare-feu (D-016). Renvois datés posés dans
+F-151 et D-015.
+`[PILOTE-DÉCLARÉ]` **Deux réglages distincts** sont en jeu, à ne pas confondre : le
+**pare-feu** (`rhel_post_install`, D-016) et l'**écoute de l'agent** dans
+`omiserver.conf` (rôle SCOM ; PO-050, PO-054).
 
 
 ---
