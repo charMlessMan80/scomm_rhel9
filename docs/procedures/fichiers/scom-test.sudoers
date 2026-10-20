@@ -1,0 +1,60 @@
+# scom-test.sudoers — essai SCOM sur host02, comptes scom_adm (maintenance) et scom_mon (supervision).
+# Base : S-16, Microsoft Learn, « Sudoers templates for elevation in UNIX/Linux monitoring »,
+# https://learn.microsoft.com/en-us/system-center/scom/manage-security-unix-linux-sudoers-templates?view=sc-om-2025
+# mise à jour du 2026-04-15, lue le 2026-10-20 (P-69) ; bloc « Universal Linux », « Operations Manager 2022 and above »,
+# recopié dans l'ordre et au texte près (43 lignes), noms remplacés : scomadm -> scom_adm, scomuser -> scom_mon.
+# Lignes écartées : commentées sur place, chacune précédée de son motif. Décision : D-017 (d).
+# Installé par docs/procedures/comptes-scom-host02.md (partie A). Aucune autorité propre : tout vient du dossier.
+
+#----------------------------------------------------------------------------------------
+# Example user configuration for Operations Manager 2022 and above
+# Example assumes users named: scom_adm & scom_mon
+# Replace usernames & corresponding /tmp/scx-\<username\> specification for your environment
+
+# General requirements
+Defaults:scom_adm !requiretty
+
+# Agent maintenance
+## Certificate signing
+# D-017 (d) : signature du certificat écartée — R-10, F-155. Un refus bruyant de sudo plutôt qu'un remplacement silencieux du certificat ADCS ; PO-058.
+#scom_adm ALL=(root) NOPASSWD: /bin/sh -c cp /tmp/scx-scom_adm/scx.pem /etc/opt/microsoft/scx/ssl/scx.pem; rm -rf /tmp/scx-scom_adm; /opt/microsoft/scx/bin/tools/scxadmin -restart
+scom_adm ALL=(root) NOPASSWD: /bin/sh -c cat /etc/opt/microsoft/scx/ssl/scx.pem
+# D-017 (d) : ligne omsagent, sans objet sur cet hôte.
+#scom_adm ALL=(root) NOPASSWD: /bin/sh -c if test -f /opt/microsoft/omsagent/bin/service_control; then cp /tmp/scx-scom_adm/omsadmin.conf /etc/opt/microsoft/omsagent/scom/conf/omsadmin.conf; /opt/microsoft/omsagent/bin/service_control restart scom; fi
+
+## Install or upgrade
+# Compiler mitigated agent version changes
+# D-017 (d) : installation/mise à jour par bundle écartée — l'équipe Linux installe par le playbook ; une mise à jour depuis SCOM sortirait la version de son contrôle.
+#scom_adm ALL=(root) NOPASSWD: /bin/sh -c sh /tmp/scx-scom_adm/scx-1.[5-9].[0-9]-[0-9].universal[[\:alpha\:]].[[\:digit\:]].s.x[6-8][4-6].sh --install --enable-opsmgr; EC=$?; cd /tmp; rm -rf /tmp/scx-scom_adm; exit $EC
+# D-017 (d) : installation/mise à jour par bundle écartée — l'équipe Linux installe par le playbook ; une mise à jour depuis SCOM sortirait la version de son contrôle.
+#scom_adm ALL=(root) NOPASSWD: /bin/sh -c sh /tmp/scx-scom_adm/scx-1.[5-9].[0-9]-[0-9]-[0-9].universal[[\:alpha\:]].[[\:digit\:]].x[6-8][4-6].sh --install --enable-opsmgr; EC=$?; cd /tmp; rm -rf /tmp/scx-scom_adm; exit $EC
+# D-017 (d) : installation/mise à jour par bundle écartée — l'équipe Linux installe par le playbook ; une mise à jour depuis SCOM sortirait la version de son contrôle.
+#scom_adm ALL=(root) NOPASSWD: /bin/sh -c sh /tmp/scx-scom_adm/scx-1.[5-9].[0-9]-[0-9].universal[[\:alpha\:]].[[\:digit\:]].x[6-8][4-6].sh --install --enable-opsmgr; EC=$?; cd /tmp; rm -rf /tmp/scx-scom_adm; exit $EC
+# D-017 (d) : installation/mise à jour par bundle écartée — l'équipe Linux installe par le playbook ; une mise à jour depuis SCOM sortirait la version de son contrôle.
+#scom_adm ALL=(root) NOPASSWD: /bin/sh -c sh /tmp/scx-scom_adm/scx-1.[5-9].[0-9]-[0-9].universal[[\:alpha\:]].[[\:digit\:]].s.x[6-8][4-6].sh --upgrade --enable-opsmgr; EC=$?; cd /tmp; rm -rf /tmp/scx-scom_adm; exit $EC
+# D-017 (d) : installation/mise à jour par bundle écartée — l'équipe Linux installe par le playbook ; une mise à jour depuis SCOM sortirait la version de son contrôle.
+#scom_adm ALL=(root) NOPASSWD: /bin/sh -c sh /tmp/scx-scom_adm/scx-1.[5-9].[0-9]-[0-9]-[0-9].universal[[\:alpha\:]].[[\:digit\:]].x[6-8][4-6].sh --upgrade --enable-opsmgr; EC=$?; cd /tmp; rm -rf /tmp/scx-scom_adm; exit $EC
+# D-017 (d) : installation/mise à jour par bundle écartée — l'équipe Linux installe par le playbook ; une mise à jour depuis SCOM sortirait la version de son contrôle.
+#scom_adm ALL=(root) NOPASSWD: /bin/sh -c sh /tmp/scx-scom_adm/scx-1.[5-9].[0-9]-[0-9].universal[[\:alpha\:]].[[\:digit\:]].x[6-8][4-6].sh --upgrade --enable-opsmgr; EC=$?; cd /tmp; rm -rf /tmp/scx-scom_adm; exit $EC
+
+## Uninstall
+#scom_adm ALL=(root) NOPASSWD: /bin/sh -c /opt/microsoft/scx/bin/uninstall
+# D-017 (d) : désinstallation (omsagent, sinon scx) écartée — même motif que l'installation : le cycle de vie de l'agent appartient au playbook ; partie omsagent sans objet.
+#scom_adm ALL=(root) NOPASSWD: /bin/sh -c if test -f /opt/microsoft/omsagent/bin/omsadmin.sh; then if test "$(/opt/microsoft/omsagent/bin/omsadmin.sh -l | grep scom | wc -l)" \= "1" && test "$(/opt/microsoft/omsagent/bin/omsadmin.sh -l | wc -l)" \= "1" || test "$(/opt/microsoft/omsagent/bin/omsadmin.sh -l)" \= "No Workspace"; then /opt/microsoft/omsagent/bin/uninstall; else /opt/microsoft/omsagent/bin/omsadmin.sh -x scom; fi; else /opt/microsoft/scx/bin/uninstall; fi
+
+## Log file monitoring
+scom_mon ALL=(root) NOPASSWD: /opt/microsoft/scx/bin/scxlogfilereader -p
+
+### Examples ###
+## Custom shell command monitoring example – replace \<shell command\> with the correct command string
+#scom_mon ALL=(root) NOPASSWD: /bin/sh -c echo error
+
+## For ubuntu18
+#scom_mon ALL=(root) NOPASSWD: /bin/bash -c echo error
+
+## Daemon diagnostic and restart recovery tasks example (using cron)
+#scom_mon ALL=(root) NOPASSWD: /bin/sh -c ps -ef | grep cron | grep -v grep
+#scom_mon ALL=(root) NOPASSWD: /usr/sbin/cron & 
+
+# End user configuration for Operations Manager 
+#-----------------------------------------------------------------------------------
