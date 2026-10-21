@@ -934,3 +934,29 @@ grep -c (scxadmin -status | scx_operations_manager | scxsslconfig) sur les 24 bl
   `ls -la` sur deux fichiers absents → « cannot access », rc=2 (`man ls` : « 2 if
   serious trouble (e.g., cannot access command-line argument) »).
   Fonde S-16 à S-20 et F-181 à F-189.
+
+---
+
+*Preuves ajoutées le **2026-10-21**. **P-70 n'a pas été produite sur ce poste** (R-08) ;
+**P-71 l'a été**.*
+
+**P-70** — `[PILOTE-DÉCLARÉ]` **Réunion de l'opérateur avec l'équipe SCOM, 2026-10-21**,
+déclarée par l'opérateur au pilote. **Aucun texte, aucune capture, aucun compte rendu
+écrit n'a été vu par l'agent.** Fonde F-190 à F-192 et D-019.
+
+**P-71** — **Pages de manuel du poste de rédaction, lues le 2026-10-21** (heure non
+relevée au moment de la lecture ; la dernière lecture précède un `date -u` à 11:46:12
+UTC). Aucune élévation, aucun accès réseau.
+```
+rpm -q openssh-clients openssh-server openssh   → 10.2p1-14.fc44 ×3                         rc=0
+MANWIDTH=100 man ssh_config | grep -n -A12 …    → PreferredAuthentications l. 845-851,
+                                                  PubkeyAuthentication l. 909-914,
+                                                  StrictHostKeyChecking l. 1073-1089       rc=0 0
+MANWIDTH=100 man ssh_config | grep -n …         → ordre des sources l. 7-11, « first
+                                                  obtained value » l. 13                   rc=0
+MANWIDTH=100 man ssh | grep -n … 'EXIT STATUS'  → l. 845-846                                rc=0
+MANWIDTH=100 man sshd_config | grep -n -A14 UsePAM → l. 1145-1155                           rc=0 0
+MANWIDTH=100 man useradd | grep -n … exclamation → l. 182-190                               rc=0 0
+MANWIDTH=100 man passwd | grep -n -A6 '-l, --lock' → l. 79-85                               rc=0 0
+```
+  Fonde F-193 à F-195.

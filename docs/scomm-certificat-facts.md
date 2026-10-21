@@ -1495,6 +1495,9 @@ captures (P-66).
   **Ce que S-19 n'établit pas :** avec `UsePAM yes`, la décision passe à la pile PAM
   `account` de `sshd`, **non relevée** sur `host02` ; que `scom_adm` se connecte par clé
   avec un mot de passe verrouillé reste donc **à constater** (partie B de la procédure).
+  `[NOTE du 2026-10-21]` La question ne se pose plus pour le test : `scom_adm` reçoit un
+  mot de passe (D-019 a), la partie B est sans objet. Le fait sur `sshd` reste vrai ; il
+  redevient utile si une clé revient sur un compte verrouillé (PO-066).
   `man useradd` du poste (shadow-utils 4.19.0) : sans `-p`, le champ vaut « a single
   exclamation mark » — **pas `!!`** ; la valeur sur RHEL 9 n'est pas au dossier.
 - **F-185** — `[SOURCE-EXTERNE]` S-20, `man sudo`, `-l` : « If a command is specified and
@@ -1528,6 +1531,58 @@ captures (P-66).
   contrôle par `sudo -l` de la procédure. `readlink -f` sur un fichier absent rend
   **rc=0** (`man readlink` : « all but the last component must exist ») ; `readlink -e`
   rend rc=1 : seul `-e` peut échouer sur l'absence.
+
+### 2.9 Le 2026-10-21 — réunion de l'opérateur avec l'équipe SCOM
+
+**Rien de cette réunion n'a été vu par l'agent.** Provenance : **P-70**, déclaration de
+l'opérateur au pilote. **Seule exception :** les lectures de pages de manuel faites sur le
+poste de rédaction (P-71, F-193 à F-195).
+
+**A — 2026-10-21, réunion de l'opérateur avec l'équipe SCOM** `[PILOTE-DÉCLARÉ]` (P-70).
+- **F-190** — L'équipe SCOM utilisera un **identifiant et un mot de passe pour les deux
+  comptes**, `scom_adm` compris. Pas de clé SSH. *Écart relevé :* le 2026-10-20, la même
+  équipe écrivait « SSH-key authentication is preferred » pour la maintenance (F-172) ;
+  la préférence est abandonnée par la même équipe ; le dossier n'en porte pas le motif.
+- **F-191** — Les entrées des deux comptes **existent déjà dans BeyondTrust** et leurs mots
+  de passe y **sont générés**. Ce qui n'est pas dit : si BeyondTrust les fait tourner
+  (PO-067), et si l'opérateur a accès en lecture aux deux entrées — la procédure s'arrête
+  avant chaque `passwd` si ce n'est pas le cas.
+- **F-192** — Pour le test, la découverte se fait **par l'assistant** (*wizard*). Un
+  processus automatisé sera mis en place **plus tard, avec l'équipe SCOM** (PO-062).
+
+**B — 2026-10-21, pages de manuel lues par l'agent** sur le poste de rédaction (P-71).
+**Réserve de transposition :** `openssh` **10.2p1** (Fedora 44) ; S-19 porte sur
+9.9p1 (CentOS Stream 9) ; la version de `host02` n'est pas au dossier.
+- **F-193** — `[SOURCE-EXTERNE]` `man ssh_config` du poste : `PreferredAuthentications`
+  « Specifies the order in which the client should try authentication methods », défaut
+  `gssapi-with-mic,hostbased,publickey,keyboard-interactive,password` ;
+  `PubkeyAuthentication` accepte `yes` (défaut), `no`, `unbound`, `host-bound` ; les
+  options de la ligne de commande passent **avant** `~/.ssh/config` et
+  `/etc/ssh/ssh_config`, et « the first obtained value will be used » ;
+  `StrictHostKeyChecking`, à `ask` (« the default »), n'ajoute une nouvelle clé d'hôte au
+  fichier `known_hosts` de l'utilisateur **qu'après confirmation**. Ce défaut peut être
+  changé par `/etc/ssh/ssh_config` de `host02`, non relevé. `man ssh`, *EXIT STATUS* :
+  « ssh exits with the exit status of the remote command or with 255 if an error
+  occurred » — un `255` ne nomme pas sa cause (refus de mot de passe, connexion refusée,
+  clé d'hôte refusée) : seul le message la nomme (R-13).
+- **F-194** — `[SOURCE-EXTERNE]` `man sshd_config` du poste, `UsePAM` : « If set to yes
+  this will enable PAM authentication using KbdInteractiveAuthentication and
+  PasswordAuthentication in addition to PAM account and session module processing for
+  all authentication types » ; défaut `no`. **Conséquence pour la procédure :** avec
+  `UsePAM yes`, une connexion SSH par la méthode `password` éprouve la pile PAM de `sshd`
+  (`auth` et `account`) ; avec `UsePAM no`, `sshd` vérifie lui-même le mot de passe et la
+  pile PAM n'est pas éprouvée. *Ce qui n'est pas établi :* le contenu de
+  `/etc/pam.d/sshd` sur `host02` n'a pas été relevé (F-179). Qu'il inclue
+  `password-auth`, comme `/etc/pam.d/omi` (F-180) : @VERIF : `cat /etc/pam.d/sshd` sur
+  `host02`.
+- **F-195** — `[SOURCE-EXTERNE]` `man useradd` du poste (l. 183-185) : sans `-p`, « the
+  new account will be locked and with no password defined […] This is a state where the
+  user won't be able to access the account or to define a password himself ». `man
+  passwd`, `-l` (l. 79-85) : le verrouillage remplace le mot de passe par « a value which
+  matches no possible encrypted value », mais « the user may still be able to login using
+  another authentication token (e.g. an SSH key) ». **Conséquence :** un compte laissé
+  verrouillé est sans danger **tant qu'aucune clé n'y est posée** — c'est le cas depuis
+  D-019 (a). Même réserve de transposition (shadow-utils 4.19.0).
 
 ---
 
@@ -2330,6 +2385,9 @@ comptes que SCOM emploiera sur `host02` sont désormais définis pour le test :
 `scom_adm` (maintenance, clé SSH) et `scom_mon` (supervision, mot de passe), D-017 (c).
 Ce sont des comptes **de SCOM** ; ils ne répondent pas à la question de ce point, qui
 porte sur le compte de connexion **d'Ansible**, toujours ouverte pour le parc.
+`[NOTE du 2026-10-21]` « `scom_adm` (maintenance, clé SSH) » ci-dessus est périmé :
+`scom_adm` s'authentifie par mot de passe (D-019 a). La distinction que fait cette
+révision reste vraie.
 `[RÉVISÉE le 2026-10-08]` — **répondu pour l'essai sur `host02`, pas en général.**
 L'exécution de F-149 s'est faite sous le **compte AD de l'opérateur** (`-K`), avec un
 inventaire hors dépôt (D-015) : ni l'`ansible_user=ansible` de ce dépôt (F-157), ni
@@ -2524,6 +2582,9 @@ contient la clé privée. S'y ajoutent, dans le dossier personnel de l'opérateu
 `host02`, les fichiers de travail de `procedures/comptes-scom-host02.md` :
 `scom-test.sudoers`, `scom_adm.pub`, `scom-comptes-avant.fp`, `scom-comptes-apres.fp`.
 Ils ne contiennent aucun secret ; leur retrait est prévu par la procédure elle-même.
+`[NOTE du 2026-10-21]` `scom_adm.pub` sort de la liste : la partie B est sans objet
+(D-019 a), la procédure ne le crée plus. Restent `scom-test.sudoers`,
+`scom-comptes-avant.fp`, `scom-comptes-apres.fp`.
 
 ### PO-057 — Épingler `ansible.posix` dans `rhel_post_install` *(ouvert le 2026-10-08)*
 Son `requirements.yml` épingle `<2.0.0` (F-073) ; or 1.6.0 et 1.6.2 déclarent
@@ -2546,7 +2607,14 @@ la découverte « already installed » — SSH ou WS-Man, S-18 se contredit (F-1
 `/var/log/secure` selon S-16 (« Sudo error log »). **Qui :** l'équipe SCOM, puis
 l'opérateur pour le relevé sur `host02`.
 
-### PO-060 — Remise des secrets des deux comptes *(ouvert le 2026-10-20)*
+### PO-060 — Remise des secrets des deux comptes *(ouvert le 2026-10-20)* — **CLOS pour le test le 2026-10-21**
+`[RÉVISÉE le 2026-10-21]` — **CLOS pour le test.** La clé publique est **sans objet** :
+`scom_adm` s'authentifie par mot de passe (D-019 a). Les deux mots de passe viennent de
+BeyondTrust, où ils sont déjà générés (F-191, D-019 b). **Ce que la clôture n'emporte
+pas :** l'accès de l'opérateur aux deux entrées n'est pas établi — la procédure s'arrête
+avant le `passwd` concerné s'il manque ; la rotation reste ouverte (PO-067) ; pour le parc,
+la question revient avec l'automatisation (PO-062, PO-066).
+**ÉTAIT**, texte du 2026-10-20 conservé ci-dessous :
 Clé **publique** de `scom_adm` à recevoir de l'équipe SCOM, avec son **empreinte
 transmise par un autre canal** ; type de clé contraint par S-17 (F-183, PO-066). Remise
 du mot de passe de `scom_mon` : la provenance (coffre) **n'est pas confirmée** (D-017 e)
@@ -2558,16 +2626,30 @@ Demandé le 2026-10-13 (F-164), **non retiré explicitement** le 2026-10-20 (F-1
 toute demande d'ouverture pour le parc** ; les demandes de flux sont à sa charge (D-017 a).
 
 ### PO-062 — Découverte à l'échelle du parc *(ouvert le 2026-10-20)*
+`[RÉVISÉE le 2026-10-21]` — **non clos.** Pour le test, la découverte se fait par
+l'assistant (F-192, D-019 c). Pour le parc, l'automatisation est **reportée** et se fera
+avec l'équipe SCOM ; son mode (PowerShell, *playbook*, autre) n'est pas choisi.
+**ÉTAIT** inchangé ci-dessous : la question du parc l'est aussi.
 Une centaine d'hôtes : assistant manuel ou script (F-163 évoque PowerShell ou
 *playbook*). Le choix décide de ce que le *playbook* doit remettre à l'équipe SCOM
 (noms, empreintes, état d'écoute). **Qui :** l'équipe SCOM et l'opérateur.
 
 ### PO-063 — Non-expiration de `scom_mon` : à fixer explicitement dans le rôle *(ouvert le 2026-10-20)*
+`[RÉVISÉE le 2026-10-21]` — la non-expiration vaut désormais pour **les deux** comptes,
+`scom_adm` et `scom_mon`, tous deux authentifiés par mot de passe (D-019 a). Le titre
+ci-dessus est conservé (R-11) ; il faut le lire « des deux comptes ».
+**ÉTAIT :** la non-expiration de `scom_mon` seul, texte ci-dessous.
 `login.defs` ne vaut qu'à la création du compte (F-181), et `rhel_post_install` pourrait
 le durcir. La réécriture du rôle doit poser la non-expiration **explicitement** (`chage`,
 F-186), et la vérifier par une garde (R-12) — pas la déduire de `login.defs`.
 
 ### PO-064 — Exposition SSH de `scom_mon` *(ouvert le 2026-10-20)*
+`[RÉVISÉE le 2026-10-21]` — l'exposition SSH par mot de passe concerne maintenant **les
+deux** comptes (D-019 a). `scom_adm` **a besoin** de SSH : la maintenance passe par SSH
+(F-182) — et désormais par mot de passe, ce qui écarte une voie « clé seule » par `Match
+User … AuthenticationMethods publickey`. `scom_mon`, non : la supervision passe par WS-Man
+(F-182). **Toujours à instruire après le test ; rien n'est changé maintenant.**
+**ÉTAIT :** `scom_mon` seul, texte ci-dessous.
 `PasswordAuthentication yes` et aucun `AllowUsers` ni `DenyUsers` (F-178) : `scom_mon`
 pourrait ouvrir une session SSH par mot de passe, **sans besoin établi** — la
 supervision passe par WS-Man (F-182). Voies possibles : shell, `DenyUsers`, `Match
@@ -2577,14 +2659,31 @@ User`. **À instruire après le premier test ; rien n'est changé maintenant.**
 `users.yml` crée **un seul** compte (F-015) ; `scom_sudoers.j2` lui donne `scxsslconfig`
 et l'installation par *bundle* (F-155, F-159), et ne reproduit pas S-16 (F-188). La
 réécriture devra suivre D-017 (c) et (d), et PO-063.
+`[NOTE du 2026-10-21]` D-017 (c) est révisée par D-019 (a) : les deux comptes par mot de
+passe. La réécriture suit donc D-017 (c) **telle que révisée**, D-017 (d), D-019 et
+PO-063.
 
-### PO-066 — Type de clé et algorithmes SSH pour `scom_adm` *(ouvert le 2026-10-20)*
+### PO-066 — Type de clé et algorithmes SSH pour `scom_adm` *(ouvert le 2026-10-20)* — **SUSPENDU le 2026-10-21**
+`[RÉVISÉE le 2026-10-21]` — **suspendu, non clos.** Sans objet **tant que D-019 (a)
+tient** : `scom_adm` s'authentifie par mot de passe, aucune clé n'est posée. *Motif de
+ne pas le fermer :* les contraintes de S-17 (F-183) et la politique cryptographique de
+RHEL 9 restent non lues pour `host02`, et une clé peut revenir — par exemple avec
+l'automatisation de la découverte (PO-062). **À rouvrir** dans ce cas, avec la partie B
+de la procédure.
+**ÉTAIT :** ouvert, texte ci-dessous.
 S-17 : SCOM n'accepte que des clés RSA ou DSA, en PPK version 2, et signale que des
 distributions récentes refusent `ssh-rsa` — résolution par `PubkeyAcceptedAlgorithms
 +ssh-rsa,ssh-dss` dans un `Match User` (F-183). **Non établi pour `host02` :** la
 politique cryptographique de RHEL 9 n'a pas été lue, et rien n'est changé dans `sshd`
 par la procédure. Si la découverte échoue sur « No supported authentication methods
 available », c'est une **décision** à prendre, pas un correctif à appliquer.
+
+### PO-067 — Rotation des mots de passe par BeyondTrust *(ouvert le 2026-10-21)*
+Le dossier ne dit pas si BeyondTrust fait tourner **automatiquement** les mots de passe
+de `scom_adm` et `scom_mon` sur les hôtes (F-191). Si c'est le cas, chaque rotation doit
+aussi mettre à jour le compte *Run As* correspondant dans SCOM, sinon la supervision et
+la maintenance échouent. **Non établi.** Question pour l'équipe SCOM et pour les
+gestionnaires de BeyondTrust. **Qui :** l'opérateur.
 
 ---
 
@@ -2820,6 +2919,8 @@ réseau**, hors de la machine.
 - **(c)** deux comptes locaux, **`scom_adm`** (maintenance, clé SSH) et **`scom_mon`**
   (supervision, mot de passe), créés **à la main** sur `host02` pour le test, sur le
   modèle de D-015. Le rôle n'est pas modifié ; sa tâche `users` reste sautée.
+  `[RÉVISÉE le 2026-10-21, D-019 a]` `scom_adm` s'authentifie **par mot de passe**, comme
+  `scom_mon`. **ÉTAIT :** « `scom_adm` (maintenance, clé SSH) ». Le reste de (c) tient.
 - **(d)** sudoers : **partir du modèle S-16** (« 2022 and above »), noms remplacés
   (`scomadm` → `scom_adm`, `scomuser` → `scom_mon`, donc `/tmp/scx-scomadm` →
   `/tmp/scx-scom_adm`), avec **mises en commentaire motivées** : la ligne de signature du
@@ -2839,6 +2940,12 @@ réseau**, hors de la machine.
 - **(e)** mot de passe de `scom_mon` saisi en interactif (`passwd`), **jamais** en ligne
   de commande. Provenance proposée par le pilote : engendré et rangé dans le coffre.
   @VERIF : **non confirmé par l'opérateur** (PO-060).
+  `[RÉVISÉE le 2026-10-21, D-019 b]` **Marqueur levé** : la provenance est confirmée —
+  BeyondTrust, où les mots de passe des **deux** comptes sont déjà générés (F-191).
+  **ÉTAIT :** « Provenance proposée par le pilote … non confirmé par l'opérateur », ligne
+  marquée conservée ci-dessus telle qu'écrite le 2026-10-20 (R-11). La saisie
+  reste interactive (`passwd`), jamais en ligne de commande, et vaut désormais pour
+  `scom_adm` aussi.
 *Portée :* `host02` seulement ; rien de cela ne vaut pour le parc ni pour
 `rhel_post_install` (R-09). Procédure : `procedures/comptes-scom-host02.md`.
 *Motif :* même logique que D-010, D-014 et D-015 — la recette avance à la main, le parc
@@ -2852,6 +2959,19 @@ F-151 et D-015.
 `[PILOTE-DÉCLARÉ]` **Deux réglages distincts** sont en jeu, à ne pas confondre : le
 **pare-feu** (`rhel_post_install`, D-016) et l'**écoute de l'agent** dans
 `omiserver.conf` (rôle SCOM ; PO-050, PO-054).
+
+### D-019 — Comptes SCOM de test : mot de passe pour les deux, depuis BeyondTrust ; découverte par l'assistant (2026-10-21)
+**Décisions de l'opérateur avec l'équipe SCOM**, 2026-10-21 `[PILOTE-DÉCLARÉ]` (P-70) :
+- **(a)** `scom_adm` s'authentifie **par mot de passe**, comme `scom_mon` (F-190).
+  **Révise D-017 (c)** (note datée et ÉTAIT posés dans D-017). La partie B de
+  `procedures/comptes-scom-host02.md` devient sans objet ; PO-066 est suspendu.
+- **(b)** les mots de passe des deux comptes viennent de **BeyondTrust**, où ils sont
+  déjà générés (F-191). **Lève le marqueur de vérification de D-017 (e)** (note datée
+  dans D-017). La saisie reste interactive (`passwd`), jamais en ligne de commande.
+- **(c)** découverte **par l'assistant** pour le test (F-192) ; l'automatisation est
+  reportée et se fera avec l'équipe SCOM (PO-062).
+*Portée :* comme D-017, `host02` seulement. *Ce que la décision laisse ouvert :* la
+rotation par BeyondTrust (PO-067) ; l'exposition SSH des deux comptes (PO-064).
 
 
 ---
