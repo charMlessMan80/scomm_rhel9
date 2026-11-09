@@ -3388,6 +3388,7 @@ de supervision (`<COMPTE-SCOM-Q>` pour `host02`), **pas** les groupes `<GROUPE-S
 `<GROUPE-SCOM-P>`. Le groupe **peut** être admis à l'accès SSSD
 (`simple_allow_groups`, PO-071).
 *Motif déclaré :* non relayé. **Révise D-017 (d)** (marque datée posée).
+`[NOTE du 2026-11-09]` Procédure : `procedures/kerberos-scom-host02.md`.
 
 ### D-023 — `host02` relève de la Qualification ; les comptes locaux seront supprimés (2026-11-04)
 **Décisions de l'opérateur**, 2026-11-04 `[PILOTE-DÉCLARÉ]` (P-76) :
