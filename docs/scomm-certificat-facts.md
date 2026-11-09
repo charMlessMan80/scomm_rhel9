@@ -14,7 +14,7 @@ nommée**, les faits **déclarés par l'opérateur**, les **points ouverts** et 
 |---|---|---|
 | Règles de travail | `../CLAUDE.md` | Une règle vit à un seul endroit. |
 | Ce que le code du dépôt fait aujourd'hui — **F-008 à F-021, F-038, F-155 à F-161, et F-188** (F-188 ajouté le 2026-10-20 ; **ÉTAIT :** « F-008 à F-021, F-038, et F-155 à F-161 » ; F-155 à F-161 ajoutés le 2026-10-08 ; **ÉTAIT :** « F-008 à F-021 et F-038 ») | `scomm-depot-actuel.md` | Brouillon sans autorité (F-044), périmable en bloc par la réécriture (D-007). **Toute citation de ces numéros dans ce fichier renvoie là-bas.** |
-| Sorties de commande — **P-01 à P-78** (`[RÉVISÉE le 2026-11-09]` **ÉTAIT :** « P-01 à P-69 », déjà périmé le 2026-10-21 — P-70 et P-71 existaient ; avant : « P-01 à P-65 », jusqu'au 2026-10-20 ; avant : « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
+| Sorties de commande — **P-01 à P-80** (`[RÉVISÉE le 2026-11-09, C-7]` **ÉTAIT :** « P-01 à P-78 », consignation C-5 ; `[RÉVISÉE le 2026-11-09]` **ÉTAIT :** « P-01 à P-69 », déjà périmé le 2026-10-21 — P-70 et P-71 existaient ; avant : « P-01 à P-65 », jusqu'au 2026-10-20 ; avant : « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
 | Procédures jouées par l'opérateur sur les cibles | `procedures/` | Elles n'ont **aucune autorité propre** : tout ce qu'elles affirment vient d'ici, par renvoi `F-xxx` / `PO-xxx`. |
 
 `[RÉVISÉE le 2026-09-29]` Deuxième ligne du tableau **ÉTAIT :** « Sorties de commande —
@@ -31,7 +31,9 @@ faits, des points ouverts et des décisions. `CLAUDE.md` porte les règles de tr
 duplique rien d'ici. » Le principe — un objet, un seul endroit — est inchangé ; c'est le
 nombre d'endroits qui est passé de un à trois (D-006).
 
-Dernière mise à jour : **2026-11-09** (consignation C-5, du 2026-10-22 au 2026-11-09).
+Dernière mise à jour : **2026-11-09** (consignation C-7, jeu de
+`procedures/kerberos-scom-host02.md` sur `host02`).
+`ÉTAIT : 2026-11-09 (consignation C-5, du 2026-10-22 au 2026-11-09).`
 `ÉTAIT : 2026-10-20 (consignation du 2026-10-13 au 2026-10-20).` — déjà périmée : la
 consignation du 2026-10-21 (§ 2.9, D-019) ne l'avait pas mise à jour.
 `ÉTAIT : 2026-10-08 (consignation du 2026-10-01 au 2026-10-08).`
@@ -1581,6 +1583,8 @@ poste de rédaction (P-71, F-193 à F-195).
   `/etc/pam.d/sshd` sur `host02` n'a pas été relevé (F-179). Qu'il inclue
   `password-auth`, comme `/etc/pam.d/omi` (F-180) : @VERIF : `cat /etc/pam.d/sshd` sur
   `host02`.
+  `[NOTE du 2026-11-09, C-7]` Relevé : `auth substack password-auth` et `account
+  include password-auth` (F-232) ; le `@VERIF` ci-dessus est levé.
 - **F-195** — `[SOURCE-EXTERNE]` `man useradd` du poste (l. 183-185) : sans `-p`, « the
   new account will be locked and with no password defined […] This is a state where the
   user won't be able to access the account or to define a password himself ». `man
@@ -1634,6 +1638,8 @@ AD ; les empreintes du certificat (F-174, P-68). **Écrits :** les uid locaux.
 - **F-197** — Étape 0 : `sshd -T` → **`usepam yes`**. Répond à F-178. Conséquence
   (F-194) : la connexion de V éprouve la pile PAM de `sshd`. **Toujours non relevé :**
   `/etc/pam.d/sshd` — c'est le `@VERIF` déjà posé par F-194, pas un objet nouveau.
+  `[NOTE du 2026-11-09, C-7]` Relevé depuis : F-232 ; le `@VERIF` est levé, phases
+  *auth* et *account*.
 - **F-198** — **Étape T, premier passage : `FAILED`.** La copie `~/scom-test.sudoers`,
   venue du poste Windows de l'opérateur, comptait **52 lignes et 4980 octets** ; le fichier
   du dépôt en compte **60 et 5759**, à l'empreinte que porte la procédure (mesuré, P-78).
@@ -1787,6 +1793,13 @@ AD ; les empreintes du certificat (F-174, P-68). **Écrits :** les uid locaux.
   ces clés (`git grep`, rc=1, P-78). @VERIF : relever ces deux clés dans `omiserver.conf`
   sur `host02`. **La question porte donc sur la provenance du certificat — ADCS ou
   autosigné —, pas sur son existence.** PO-069.
+  `[RÉVISÉE le 2026-11-09, C-7]` **Relevé sur `host02` (F-231) : aucune ligne `pemfile`
+  ni `keyfile` active dans `/etc/opt/omi/conf/omiserver.conf`** ; omi emploie ses chemins
+  par défaut, **non sourcés** — @VERIF. Le `@VERIF` de relevé ci-dessus est levé ; la
+  parenthèse qu'il visait est **contredite**. « omi garde besoin d'un certificat » reste
+  `[PILOTE-DÉCLARÉ]`, et la question de provenance (PO-069) est inchangée.
+  **ÉTAIT :** « `[PILOTE-DÉCLARÉ]` omi garde besoin d'un certificat (`pemfile` et
+  `keyfile` dans `omiserver.conf`) » — texte ci-dessus, conservé (R-11).
 
 **E — 2026-11-04 et 2026-11-09, objets AD et relevés SSSD** (P-76, P-77).
 - **F-217** — `[TIERS-DÉCLARÉ]` (courriels de l'interlocuteur de l'équipe AD) Comptes
@@ -1838,6 +1851,199 @@ AD ; les empreintes du certificat (F-174, P-68). **Écrits :** les uid locaux.
   mesuré en P-78) ; le risque qui en découle est porté par PO-065.
 - Le contenu de `/etc/pam.d/sshd`, non relevé, est **déjà** consigné (F-194, `@VERIF`) ;
   F-197 le rappelle. Aucun objet nouveau.
+  `[NOTE du 2026-11-09, C-7]` Relevé depuis : F-232.
+
+### 2.11 Le 2026-11-09 — `procedures/kerberos-scom-host02.md` jouée sur `host02`
+
+**Aucune capture de `host02` n'a été vue par l'agent.** Sauf mention contraire, tout ce
+qui suit est `[ÉCRAN-2026-11-09, relayé]` (P-80), sous la réserve de transmission de P-72
+à P-77, à l'identique. **Exception :** les sources S-22 à S-30, lues par l'agent sur le
+poste de rédaction pour écrire la procédure (P-79). Libellés : ceux du § 2.10, aucun
+nouveau. Ne sont pas écrits : les noms réels, les uid et gid attribués dans AD, les
+empreintes (certificat, fichiers), les noms des autres fichiers de `/etc/sudoers.d`.
+Les étapes sont désignées par leur nom dans la procédure (S, 0a, 0b, 0c, R, SV, A1, A2, V).
+
+**A — Sources lues pour la rédaction de la procédure** (C-6, 2026-11-09, P-79). Toutes
+`[SOURCE-EXTERNE]`, lues sur le poste, **pas** sur `host02` ; ce que le jeu du jour en a
+confirmé est dit pour chacune. Lignes et versions telles que la procédure les cite
+(`procedures/kerberos-scom-host02.md`, § *Sources*).
+- **S-22** — Code de **realmd**, étiquette `0.17.1`
+  (`gitlab.freedesktop.org/realmd/realmd`, `http_code=200` ×4, 09:05:55 UTC) :
+  `service/realm-sssd.c:74-116` (`access_provider` posé, puis `simple_allow_groups` par
+  `realm_ini_config_set_list_diff`), `:212-214` (redémarrage de `sssd` après écriture),
+  `:120-123` (`,` et `$` refusés dans un nom) ; `service/realm-ini-config.c:485-487`
+  (clé en double indexée sur sa **dernière** occurrence), `:579-601` (réécriture ligne à
+  ligne, octets d'origine conservés), `:665-708` (`g_file_set_contents`, masque `077`),
+  `:1000-1050` (liste rejointe par `", "`) ; `service/realm-sssd-config.c:34` ;
+  `service/realm-service.c:98-106` (commande `sssd-restart-service`). Avec
+  `/usr/lib/realmd/realmd-distro.conf:41` **du poste**. **Sur `host02` :** même version
+  amont (F-225) ; `realmd-distro.conf:38` porte la même commande (F-225) ; comportement
+  **confirmé** en A2 — une seule ligne réécrite, liste rejointe par une virgule suivie
+  d'une espace, doublon conservé, attributs inchangés, `sssd` redémarré (F-238).
+- **S-23** — `SSSD/sssd`, `src/man/sssctl.8.xml` sur `master` (`http_code=200`,
+  2 331 octets, dernier commit du fichier le 2024-02-11). Lue **par basculement
+  déclaré** : `man sssctl` absent du poste. Ne documente pas `user-checks`. **Sur
+  `host02` :** non confrontée ; c'est `--help` qui a été lu (F-226).
+- **S-24** — `SSSD/sssd`, `src/tools/sssctl/sssctl_user_checks.c` sur `master`
+  (`http_code=200`, 9 504 octets, dernier commit du fichier le 2024-09-02), second
+  basculement déclaré : `:234-238` options `-a`/`--action` et `-s`/`--service` ;
+  `:285-288` ligne `pam_acct_mgmt: <message>` ; `:317-318` `ret = EOK` quel que soit le
+  résultat PAM. **Sur `host02` :** syntaxe **confirmée** par `--help` (F-226) ; code de
+  retour `0` sur refus **confirmé** (F-233). Que ce code soit celui de `sssd-tools`
+  2.9.8 : non établi.
+- **S-25** — `man sudoers` de `sudo-1.9.17-10.p2.fc44` : grammaire `User`
+  (l. 327-336), noms entre guillemets ou échappés (l. 346-363), caractères à échapper
+  (l. 1034-1035), `pam_acct_mgmt` (l. 1476-1482). **Sur `host02` :** même version amont,
+  1.9.17p2 (F-225) ; la validation PAM du demandeur est **confirmée** par le refus de la
+  forme `sudo -u … sudo -n -l` (F-240) ; l'échappement n'a pas été exercé (noms de la
+  forme `[a-z0-9_-]+`).
+- **S-26** — `man bash` de `bash-5.3.9-3.fc44`, `${parameter:?word}` (l. 1601-1606), et
+  mesure `bash --norc -i` sur le poste. **Sur `host02` :** **confirmé** sur bash 5.1.8
+  (F-228).
+- **S-27** — `man realm` de `realmd-0.17.1-19.fc44`, page datée 01/17/2026, § *PERMIT*,
+  `--groups, -g`. Ne dit rien du redémarrage ni des lignes touchées — d'où S-22. **Sur
+  `host02` :** rien à confirmer.
+- **S-28** — `man cp` de `coreutils-9.10-5.fc44` : `-a` « same as -dR --preserve=all ».
+  **Sur `host02` :** cohérent avec SV (`stat` de la copie identique, F-235) ; la page de
+  la cible n'a pas été lue.
+- **S-29** — `man diff` de `diffutils-3.12-5.fc44`, l. 220 : « Exit status is 0 if
+  inputs are the same, 1 if different, 2 if trouble. » **Sur `host02` :** **confirmé** par
+  le `rc_diff=1` du `diff` d'A2, fichiers différents (F-238), en plus du `rc=2` du `diff`
+  contre une sauvegarde absente (F-234).
+- **S-30** — `pam_strerror` de `pam-1.7.2-2.fc44`, appelé sur le poste : `0` « Success »,
+  `6` « Permission denied », `10` « User not known to the underlying authentication
+  module ». **Sur `host02` :** les deux premiers messages sont ceux relevés (F-233) ;
+  version de pam de la cible non relayée.
+
+**B — Versions et outils (étape 0c).**
+- **F-225** — Sur `host02` : bash **5.1.8-9.el9** ; sudo **1.9.17p2-3.el9_8** ;
+  realmd **0.17.1-2.el9**, même version amont que le code lu (S-22) ; sssd-tools
+  **2.9.8-4.el9_8.1**. `/usr/lib/realmd/realmd-distro.conf:38` : `sssd-restart-service =
+  /usr/bin/systemctl restart sssd.service` — même commande qu'au poste, à la l. 41.
+- **F-226** — `sssctl user-checks --help` : `-a`/`--action` « PAM action
+  [auth|acct|setc|chau|open|clos], default: acct » ; `-s`/`--service`, défaut
+  `system-auth`. **Lève le `@VERIF` de syntaxe** de la procédure (S-24).
+
+**C — Ordre effectif du jeu.**
+- **F-227** — Les captures ont été faites dans cet ordre : 0a, 0b, 0c, **R (par
+  erreur)**, SV, **S**, seconde session, relevé d'horodatage, A1, A2, V. **Deux écarts à
+  l'ordre de la procédure** : R joué avant SV (F-234), et S capturé après SV au lieu de
+  l'être en premier (F-228). Écrit, non démontré par la procédure : que S soit joué en
+  premier. PO-073 (1), (5).
+
+**D — Constats par étape.**
+- **F-228** — **S**, joué avant A1 : `${…:?}` sur bash 5.1.8 affiche « -bash:
+  SCOM_TEMOIN_VIDE: vide » et **aucune ligne `rc_temoin_vide`**. L'arrêt par variable
+  vide est **démontré sur la cible**, plus seulement sur le bash 5.3.9 du poste (S-26).
+  Témoin de forme : `0`, `rc=1`. *Ce que l'ordre emporte :* les blocs 0a à SV ont été
+  joués sans cette démonstration préalable ; ils n'en ont pas eu besoin (`rc_vars=0`
+  partout où le contrôle figure — R n'en porte pas, par construction).
+- **F-229** — **0a.** Le compte se résout sous son nom court en minuscules ; `id` ne
+  montre que son groupe primaire : il **n'est pas membre** de `<GROUPE-SCOM-Q>`. Le
+  groupe se résout, **aucun membre** (concorde avec F-221). `realm list` conforme à
+  F-213. `sssd.conf` : l. 16 `use_fully_qualified_names = True`, l. 18 `access_provider
+  = simple`, l. 19 `simple_allow_groups = <GROUPES-ADMIN-LINUX>`, l. 24
+  `use_fully_qualified_names = False` (concorde avec F-219) ; `stat` : `600`, `root
+  root`, `sssd_conf_t`. `sssd` actif depuis le 2026-10-25 10:28:42 CET.
+- **F-230** — **0b, sudoers.** `ls /etc/sudoers.d/` sans élévation : « Permission
+  denied », `rc=2` ; rejoué avec `sudo` : six fichiers, dont `scom-test` (5759 octets,
+  27/10 09:51 — concorde avec F-205) ; **pas** de `scom-kerberos`. Les cinq autres ne
+  sont pas nommés (R-07). Sauvegarde de `sssd.conf` absente (`rc=2`).
+- **F-231** — **0b, omi.** `omiserver.conf` est à **`/etc/opt/omi/conf/omiserver.conf`**
+  (`-r--r--r--`, `root sys`, 3948 octets, 8 oct. 14:14 — mode et propriétaire
+  concordent avec les attributs rétablis en F-151). **Lève le `@VERIF` de chemin** de la
+  procédure. Parmi `pemfile`, `keyfile` et `httpsport`, **seule** la l. 11
+  `httpsport=0,1270` est active (concorde avec F-151) ; **aucune ligne `pemfile` ni
+  `keyfile` active** : omi emploie ses chemins par défaut. Lesquels : **non sourcé** —
+  @VERIF (code ou documentation d'omi). **Révise F-216.**
+- **F-232** — **0b, PAM.** `/etc/pam.d/omi` : `auth substack password-auth`, `auth
+  include postlogin`, `account required pam_sepermit.so`, `account required
+  pam_nologin.so`, `account include password-auth`, `password include password-auth`,
+  `session include password-auth` — **concorde avec F-180**. `/etc/pam.d/sshd` relevé :
+  `auth substack password-auth`, `auth include postlogin` ; `account include
+  password-auth` ; `session` avec `pam_selinux`, `pam_loginuid`, `pam_namespace`,
+  `pam_keyinit`, `pam_motd`, `password-auth` et `postlogin`. « Pile RHEL 9 standard » est
+  la lecture du pilote `[PILOTE-DÉCLARÉ]`. **Lève le `@VERIF` de F-194 et de F-197** :
+  `sshd` passe par `password-auth` en phases *auth* et *account*, comme omi (F-180).
+- **F-233** — **0c.** Empreinte « avant » du certificat écrite dans le fichier de
+  travail ; `[PILOTE-DÉCLARÉ]` identique à la référence (F-208) ; valeur non écrite.
+  `sssctl user-checks`, phase `acct`, service `omi` : témoin (compte de l'opérateur)
+  « `pam_acct_mgmt: Success` » ; compte de supervision « `pam_acct_mgmt: Permission
+  denied` » ; **`rc=0` pour les deux**. Confirme sur la cible que le code de retour ne
+  porte pas le verdict (S-24) — même famille que F-054.
+- **F-234** — **R joué par erreur, avant SV**, bloc collé d'un seul tenant : `rm -f`
+  `rc=0` ; `ls` `rc=2` ; `visudo -c` `rc=0` ; **`cp` `rc=1`** (sauvegarde absente) ;
+  puis, sans arrêt : `chmod` `rc=0`, `restorecon` `rc=0` sans réétiquetage, `stat`
+  identique à 0a ; **`systemctl restart sssd` exécuté** (`rc=0`, actif,
+  `ActiveEnterTimestamp` 2026-11-09 11:17:10 CET) ; `diff` `rc=2` ; `getent` de
+  l'opérateur `rc=0`. **Effet :** `sssd` redémarré, `sssd.conf` inchangé, aucun fichier
+  sudoers retiré (il n'en existait pas, F-230). SV a été joué après.
+  **Constat sur la procédure** (`kerberos-scom-host02.md:282`) : la consigne « ne pas
+  jouer les lignes suivantes » si `cp` échoue **ne protège pas un bloc collé d'un seul
+  tenant**. Au sens de R-13 (antériorité), R doit s'arrêter **de lui-même** si la
+  sauvegarde manque. PO-073 (1).
+- **F-235** — **SV.** Copie faite ; empreintes égales (non écrites) ; `cmp` `rc=0` ;
+  témoin contre `/dev/null` `rc=1` (« EOF on /dev/null ») ; `stat` de la copie identique.
+- **F-236** — **Seconde session.** `sudo -i` → « This account is currently not
+  available. » `[PILOTE-DÉCLARÉ]` Le shell de connexion de `root` est `nologin` —
+  @VERIF : `getent passwd root`. `sudo -s` → invite `root` ; la ligne `id -u` n'a **pas**
+  été capturée. **Constat sur la procédure** (`:324`) : la seconde session doit s'ouvrir
+  par `sudo -s`. PO-073 (2).
+  **Référence d'horodatage relevée avant A1 : 11:17:10** — celle du redémarrage de R
+  (F-234), et non celle de 0a. **Constat sur la procédure** (`:155`, `:413`, `:439`) :
+  comparée à la date de 0a, la garde d'A2 serait passée **même si `realm permit`
+  n'avait pas redémarré `sssd`**, puisque R l'avait déjà fait — elle ne discriminait plus
+  (R-13). A2 doit prendre sa référence **juste avant** `realm permit`. PO-073 (3).
+- **F-237** — **A1.** Fichier de travail : 3 lignes, 1 active ; ligne exacte trouvée
+  1 fois ; témoin de ligne voisine `0`, `rc=1` ; caractères non ASCII `0`, `rc=1` ;
+  `cat -A` propre. Témoin `visudo` : « syntax error » à 1:27, `rc=1` ; fichier :
+  `parsed OK`. Empreinte égale avant et après la pose (`rc_egal=0`, témoin `rc=1`).
+  `install` `rc=0`, `restorecon` `rc=0` ; `/etc/sudoers.d/scom-kerberos` :
+  `-r--r-----`, `root root`, `etc_t`, 232 octets. `visudo -c` global `rc=0`,
+  `scom-kerberos` inclus.
+- **F-238** — **A2.** `cmp` avec la sauvegarde avant écriture `rc=0` ; `realm permit -g`
+  `rc=0`. `diff` : `rc_diff=1` (1 attendu, S-29) ; **« 19c19 » seul**, une ligne `<` et
+  une ligne `>` ; la ligne `>` reprend les trois groupes de `<GROUPES-ADMIN-LINUX>` dans
+  le même ordre et ajoute `<GROUPE-SCOM-Q>` (nom court en minuscules) à la fin.
+  Séparateur avant `<GROUPE-SCOM-Q>` : virgule suivie d'une espace, conforme à S-22.
+  `access_provider` non réécrit. `use_fully_qualified_names` :
+  **toujours deux lignes**. `stat` identique (`600`, `root root`, `sssd_conf_t`).
+  `sssd` redémarré : `ActiveEnterTimestamp` **11:27:44**, postérieur à la référence
+  11:17:10 (F-236) ; actif ; `getent` de l'opérateur `rc=0`.
+  **Ce que S-22 laissait prévoir est confirmé sur `host02`** : réécriture limitée à
+  `simple_allow_groups`, doublon conservé, redémarrage de `sssd` ; et, levant le
+  `@VERIF` de la procédure, contexte SELinux et mode du fichier remplacé inchangés.
+- **F-239** — **V, forme `-U`.** `sudo -l -U` : **une seule règle**, `(root) NOPASSWD:
+  /opt/microsoft/scx/bin/scxlogfilereader -p` ; `Defaults` sans `requiretty` ; `rc=0`.
+  Ligne permise : chemin réaffiché, `rc=0` ; ligne refusée : `rc=1`, **sans message**.
+  Les trois conditions de R-13 posées par la procédure (`:508-513`) sont réunies : **la
+  règle `sudo` de D-022 est démontrée sur `host02`**, dans les deux sens.
+- **F-240** — **V, forme `sudo -u … sudo -n -l`.** Sortie : « Creating home directory for
+  `<COMPTE-SCOM-Q>`. », puis, pour les deux lignes, « sudo: PAM account management
+  error: Permission denied » et « sudo: a password is required », `rc=1`. **Non
+  concluant**, comme la procédure le prévoit : c'est SSSD qui refuse le compte, non
+  membre du groupe (F-229) ; S-25 (`pam_acct_mgmt`) l'explique.
+  **Effet de bord non prévu :** le **dossier personnel du compte a été créé**, par la
+  session PAM qu'ouvre le `sudo -u` extérieur ; `[PILOTE-DÉCLARÉ]` par
+  `oddjob-mkhomedir` (`realm list` : « required-package: oddjob-mkhomedir ») — cohérent
+  avec l'option `with-mkhomedir` d'`authselect` (F-179). **V n'était donc pas « sans rien
+  exécuter »** (`kerberos-scom-host02.md:52`, `:450`). Le dossier est **laissé en
+  place** ; son sort n'est pas décidé. PO-073 (4).
+- **F-241** — **V, suite.** `user-checks` du compte, service `omi` : « Permission
+  denied » (inchangé depuis F-233 : le compte n'est toujours pas membre). Certificat :
+  `rc_openssl=0`, `rc_diff=0` contre l'empreinte « avant » ; témoin `rc=1`.
+
+**E — Après le jeu.**
+- **F-242** — `[PILOTE-DÉCLARÉ]` Courriel de l'opérateur à l'équipe SCOM et à
+  l'interlocuteur de l'équipe AD : demande d'ajout de `<COMPTE-SCOM-Q>` à
+  `<GROUPE-SCOM-Q>`, puis tâche « Enable Linux Authentication Type » et commande de
+  vérification de S-21 (F-212, F-216). **Ordre retenu** `[PILOTE-DÉCLARÉ]` : le test
+  Kerberos de l'équipe SCOM **après** l'ajout au groupe et le rejeu de V — avant, un
+  échec ne permettrait pas de distinguer PO-070 de PO-071 (R-13, discrimination).
+
+**F — Ce qui n'est pas consigné ici.** La procédure **n'est pas modifiée** : ses
+corrections sont des constats (F-227, F-234, F-236, F-240), regroupés en PO-073 pour une
+révision distincte.
 
 ---
 
@@ -3024,8 +3230,25 @@ elle échoue, après l'ajout d'une entrée `HTTP/`. L'ajout d'une entrée `HTTP/
 `[PILOTE-DÉCLARÉ]` AD et keytab restent cohérents, comme lors d'une rotation SSSD.
 **Accepter cet effet ou l'éviter est une décision à prendre — non prise.** **Qui :** l'équipe SCOM pour la commande,
 l'opérateur pour le keytab.
+`[NOTE du 2026-11-09, C-7]` Inchangé sur le fond. **Ordre retenu** `[PILOTE-DÉCLARÉ]` :
+la commande de vérification se joue **après** l'ajout du compte au groupe et le rejeu de
+V, pour qu'un échec ne puisse plus venir de PO-071 (F-242).
 
 ### PO-071 — Accès SSSD du compte de supervision sous Kerberos *(ouvert le 2026-11-09)*
+`[RÉVISÉE le 2026-11-09, C-7]` **Le groupe est admis** : `realm permit -g` en A2 de
+`procedures/kerberos-scom-host02.md` — `simple_allow_groups` porte désormais
+`<GROUPES-ADMIN-LINUX>` et `<GROUPE-SCOM-Q>` (F-238). **La pile PAM d'omi refuse
+aujourd'hui le compte** — `sssctl user-checks -a acct -s omi` → « Permission denied »
+(F-233, F-241) —, parce qu'il **n'est pas membre** du groupe (F-229). **Reste @VERIF :**
+qu'omi applique la phase *account* à une authentification Kerberos par WS-Man ;
+`user-checks` éprouve la pile `omi`, pas le chemin d'omi sous Kerberos. **Mesure
+suivante :** après l'ajout du compte au groupe (F-242), `sss_cache -E` si besoin, puis
+rejeu de S et V ; « Success » attendu. **Risque ajouté :** si `rhel_post_install`
+repousse son modèle SSSD sur `host02`, `simple_allow_groups` peut perdre
+`<GROUPE-SCOM-Q>` **sans bruit** ; l'admission devra être portée par ce modèle à
+l'intégration (R-09, renvoi seul). **Qui :** l'opérateur ; l'équipe SCOM et
+l'interlocuteur de l'équipe AD pour l'appartenance.
+**ÉTAIT :** texte ci-dessous, vrai jusqu'à A2 du 2026-11-09.
 `access_provider = simple` et `simple_allow_groups` = `<GROUPES-ADMIN-LINUX>` seulement
 (F-219) : `<COMPTE-SCOM-Q>` n'y est pas, et `<GROUPE-SCOM-Q>` n'a encore aucun membre
 (F-221). **Non établi :** que la pile PAM d'omi (`/etc/pam.d/omi`, `account include
@@ -3041,6 +3264,25 @@ posé sur ce point est levé par cette balise. **Ce qui reste :** la portée de 
 « Only the most recently released version of each distribution will be supported » —
 version majeure ou mineure ? —, et le fait qu'aucune validation n'existe dans cet
 environnement (F-214). **Qui :** l'équipe SCOM, à l'essai.
+
+### PO-073 — Révision de `procedures/kerberos-scom-host02.md` *(ouvert le 2026-11-09)*
+Le jeu du 2026-11-09 (§ 2.11) a relevé cinq défauts. **La procédure n'est pas modifiée
+par la consignation C-7** ; sa révision est un objet distinct, qui rejoue les gardes
+touchées (R-12 : une garde modifiée perd sa démonstration).
+1. **R doit s'arrêter de lui-même si la sauvegarde manque** : la consigne écrite ne
+   protège pas un bloc collé d'un seul tenant ; joué par erreur, R a redémarré `sssd`
+   après un `cp` en échec (F-234).
+2. **La seconde session s'ouvre par `sudo -s`** : `sudo -i` échoue, le shell de
+   connexion de `root` étant `nologin` (F-236, @VERIF).
+3. **La référence d'horodatage de `sssd` se prend juste avant `realm permit`**, pas en
+   0a : sinon tout redémarrage intermédiaire fait passer la garde d'A2 sans
+   discrimination (F-236, R-13).
+4. **Dans V, la forme `sudo -u … sudo -n -l` ouvre une session PAM** et peut créer le
+   dossier personnel du compte (F-240) : le dire, ou retirer cette forme. V n'est pas
+   « sans rien exécuter ».
+5. **S doit être joué et capturé en premier** (F-227, F-228).
+**Non décidé :** le sort du dossier personnel créé en V (F-240) — le garder, ou le
+retirer, et par quel geste. **Qui :** l'opérateur ; la révision, par le pilote.
 
 ---
 
@@ -3389,6 +3631,8 @@ de supervision (`<COMPTE-SCOM-Q>` pour `host02`), **pas** les groupes `<GROUPE-S
 (`simple_allow_groups`, PO-071).
 *Motif déclaré :* non relayé. **Révise D-017 (d)** (marque datée posée).
 `[NOTE du 2026-11-09]` Procédure : `procedures/kerberos-scom-host02.md`.
+`[NOTE du 2026-11-09, C-7]` Appliquée sur `host02` le jour même : règle posée (F-237),
+démontrée dans les deux sens par `sudo -l -U` (F-239) ; groupe admis à SSSD (F-238).
 
 ### D-023 — `host02` relève de la Qualification ; les comptes locaux seront supprimés (2026-11-04)
 **Décisions de l'opérateur**, 2026-11-04 `[PILOTE-DÉCLARÉ]` (P-76) :

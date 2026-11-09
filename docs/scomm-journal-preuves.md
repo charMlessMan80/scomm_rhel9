@@ -1088,3 +1088,54 @@ git show <c>:docs/procedures/comptes-scom-host02.md | grep -nE 'NOPASSWD([^:]|$)
   `git grep -niE` → rc=1 ; `git log --all -i -G` → sortie vide ; `git log --all -i -E
   --grep` → sortie vide ; témoin positif du motif sur une chaîne d'essai → 1.
   Fonde S-21, F-198, F-199, F-201, F-202, F-209, F-212, F-216, et la révision de F-015.
+
+---
+
+*Preuves ajoutées le **2026-11-09** (consignation C-7). **P-79 a été produite sur ce
+poste** ; **P-80 ne l'a pas été** (R-08) : elle relève de la réserve de transmission de
+P-72 à P-77, à l'identique. Libellés : ceux du § 2.10 du dossier, aucun nouveau.*
+
+**P-79** — **Lectures et mesures faites sur le poste de rédaction pour écrire
+`procedures/kerberos-scom-host02.md`** (C-6, 2026-11-09), sans élévation ;
+téléchargements dans le répertoire temporaire de la session, hors dépôt. **Relevées au
+moment de la rédaction** et citées, avec versions, lignes, codes et heures, au § *Sources*
+de la procédure ; **aucune sortie brute n'est reproduite au-delà**.
+- 09:05:55 UTC — code de realmd `0.17.1`, quatre fichiers, `http_code=200` ×4 ;
+  `realmd-distro.conf:41` du poste. → S-22.
+- `rpm -q sssd-tools` → `rc=1` ; `man -w sssctl` → `rc=16` : **basculement déclaré** vers
+  `sssctl.8.xml` (`http_code=200`, 2 331 octets), puis **second basculement** vers
+  `sssctl_user_checks.c` (`http_code=200`, 9 504 octets), tous deux sur `master`. → S-23,
+  S-24.
+- `pam_strerror` de pam 1.7.2 appelé sur le poste : `0`, `6`, `10`. → S-30.
+- Pages de manuel du poste : `realm` (realmd-0.17.1-19.fc44), `sudoers`
+  (sudo-1.9.17-10.p2.fc44), `bash` (bash-5.3.9-3.fc44), `cp` (coreutils-9.10-5.fc44),
+  `diff` (diffutils-3.12-5.fc44). → S-25 à S-29.
+- `bash --norc -i` : `${COMPTE:?vide}` abandonne la ligne entière, `echo "rc_…"`
+  compris, avec `bash: COMPTE: vide` ; la ligne suivante s'exécute. → S-26.
+- 09:10:09 UTC — formes de contrôle d'A1, mesurées avec un nom fictif : `wc -l`,
+  `grep -cv`, `grep -cxF` et sa ligne voisine, recherche de non ASCII et son témoin,
+  `visudo -cf` et son témoin à parenthèse (« syntax error » à 1:20, `rc=1`), comparaison
+  `H_AVANT` / `H_APRES` et son témoin, contrôle de forme et son témoin sur `x,y`.
+- **Entrée de la consignation C-7**, même jour : `git status --porcelain -uall` → aucune
+  ligne, `rc=0` ; `HEAD` = `origin/main` = `9a2e9d8` ; plus hauts numéros en usage
+  F-224, PO-072, D-023, S-21, P-78.
+  Fonde S-22 à S-30.
+
+**P-80** — `[ÉCRAN-2026-11-09, relayé]` **`procedures/kerberos-scom-host02.md` jouée sur
+`host02`.** Captures relayées par le pilote, décrites ; **aucune vue par l'agent**.
+Dans l'ordre de capture : 0a (`getent`, `id`, `realm list`, lignes de `sssd.conf`,
+`stat`, `ActiveEnterTimestamp`) ; 0b (`ls /etc/sudoers.d/` sans puis avec `sudo`,
+sauvegarde absente, `ls -l` et lignes d'`omiserver.conf`, `/etc/pam.d/omi`,
+`/etc/pam.d/sshd`) ; 0c (versions, `realmd-distro.conf`, `sssctl user-checks --help`,
+empreinte « avant », `user-checks` du témoin et du compte) ; **R, joué par erreur** ;
+SV ; S ; relevé d'horodatage ; seconde session (`sudo -i`, puis `sudo -s`) ; A1 ; A2
+(`cmp`, `realm permit`, `diff`, `stat`, `ActiveEnterTimestamp`, `getent`) ; V (`sudo -l
+-U`, formes `-U` et `-u`, `user-checks`, certificat).
+`[PILOTE-DÉCLARÉ]` : empreinte « avant » identique à la référence ; shell de `root` en
+`nologin` ; `oddjob-mkhomedir` comme auteur du dossier personnel ; « pile RHEL 9
+standard » pour `/etc/pam.d/sshd` ; courriel de l'opérateur après le jeu et ordre retenu
+pour le test Kerberos.
+**Codes non relayés :** `id -u` de la seconde session.
+**Valeurs non écrites (R-07) :** noms réels, uid et gid AD, noms des cinq autres fichiers
+de `/etc/sudoers.d`, empreintes du certificat, de la sauvegarde et du fichier sudoers.
+**Aucune documentation citée** par le pilote. Fonde F-225 à F-242.
