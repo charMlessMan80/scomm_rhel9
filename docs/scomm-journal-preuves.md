@@ -960,3 +960,131 @@ MANWIDTH=100 man useradd | grep -n … exclamation → l. 182-190               
 MANWIDTH=100 man passwd | grep -n -A6 '-l, --lock' → l. 79-85                               rc=0 0
 ```
   Fonde F-193 à F-195.
+
+---
+
+*Preuves ajoutées le **2026-11-09** (consignation C-5). **P-72 à P-77 n'ont pas été
+produites sur ce poste** (R-08) ; **P-78 l'a été**.*
+
+> **Réserve de transmission — elle gouverne P-72 à P-77, à l'identique de P-56 à P-64.**
+> Écrans de l'opérateur, courriels de l'équipe SCOM et de l'interlocuteur de l'équipe AD,
+> déclarations en réunion : tout a été **relayé par le pilote, décrit**. **Aucune capture,
+> aucun courriel, aucune sortie n'a été vu par l'agent** ; rien n'est reproduit au-delà de
+> ce que le dossier cite. Une valeur non transmise est dite « non relayée », pas
+> reconstituée (R-01, R-15).
+> **Libellés réduits (R-07)** : ceux du § 2.10 du dossier, introduits en P-74, P-76 et
+> P-77 ci-dessous. Le nom réel de `host02`, son FQDN, son adresse, le realm, les DN et les
+> noms des comptes et groupes AD ne sont pas écrits.
+
+**P-72** — `[ÉCRAN-2026-10-22, relayé]` **`procedures/comptes-scom-host02.md` jouée sur
+`host02`.** Captures relayées : étape 0 (`readlink -e` et `ls -l` sur
+`/etc/opt/microsoft/scx/ssl/`, `sshd -T | grep usepam`) ; étape T, premier passage en
+échec (nombre de lignes et d'octets de la copie), retrait, recopie avec contrôle
+`certutil` sur le poste Windows avant `scp`, rejeu ; étape R ; A1 (`useradd`, `id`, champ
+`shadow` avant `passwd`, `chage`, `passwd`) ; A2, premier passage (empreinte et taille du
+fichier posé, recherche de l'espace insécable), repose ; témoins `visudo` ; A3 ; V ; F.
+Codes non relayés : `chage`, `chage -l`, `passwd`, le témoin de T, le `visudo -c` de R.
+**Aucune documentation citée.** Fonde F-196 à F-204.
+
+**P-73** — `[ÉCRAN-2026-10-27, relayé]` **Rejeu et vérifications sur `host02`.** Captures
+relayées : A2 rejoué à 09:51 (fuseau non relayé) — témoin, `ls -lZ`, `visudo -c` ; A3
+rejoué — cinq lignes `sudo -u … sudo -n -l` ; `scxadmin -status` ; contenu de
+`/var/opt/microsoft/scx/log/` ; `ss` sur 1270 ; `openssl x509 -fingerprint` SHA-256 et
+SHA-1, valeurs non écrites (R-07) ; contenu de `~/scom-comptes-avant.fp` (une ligne
+SHA-256) ; les deux `sudo -l -U` de A3, `rc=0` chacun. `[PILOTE-DÉCLARÉ]` : comparaison
+SHA-1 faite contre l'empreinte portée par le nom du PFX (F-144).
+`[PILOTE-DÉCLARÉ]` : l'erreur de comparaison `sha256sum` / empreinte ; l'envoi du
+courriel de demande de découverte, **date non relevée**. **Aucune documentation citée**
+par le pilote ; la page `openssl-x509` qui fonde F-209 est lue en P-78. Fonde F-205 à
+F-210.
+
+**P-74** — `[TIERS-DÉCLARÉ]` + `[ÉCRAN-2026-10-30, relayé]` **Échec de la découverte en
+Basic, 2026-10-30.** Courriel de l'équipe SCOM : exception de l'assistant ; sortie de
+`winrm get winrm/config/client` sur un serveur de gestion non désigné. Écrans de
+l'opérateur : `realm list` et liste du keytab de `host02`. `[PILOTE-DÉCLARÉ]` : première
+machine Linux sur ce serveur SCOM, Kerberos jamais validé avec RHEL 9.
+**Documentation citée :** S-21, Microsoft Learn, « Kerberos Authentication Support for
+Unix and Linux computers », `manage-linux-kerberos-auth?view=sc-om-2025` — consultée par
+le pilote, **date de consultation non relayée** ; relue par l'agent le 2026-11-09 (P-78).
+**Libellés introduits ici :** `<GROUPES-ADMIN-LINUX>`. Fonde F-211 à F-214.
+
+**P-75** — `[TIERS-DÉCLARÉ]` + `[PILOTE-DÉCLARÉ]` **Réunion du 2026-11-02 avec l'expert
+SCOM de Microsoft**, déclarée par l'opérateur au pilote. **Aucun compte rendu écrit vu.**
+Décisions de l'opérateur du même jour (D-020, D-021). **Documentation citée :** S-21, la
+commande de vérification `winrm e … -skipcacheck -skipcncheck` — même consultation qu'en
+P-74. Fonde F-215, F-216, D-020, D-021.
+
+**P-76** — `[TIERS-DÉCLARÉ]` + `[ÉCRAN-2026-11-04, relayé]` **2026-11-04.** Courriels
+de l'interlocuteur de l'équipe AD : comptes et groupes de supervision Qualification et
+Production, attributs POSIX, délégation demandée, actions annoncées. Écrans de
+l'opérateur : `sssd.conf` de `host02` (section du domaine, l. 16 et 24),
+`sssctl config-check` ; « no such user ». Décisions de l'opérateur du même jour
+(D-022, D-023). **Aucune documentation citée.**
+**Libellés introduits ici :** `<COMPTE-SCOM-Q>`, `<COMPTE-SCOM-P>`, `<GROUPE-SCOM-Q>`,
+`<GROUPE-SCOM-P>`, `<GROUPES-DELEGATION-AD>`, `<DEMANDE-IAM-1>`, `<DEMANDE-IAM-2>`.
+Fonde F-217 à F-220, D-022, D-023.
+
+**P-77** — `[TIERS-DÉCLARÉ]` + `[ÉCRAN-2026-11-09, relayé]` **2026-11-09.** Courriel de
+l'interlocuteur de l'équipe AD : déplacement des comptes et des groupes. Écrans de
+l'opérateur sur `host02` : `getent` du compte et du groupe de Qualification ; `adcli`
+(version, options, `man adcli` sur la durée de 30 jours) ; `kvno HTTP/<MACHINE-FQDN>` ;
+`kinit -k` du compte machine. Écran d'un **poste Windows** : `setspn -Q
+HTTP/<MACHINE-FQDN>`. **Documentation citée :** `man adcli` de `host02`, lue sur la
+cible le 2026-11-09 (version de la page : celle d'`adcli` 0.9.3.1).
+**Libellés introduits ici :** `<OU-COMPTES-SCOM>`, `<OU-GROUPES-SCOM>`, `<DN-MACHINE>`.
+Les uid et gid attribués dans AD ne sont pas écrits. Fonde F-221 à F-224.
+
+**P-78** — **Lectures et contrôles sur le poste de rédaction, le 2026-11-09**, sans
+élévation ; téléchargement et scripts dans le répertoire temporaire de la session (hors
+dépôt).
+- **Entrée :** `git status --porcelain -uall` → aucune ligne, rc=0 ; numéros libres :
+  plus hauts en usage F-195, PO-067, D-019, P-71.
+- **08:41:35 UTC — S-21 :**
+```
+curl -sS -L -m 60 -o s21.html -w 's21.html http_code=%{http_code} size=%{size_download}\n' \
+  'https://learn.microsoft.com/en-us/system-center/scom/manage-linux-kerberos-auth?view=sc-om-2025'
+s21.html http_code=200 size=57489                                       rc_curl=0
+grep méta → ms.date 2026-06-30T00:00:00Z, updated_at 2026-10-15T11:03:00Z  rc=0
+<title>Kerberos Authentication Support for UNIX and Linux | Microsoft Learn</title>
+sha256 f31b8f2a6455fafd1d09e01bfe41ea2c20d518ad73cd455e10aa8adb065aa528
+```
+  Conversion en texte par un script Python (`html.parser`, `python3 -I`), rc=0, 187
+  lignes ; pied de page « Last updated on 2026-07-01 ». Lignes citées en F-212 et F-216 :
+  l. 31 (Basic), l. 32-53 (tableau par activité), l. 121-129 (prérequis et topologies),
+  l. 136-142 (tâche « Enable Linux Authentication Type »), l. 151 (commande `winrm e`) ;
+  pied de page l. 164-165. Numéros relevés par `grep -n` sur le texte extrait, rc=0,
+  après une première écriture fausse sur deux d'entre eux (l. 143 et 152), corrigée avant
+  commit.
+  Balises des deux tableaux de systèmes, relevées dans le HTML : `data-moniker="sc-om-2019"`
+  puis `data-moniker="sc-om-2022 sc-om-2025"`.
+- **08:44:27 UTC — pages de manuel et code installé :**
+```
+rpm -q shadow-utils openssl python3-jinja2
+  → shadow-utils-4.19.0-7.fc44, openssl-3.5.9-1.fc44, python3-jinja2-3.1.6-7.fc44   rc=0
+MANWIDTH=100 man userdel | grep … → l. 148-149 : « 6  specified user doesn't exist »   rc=0
+MANWIDTH=100 man openssl-x509 | grep -A3 -- '-fingerprint$'
+  → l. 139-140 : « Calculates and prints the digest of the DER encoded version of the
+    entire certificate »                                                   rc=0
+grep -n -A30 '^def do_default' …/jinja2/filters.py
+  → l. 573 : if isinstance(value, Undefined) or (boolean and not value):   rc=0
+python3 -I : default("OMIT") sur x="" → ''        ; sur x indéfini → 'OMIT'
+             default("OMIT", true) sur x="" → 'OMIT'                       rc=0
+grep -n password roles/scomm_agent/{tasks/users.yml,defaults/main.yml}
+  → users.yml:18, defaults/main.yml:38-40                                  rc=0
+git grep -n -iE 'pemfile|keyfile'                                          rc=1 (aucune)
+```
+- **Fichier sudoers et procédure :**
+```
+sha256sum docs/procedures/fichiers/scom-test.sudoers
+  → 895682f51137e5c87d16b1b2e3a5f0eb51dc587d033d4d942f8fd6a4f8fd5a07     rc=0
+wc -lc → 60 lignes, 5759 octets                                          rc=0
+grep -c $'\xc2\xa0' → 1                                                  rc=0
+git show <c>:docs/procedures/comptes-scom-host02.md | grep -nE 'NOPASSWD([^:]|$)'
+  743a335 → l. 240 seule (la mise en garde) ; c62545e → l. 286 seule     rc=0 ×2
+  témoin positif du motif sur « x NOPASSWD » → 1                         rc=0
+```
+- **Contrôle R-07 des fichiers suivis et de l'historique**, avant écriture, motif réunissant
+  les identifiants réels de cette consignation (non reproduit ici) :
+  `git grep -niE` → rc=1 ; `git log --all -i -G` → sortie vide ; `git log --all -i -E
+  --grep` → sortie vide ; témoin positif du motif sur une chaîne d'essai → 1.
+  Fonde S-21, F-198, F-199, F-201, F-202, F-209, F-212, F-216, et la révision de F-015.

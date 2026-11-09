@@ -14,7 +14,7 @@ nommée**, les faits **déclarés par l'opérateur**, les **points ouverts** et 
 |---|---|---|
 | Règles de travail | `../CLAUDE.md` | Une règle vit à un seul endroit. |
 | Ce que le code du dépôt fait aujourd'hui — **F-008 à F-021, F-038, F-155 à F-161, et F-188** (F-188 ajouté le 2026-10-20 ; **ÉTAIT :** « F-008 à F-021, F-038, et F-155 à F-161 » ; F-155 à F-161 ajoutés le 2026-10-08 ; **ÉTAIT :** « F-008 à F-021 et F-038 ») | `scomm-depot-actuel.md` | Brouillon sans autorité (F-044), périmable en bloc par la réécriture (D-007). **Toute citation de ces numéros dans ce fichier renvoie là-bas.** |
-| Sorties de commande — **P-01 à P-69** (**ÉTAIT :** « P-01 à P-65 », jusqu'au 2026-10-20 ; avant : « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
+| Sorties de commande — **P-01 à P-78** (`[RÉVISÉE le 2026-11-09]` **ÉTAIT :** « P-01 à P-69 », déjà périmé le 2026-10-21 — P-70 et P-71 existaient ; avant : « P-01 à P-65 », jusqu'au 2026-10-20 ; avant : « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
 | Procédures jouées par l'opérateur sur les cibles | `procedures/` | Elles n'ont **aucune autorité propre** : tout ce qu'elles affirment vient d'ici, par renvoi `F-xxx` / `PO-xxx`. |
 
 `[RÉVISÉE le 2026-09-29]` Deuxième ligne du tableau **ÉTAIT :** « Sorties de commande —
@@ -31,7 +31,9 @@ faits, des points ouverts et des décisions. `CLAUDE.md` porte les règles de tr
 duplique rien d'ici. » Le principe — un objet, un seul endroit — est inchangé ; c'est le
 nombre d'endroits qui est passé de un à trois (D-006).
 
-Dernière mise à jour : **2026-10-20** (consignation du 2026-10-13 au 2026-10-20).
+Dernière mise à jour : **2026-11-09** (consignation C-5, du 2026-10-22 au 2026-11-09).
+`ÉTAIT : 2026-10-20 (consignation du 2026-10-13 au 2026-10-20).` — déjà périmée : la
+consignation du 2026-10-21 (§ 2.9, D-019) ne l'avait pas mise à jour.
 `ÉTAIT : 2026-10-08 (consignation du 2026-10-01 au 2026-10-08).`
 `ÉTAIT : 2026-09-29 (consignation du 2026-09-25 au 2026-09-28).`
 `ÉTAIT : 2026-09-21 (livrables 3 puis 4).` — déjà périmée : des faits ont été ajoutés
@@ -1421,6 +1423,7 @@ captures (P-66).
 - **F-178** — `sshd -T` : `pubkeyauthentication yes`, `passwordauthentication yes`,
   **aucune** ligne `allowgroups`, `allowusers`, `denyusers`. **`UsePAM` non relevé** :
   c'est lui qui décide de la portée de S-19 (F-184) ; mesuré à l'étape 0 de la procédure.
+  `[NOTE du 2026-11-09]` Mesuré : `usepam yes` (F-197).
 - **F-179** — `/etc/security/access.conf` : aucune ligne active ; `authselect current` :
   profil `sssd`, seule option `with-mkhomedir` — donc pas de `pam_access` par
   `authselect`. `[PILOTE-DÉCLARÉ]` pour cette conséquence : le contenu des fichiers
@@ -1499,7 +1502,10 @@ captures (P-66).
   mot de passe (D-019 a), la partie B est sans objet. Le fait sur `sshd` reste vrai ; il
   redevient utile si une clé revient sur un compte verrouillé (PO-066).
   `man useradd` du poste (shadow-utils 4.19.0) : sans `-p`, le champ vaut « a single
-  exclamation mark » — **pas `!!`** ; la valeur sur RHEL 9 n'est pas au dossier.
+  exclamation mark » — **pas `!!`**.
+  `[RÉVISÉE le 2026-11-09]` **Sur `host02` (RHEL 9), le champ vaut `!!`** avant `passwd`
+  (F-200) : la page du poste ne transpose pas. Ce qu'elle dit de Fedora reste vrai.
+  **ÉTAIT :** « … — **pas `!!`** ; la valeur sur RHEL 9 n'est pas au dossier. »
 - **F-185** — `[SOURCE-EXTERNE]` S-20, `man sudo`, `-l` : « If a command is specified and
   is permitted by the security policy for the invoking user (or the, user specified by
   the -U option) on the current host, the fully-qualified path to the command is
@@ -1583,6 +1589,255 @@ poste de rédaction (P-71, F-193 à F-195).
   another authentication token (e.g. an SSH key) ». **Conséquence :** un compte laissé
   verrouillé est sans danger **tant qu'aucune clé n'y est posée** — c'est le cas depuis
   D-019 (a). Même réserve de transposition (shadow-utils 4.19.0).
+
+### 2.10 Du 2026-10-22 au 2026-11-09 — procédure jouée sur `host02`, échec de la découverte en Basic, bascule vers Kerberos
+
+**Aucun courriel, aucune capture, aucune mesure de `host02` ni d'un poste Windows n'a été
+vu par l'agent.** Provenance et réserve de transmission : **P-72 à P-77, à lire avant
+cette section** ; la réserve de P-56 à P-64 s'y applique à l'identique. **Seule
+exception :** les lectures et contrôles faits sur le poste de rédaction le 2026-11-09
+(P-78) — S-21, le fichier sudoers du dépôt, les pages `userdel` et `openssl-x509`, le
+filtre `default` de Jinja2.
+
+**Machine.** `host02`, la recette des § 2.6 à 2.9. Ni son nom réel, ni son FQDN, ni son
+adresse ne sont écrits (R-07).
+
+**Libellés réduits (R-07)**, introduits en P-74, P-76 et P-77 :
+
+| Libellé | Ce qu'il désigne |
+|---|---|
+| `<COMPTE-SCOM-Q>` | Compte de service AD de supervision SCOM, environnement Qualification |
+| `<COMPTE-SCOM-P>` | Compte de service AD de supervision SCOM, environnement Production |
+| `<GROUPE-SCOM-Q>` | Groupe AD de supervision SCOM, Qualification |
+| `<GROUPE-SCOM-P>` | Groupe AD de supervision SCOM, Production |
+| `<OU-COMPTES-SCOM>` | OU des comptes de service de supervision, scindée Qualification / Production |
+| `<OU-GROUPES-SCOM>` | OU des groupes de sécurité de supervision, scindée Qualification / Production |
+| `<GROUPES-DELEGATION-AD>` | Groupes AD de délégation demandés pour le rôle d'administration de l'opérateur |
+| `<DEMANDE-IAM-1>`, `<DEMANDE-IAM-2>` | Les deux demandes IAM de cette délégation |
+| `<GROUPES-ADMIN-LINUX>` | Les trois groupes AD d'administration admis par `realm` (`permitted-groups`) et par `simple_allow_groups` sur `host02` |
+| `<DN-MACHINE>` | DN de l'objet ordinateur de `host02` dans l'annuaire |
+
+Déjà en usage, même sens : `<REALM>`, `<MACHINE>`, `<MACHINE-FQDN>`
+(`procedures/diagnostic-enrolement.md` § 1). Principals : `HTTP/<MACHINE-FQDN>`,
+`host/<MACHINE-FQDN>`, `<MACHINE>$@<REALM>`. Personnes : « l'opérateur » ; « l'équipe
+SCOM » ; « l'interlocuteur de l'équipe AD », auteur des courriels sur les objets AD ;
+« l'expert SCOM de Microsoft », sans nom. **Non écrits :** les uid et gid attribués dans
+AD ; les empreintes du certificat (F-174, P-68). **Écrits :** les uid locaux.
+
+**A — 2026-10-22, `procedures/comptes-scom-host02.md` jouée sur `host02`**
+`[ÉCRAN-2026-10-22, relayé]` (P-72).
+- **F-196** — **Étape 0 : `/etc/opt/microsoft/scx/ssl/scx.pem` est un lien vers
+  `/etc/opt/omi/ssl/omi.pem`.** Clôt PO-058. *Conséquence, celle que la procédure
+  demandait de dire en tête du rapport* (`comptes-scom-host02.md:103`) : la ligne de
+  signature du modèle S-16 (`cp … scx.pem`), écartée par D-017 (d), **aurait remplacé le
+  certificat ADCS**. L'exclusion protégeait d'un effet réel (R-10, PO-051).
+- **F-197** — Étape 0 : `sshd -T` → **`usepam yes`**. Répond à F-178. Conséquence
+  (F-194) : la connexion de V éprouve la pile PAM de `sshd`. **Toujours non relevé :**
+  `/etc/pam.d/sshd` — c'est le `@VERIF` déjà posé par F-194, pas un objet nouveau.
+- **F-198** — **Étape T, premier passage : `FAILED`.** La copie `~/scom-test.sudoers`,
+  venue du poste Windows de l'opérateur, comptait **52 lignes et 4980 octets** ; le fichier
+  du dépôt en compte **60 et 5759**, à l'empreinte que porte la procédure (mesuré, P-78).
+  Copie retirée, recopiée — empreinte contrôlée par `certutil` sur le poste Windows
+  **avant** `scp` —, T rejoué : `OK`, `rc_sha=0`. Résultat du témoin à empreinte nulle :
+  non relayé. **Origine de la copie abîmée : non établie.** @VERIF : outil et chemin de
+  la première copie vers le poste Windows.
+  *Au sens de R-12 et R-13 :* la garde de T a arrêté un fichier **réellement** altéré,
+  **avant** A2, avec son propre message (`FAILED`) — un échec réel, imputable à la garde.
+- **F-199** — **Étape R jouée sans nécessité**, sans dégât : `rm` → `1` (rien à retirer),
+  `userdel` → `6`, `getent passwd` → `2` pour les deux comptes. `man userdel` du poste
+  (shadow-utils 4.19.0, P-78) : `6` « specified user doesn't exist ». Les codes montrent
+  que les comptes n'existaient pas au moment du jeu ; sa place exacte dans la séquence et
+  le code de `visudo -c` du bloc ne sont pas relayés.
+- **F-200** — **A1 : `scom_adm` (uid 1002) et `scom_mon` (uid 1003) créés.** **Avant
+  `passwd`, le champ `shadow` vaut `!!`** — et non le seul `!` que décrit `man useradd` du
+  poste, la page Fedora employée pour la procédure (F-184, F-195). **Révise F-184.** Puis
+  `chage -m 0 -M -1 -I -1 -E -1` et `passwd` avec les mots de passe pris dans BeyondTrust
+  (D-019 b). Codes de retour de `chage`, `chage -l` et `passwd` : non transmis.
+- **F-201** — **A2, premier passage : le fichier posé n'était pas celui du dépôt.**
+  `/etc/sudoers.d/scom-test` avait l'empreinte `dae4ec24…f0a41` et **5758 octets**, contre
+  5759 au dépôt. **Hypothèse de l'espace insécable perdue (P-69), écartée :** une
+  occurrence de chaque côté — au dépôt, mesurée (P-78) ; sur `host02`, relayée. Fichier
+  reposé depuis la version relue : empreinte
+  `895682f51137e5c87d16b1b2e3a5f0eb51dc587d033d4d942f8fd6a4f8fd5a07`, **égale à celle du
+  dépôt** (P-78). Cause de l'écart : non établie.
+  **Incohérence relevée, non résolue :** T avait validé `~/scom-test.sudoers` à
+  l'empreinte du dépôt (F-198), et A2 installe ce même chemin
+  (`comptes-scom-host02.md:276`). Un autre fichier n'a pu être posé que si
+  `~/scom-test.sudoers` a changé entre T et A2, ou si la source de l'`install` n'était pas
+  celle que T avait contrôlée. @VERIF : la commande `install` effectivement jouée au
+  premier passage. **Constat sur la procédure, non corrigé (hors périmètre) :** A2 ne
+  recontrôle pas l'empreinte avant l'`install` ; sa seule garde est `visudo -cf`, qui ne
+  distingue pas un fichier valide mais différent (F-189).
+- **F-202** — **Témoin de `visudo` sur `host02` :** une ligne `NOPASSWD` sans « : » passe
+  `visudo -cf` (`rc=0`) et ne démontre donc rien ; le témoin retenu est la parenthèse non
+  fermée (`rc=1`, « syntax error »). **Concorde avec F-189**, mesuré sur le poste.
+  *Écart au texte de la procédure :* celle-ci ne porte **que** le témoin à parenthèse
+  (`comptes-scom-host02.md:272`) et met en garde contre l'autre (`:286-287`), dans ses
+  deux versions, `743a335` et `c62545e` (P-78). Le témoin `NOPASSWD` a donc été joué
+  **hors du texte**. `[PILOTE-DÉCLARÉ]` Il avait été fourni par le pilote dans ses
+  échanges avec l'opérateur, hors procédure.
+- **F-203** — **A3 :** la forme qui démontre les refus **sans rien exécuter** est
+  `sudo -u <compte> sudo -n -l <commande>` — celle des lignes principales de la procédure
+  (`comptes-scom-host02.md:315-319`). La forme de repli `-U` n'est pas relayée comme
+  jouée (R-04 : branche non exercée).
+- **F-204** — **V :** connexion SSH de `scom_adm` à `localhost` par mot de passe,
+  **`rc=0`** ; avec `usepam yes` (F-197), la pile PAM de `sshd` accepte ce compte.
+  **F :** certificat inchangé ; les valeurs relevées sont celles du rejeu du 2026-10-27
+  (F-208).
+
+**B — 2026-10-27, rejeu et vérifications** `[ÉCRAN-2026-10-27, relayé]` (P-73).
+- **F-205** — **A2 rejoué** à 09:51 (fuseau non relayé) : témoin `rc=1` ; fichier de
+  **5759 octets**, `-r--r-----`, `root root`, contexte `etc_t` ; `visudo -c` global
+  `rc=0`. Répond au relevé demandé par la procédure (`:293-294`). *Au sens de R-12 :* le
+  sens de l'échec du contrôle de syntaxe est montré **sur `host02`** ; le code du
+  `visudo -cf` du fichier n'est pas relayé.
+- **F-206** — **A3 rejoué.** Permis : `cat` du certificat par `scom_adm` (`rc=0`),
+  `scxlogfilereader -p` par `scom_mon` (`rc=0`). **Refusés, sans message :** copie du PEM
+  par `scom_adm` (`rc=1`), installation de l'agent par `scom_adm` (`rc=1`), `cat` du
+  certificat par `scom_mon` (`rc=1`). Conditions de R-13 posées par la procédure
+  (`:339-348`) : (1) une ligne permise de même forme a rendu `0` pour chaque compte —
+  **oui** ; (2) aucun message — **oui** ; (3) les lignes refusées absentes de
+  `sudo -l -U` — **oui** : pour chacun des deux comptes, `sudo -l -U` ne liste que sa
+  ligne permise (`cat` du certificat pour `scom_adm`, `scxlogfilereader -p` pour
+  `scom_mon`), `rc=0` pour les deux. **Le refus de la signature est démontré sous les
+  trois conditions.**
+- **F-207** — **omi.** `scxadmin -status` : `omiserver` *running*, `omiagent` *stopped*
+  — même état qu'en F-150. Lecture « lancé à la demande » : @VERIF, aucune source lue.
+  `/var/opt/microsoft/scx/log/` ne contient que `scx-logrotate.status`. `ss` :
+  `omiengine` (pid 949) en écoute sur `*:1270` (concorde avec F-176).
+- **F-208** — **F :** empreintes SHA-256 et SHA-1 du certificat, lues par
+  `openssl x509 -fingerprint`, **identiques à la référence**. Valeurs non écrites (R-07,
+  F-174). `~/scom-comptes-avant.fp` ne contient qu'une ligne SHA-256, conformément à la
+  procédure (`comptes-scom-host02.md:78`) : c'est la référence de la comparaison SHA-256.
+  `[PILOTE-DÉCLARÉ]` La comparaison SHA-1 a été faite par le pilote contre l'empreinte
+  SHA-1 que porte le nom du PFX livré (F-144, F-174).
+- **F-209** — **Erreur du pilote, consignée** `[PILOTE-DÉCLARÉ]` : un `sha256sum` du
+  **fichier** `omi.pem` (valeur non écrite) avait été comparé à l'**empreinte du
+  certificat**. Ce sont deux grandeurs différentes. `[SOURCE-EXTERNE]` `man openssl-x509`
+  du poste (openssl 3.5.9, P-78), `-fingerprint` : « Calculates and prints the digest of
+  the DER encoded version of the entire certificate » — l'empreinte porte sur l'encodage
+  DER, `sha256sum` sur les octets du fichier PEM. **Consigne de lecture retenue :**
+  l'empreinte d'un certificat se lit **uniquement** par `openssl x509 -fingerprint`. Elle
+  n'est **pas** inscrite comme règle `R-xx` : les règles vivent dans `CLAUDE.md`, hors du
+  périmètre d'écriture de cette consignation.
+- **F-210** — `[PILOTE-DÉCLARÉ]` La demande de découverte a été envoyée par courriel à
+  l'équipe SCOM. **Date d'envoi non relevée.**
+
+**C — 2026-10-30, échec de la découverte en Basic** (P-74).
+- **F-211** — `[TIERS-DÉCLARÉ]` (courriel de l'équipe SCOM ; sortie citée, non vue par
+  l'agent) L'assistant de découverte échoue sur `<MACHINE-FQDN>` (`host02`) avec
+  **`WinRMBasicAuthDisabledException`**. Sur un serveur de gestion, non désigné,
+  `winrm get winrm/config/client` donne `Basic=false`, `Digest=false`,
+  `AllowUnencrypted=false` (`Source=GPO`), `Kerberos=true`, `Negotiate=true`. Instruit
+  PO-059 ; ouvre PO-068.
+- **S-21** `[SOURCE-EXTERNE]` — Microsoft Learn, « Kerberos Authentication Support for
+  Unix and Linux computers »,
+  `learn.microsoft.com/en-us/system-center/scom/manage-linux-kerberos-auth?view=sc-om-2025`,
+  `ms.date` **2026-06-30**, « Last updated on 2026-07-01 » affiché, méta `updated_at`
+  **2026-10-15T11:03:00Z**. **Lue par l'agent le 2026-11-09 à 08:41:35 UTC**
+  (`http_code=200`, 57 489 octets, P-78). La date de consultation du pilote n'est pas
+  relayée ; `updated_at` étant postérieur à la date affichée, la page a pu changer entre
+  les deux lectures — non établi.
+- **F-212** — `[SOURCE-EXTERNE]` S-21, texte extrait (P-78) :
+  - « Don't disable basic authentication for WinRM if you aren't using Windows Kerberos
+    authentication. »
+  - Tableau par activité : *Agent Install*, *Uninstall*, *Update*, *Recovery* — SSH,
+    Kerberos « No » ; *Agent Monitoring*, *Agent Discovery* — WS-Man, « Yes ».
+  - « UNIX or Linux agent must be domain joined. » ; « Non-AD Kerberos realms such as
+    FreeIPA aren't supported. » ; serveur de gestion, agent et compte *Run As* dans la
+    même forêt, ou dans des forêts liées par une approbation bidirectionnelle.
+  - « The Run As Account must be a domain-based account whose Kerberos credentials can be
+    used by the Management Server to request a service ticket for the target host's SPN
+    (HTTP/<fqdn>). »
+  - « Mixed mode authentication where some agents use basic authentication and others use
+    Kerberos isn't supported. Instead use separate Resource Pools and Management Servers
+    to achieve this. »
+  - Tâche « Enable Linux Authentication Type », et « Repeat the above steps on all
+    management servers in the UNIX and Linux resource pool » ; elle pose une valeur de
+    registre sous `…\Setup\Linux Auth`.
+  - **RHEL 9.** Deux tableaux de systèmes : le premier, balisé
+    `data-moniker="sc-om-2019"`, s'arrête à RHEL 8 ; le second, balisé
+    `sc-om-2022 sc-om-2025`, porte **RHEL 7, 8 et 9**. Ce projet vise SCOM 2025 (F-162) :
+    **RHEL 9 est listé pour cette version.** Réserve de la page elle-même : « (Only the
+    most recently released version of each distribution will be supported.) » — portée
+    non établie (PO-072).
+  - *Rapprochement avec F-182 :* S-21 range la **découverte** sur WS-Man, comme S-18
+    l. 246 et 286. La contradiction interne de S-18 n'est pas levée ; la page Kerberos
+    en suit un côté.
+- **F-213** — `[ÉCRAN-2026-10-30, relayé]` `realm list` sur `host02` : `<REALM>`,
+  `kerberos-member`, client `sssd`, `login-formats` `%U`, `permitted-groups` =
+  `<GROUPES-ADMIN-LINUX>`. Keytab `/etc/krb5.keytab` : `<MACHINE>$`, `host/` (nom court et
+  FQDN), `RestrictedKrbHost/`, versions de clé **3 et 4**. **Aucune entrée `HTTP/`.**
+  (F-092 donnait 2 et 3 pour `host01`, autre machine.)
+- **F-214** — `[PILOTE-DÉCLARÉ]` `host02` est la **première** machine Linux testée sur ce
+  serveur SCOM ; l'équipe SCOM **n'a jamais validé Kerberos avec RHEL 9**. Concorde avec
+  F-079.
+
+**D — 2026-11-02, le certificat sous Kerberos** (P-75).
+- **F-215** — `[TIERS-DÉCLARÉ]` En réunion, l'expert SCOM de Microsoft a déclaré que le
+  certificat **n'est pas utilisé** avec Kerberos. Aucun écrit. `[PILOTE-DÉCLARÉ]` Lecture
+  de l'opérateur : la chaîne du certificat **n'est pas vérifiée**.
+- **F-216** — `[SOURCE-EXTERNE]` S-21, commande de vérification :
+  `winrm e … -r:https://<UNIX/Linux servername>:1270 … -auth:Kerberos -skipcacheck
+  -skipcncheck …`. **Le canal reste TLS** (`https://…:1270`). La page **ne définit pas**
+  `-skipcacheck` ni `-skipcncheck` ; les lire comme la désactivation des contrôles
+  d'autorité et de nom est une lecture `[PILOTE-DÉCLARÉ]`, cohérente avec F-215.
+  `[PILOTE-DÉCLARÉ]` omi garde besoin d'un certificat (`pemfile` et `keyfile` dans
+  `omiserver.conf`) : **non sourcé** — aucune source lue ni aucun relevé au dossier ne cite
+  ces clés (`git grep`, rc=1, P-78). @VERIF : relever ces deux clés dans `omiserver.conf`
+  sur `host02`. **La question porte donc sur la provenance du certificat — ADCS ou
+  autosigné —, pas sur son existence.** PO-069.
+
+**E — 2026-11-04 et 2026-11-09, objets AD et relevés SSSD** (P-76, P-77).
+- **F-217** — `[TIERS-DÉCLARÉ]` (courriels de l'interlocuteur de l'équipe AD) Comptes
+  `<COMPTE-SCOM-Q>` (Qualification) et `<COMPTE-SCOM-P>` (Production) ; groupes
+  `<GROUPE-SCOM-Q>` et `<GROUPE-SCOM-P>`. **Déplacés le 2026-11-09** dans
+  `<OU-COMPTES-SCOM>` et `<OU-GROUPES-SCOM>`. Attributs POSIX posés. Délégation demandée
+  pour le rôle d'administration de l'opérateur (`<GROUPES-DELEGATION-AD>`, demandes
+  `<DEMANDE-IAM-1>` et `<DEMANDE-IAM-2>`).
+- **F-218** — `[TIERS-DÉCLARÉ]` Actions annoncées. Côté SCOM : ajout des comptes aux
+  groupes, mots de passe dans HPAM, comptes *Run As*. Côté Linux : `sudo`, SPN `HTTP/`,
+  keytab.
+- **F-219** — `[ÉCRAN-2026-11-04, relayé]` `sssd.conf` de `host02`, section `[domain/<REALM>]` :
+  - `use_fully_qualified_names` **deux fois** : `True` (l. 16) puis `False` (l. 24).
+    Valeur effective **`False`** — noms courts, en minuscules — constatée par la
+    résolution du compte sous son nom court (F-221), **non** par une source sur la
+    priorité d'une clé répétée ;
+  - `ldap_id_mapping = False` : seuls les comptes AD **porteurs d'attributs POSIX** sont
+    visibles. `[PILOTE-DÉCLARÉ]` C'est la cause du « no such user » du 2026-11-04 ;
+    cohérent avec la résolution du 2026-11-09, après la pose des attributs (F-217, F-221) ;
+  - `access_provider = simple`, `simple_allow_groups` = `<GROUPES-ADMIN-LINUX>` ; ni
+    `search_base` ni `access_filter` ;
+  - `sssctl config-check` : 0 problème, 0 fichier `conf.d`. **Le doublon n'y est pas
+    signalé** : ce contrôle n'a pas vu la clé répétée (R-03).
+- **F-220** — Le doublon de `use_fully_qualified_names` relève de `rhel_post_install`, qui configure SSSD (F-069) : renvoi seul, aucun point ouvert SCOM (R-09).
+- **F-221** — `[ÉCRAN-2026-11-09, relayé]` `<COMPTE-SCOM-Q>`, sous son nom court en
+  minuscules : uid = gid, attribués dans AD ; dossier personnel `/home/` suivi de ce nom ;
+  shell `/bin/bash`. `<GROUPE-SCOM-Q>`, nom court en minuscules : gid attribué dans AD,
+  **aucun membre** — le compte n'est **pas encore** dans le groupe (F-218).
+- **F-222** — `[ÉCRAN-2026-11-09, relayé]` `adcli` **0.9.3.1** propose
+  `--add-service-principal` et `--remove-service-principal`. `man adcli`, sur `host02` :
+  par défaut, `update` **change le mot de passe machine s'il a plus de 30 jours**.
+  *Conséquence :* poser un SPN par `adcli update` peut faire tourner le mot de passe
+  machine, donc sa version de clé. `[PILOTE-DÉCLARÉ]` Contrairement à une restauration
+  (PO-017, point 2), qui remet un secret qu'AD ne connaît plus, `adcli` change le secret
+  dans AD et dans le keytab ensemble : les deux restent cohérents. Risque résiduel : délai
+  de réplication entre contrôleurs de domaine juste après le changement — @VERIF.
+  Décision sur cet effet : PO-070.
+- **F-223** — `[ÉCRAN-2026-11-09, relayé]` (poste Windows) `setspn -Q
+  HTTP/<MACHINE-FQDN>` : le SPN existe, sur le **seul** objet `<DN-MACHINE>`.
+  `[PILOTE-DÉCLARÉ]` Il a été créé côté AD, hors équipe Linux.
+- **F-224** — `[ÉCRAN-2026-11-09, relayé]` `kvno HTTP/<MACHINE-FQDN>` → **4**, égal à la
+  plus haute version de clé du keytab (F-213) ; `kinit -k` sous `<MACHINE>$@<REALM>` :
+  `rc=0`. `[PILOTE-DÉCLARÉ]` Le mot de passe machine **n'a pas été réinitialisé** par la
+  création du SPN. **Le keytab n'a toujours pas d'entrée `HTTP/`** ; qu'omi accepte un
+  ticket `HTTP/` sans elle : @VERIF (PO-070).
+
+**F — Reports antérieurs.**
+- **F-015** est **révisé** dans `scomm-depot-actuel.md` (le filtre `default` de Jinja2,
+  mesuré en P-78) ; le risque qui en découle est porté par PO-065.
+- Le contenu de `/etc/pam.d/sshd`, non relevé, est **déjà** consigné (F-194, `@VERIF`) ;
+  F-197 le rappelle. Aucun objet nouveau.
 
 ---
 
@@ -2591,7 +2846,12 @@ Son `requirements.yml` épingle `<2.0.0` (F-073) ; or 1.6.0 et 1.6.2 déclarent
 `>=2.15.0` (S-15, F-146). L'épinglage sûr pour `ansible-core 2.14` est `<1.6.0`. **À
 porter dans `rhel_post_install`** — R-09 : rien n'y est écrit d'ici.
 
-### PO-058 — Sur `host02`, `/etc/opt/microsoft/scx/ssl/scx.pem` est-il un lien vers `omi.pem` ? *(ouvert le 2026-10-20)*
+### PO-058 — Sur `host02`, `/etc/opt/microsoft/scx/ssl/scx.pem` est-il un lien vers `omi.pem` ? *(ouvert le 2026-10-20)* — **CLOS le 2026-10-22**
+`[RÉVISÉE le 2026-11-09]` — **CLOS : oui, c'est un lien vers `/etc/opt/omi/ssl/omi.pem`**
+(F-196, étape 0 jouée le 2026-10-22). La première branche ci-dessous est donc la bonne :
+la ligne de signature aurait remplacé le certificat ADCS ; D-017 (d) l'a écartée.
+Titre **ÉTAIT :** « PO-058 — Sur `host02`, `/etc/opt/microsoft/scx/ssl/scx.pem` est-il un
+lien vers `omi.pem` ? *(ouvert le 2026-10-20)* ».
 La ligne de signature de S-16 **écrit** `/etc/opt/microsoft/scx/ssl/scx.pem`, et la
 ligne de lecture le **lit** ; le certificat servi est `/etc/opt/omi/ssl/omi.pem` (F-174).
 Si le premier chemin mène au second, la ligne de signature remplacerait le certificat
@@ -2600,6 +2860,14 @@ ADCS (R-10) ; s'il n'existe pas, la lecture par `scom_adm` échouera à la déco
 pas `-f`, qui ne peut pas échouer sur un fichier absent, F-189).
 
 ### PO-059 — Résultat du test SCOM sur `host02` *(ouvert le 2026-10-20)*
+`[RÉVISÉE le 2026-11-09]` — **premier essai : échec en Basic ; voie Kerberos en cours.**
+L'assistant a échoué sur `WinRMBasicAuthDisabledException` : Basic est désactivé par GPO
+sur les serveurs de gestion (F-211). S-21 tranche : sans Kerberos, Basic ne doit pas être
+désactivé (F-212). Décision : Kerberos (D-020, clôt PO-068). Rien de la liste ci-dessous
+n'a encore été observé — aucune découverte n'a abouti. **Le canal de la découverte**
+« already installed » est désormais désigné par S-21 : **WS-Man** (F-212). **S'ajoute :**
+ce que SCOM fait du certificat de l'agent sous Kerberos (PO-069). La liste ci-dessous,
+écrite pour la voie Basic, est conservée telle quelle.
 À relever : empreinte du certificat avant et après la découverte (F-169) ; acceptation
 du sujet tel quel (PO-023) ; acceptation de 1.9.4-0 (D-017 b, F-170) ; canal employé par
 la découverte « already installed » — SSH ou WS-Man, S-18 se contredit (F-182) ;
@@ -2635,6 +2903,12 @@ Une centaine d'hôtes : assistant manuel ou script (F-163 évoque PowerShell ou
 (noms, empreintes, état d'écoute). **Qui :** l'équipe SCOM et l'opérateur.
 
 ### PO-063 — Non-expiration de `scom_mon` : à fixer explicitement dans le rôle *(ouvert le 2026-10-20)*
+`[RÉVISÉE le 2026-11-09]` — **change d'objet : ne concerne plus les comptes locaux**, qui
+seront supprimés une fois Kerberos validé (D-023). La question se reporte sur le **compte
+AD** de supervision (`<COMPTE-SCOM-Q>`, puis `<COMPTE-SCOM-P>`), dont le mot de passe est
+dans HPAM et géré par l'équipe SCOM (F-218) : son expiration se règle dans l'annuaire,
+pas par `chage`. **Qui :** l'équipe SCOM et l'interlocuteur de l'équipe AD.
+**ÉTAIT :** les deux comptes locaux, texte ci-dessous.
 `[RÉVISÉE le 2026-10-21]` — la non-expiration vaut désormais pour **les deux** comptes,
 `scom_adm` et `scom_mon`, tous deux authentifiés par mot de passe (D-019 a). Le titre
 ci-dessus est conservé (R-11) ; il faut le lire « des deux comptes ».
@@ -2643,7 +2917,13 @@ ci-dessus est conservé (R-11) ; il faut le lire « des deux comptes ».
 le durcir. La réécriture du rôle doit poser la non-expiration **explicitement** (`chage`,
 F-186), et la vérifier par une garde (R-12) — pas la déduire de `login.defs`.
 
-### PO-064 — Exposition SSH de `scom_mon` *(ouvert le 2026-10-20)*
+### PO-064 — Exposition SSH de `scom_mon` *(ouvert le 2026-10-20)* — **SANS OBJET pour SCOM le 2026-11-02**
+`[RÉVISÉE le 2026-11-09]` — **sans objet pour SCOM** : D-020 retire SSH du chemin SCOM
+(installation, mise à jour et récupération par AAP ; supervision et découverte par
+WS-Man, F-212), et les comptes locaux seront supprimés (D-023). *Ce qui reste vrai :* tant
+qu'ils existent sur `host02`, `scom_adm` et `scom_mon` ont un mot de passe et sont
+joignables par SSH (`PasswordAuthentication yes`, F-178 ; connexion constatée, F-204).
+Titre **ÉTAIT :** « PO-064 — Exposition SSH de `scom_mon` *(ouvert le 2026-10-20)* ».
 `[RÉVISÉE le 2026-10-21]` — l'exposition SSH par mot de passe concerne maintenant **les
 deux** comptes (D-019 a). `scom_adm` **a besoin** de SSH : la maintenance passe par SSH
 (F-182) — et désormais par mot de passe, ce qui écarte une voie « clé seule » par `Match
@@ -2662,8 +2942,20 @@ réécriture devra suivre D-017 (c) et (d), et PO-063.
 `[NOTE du 2026-10-21]` D-017 (c) est révisée par D-019 (a) : les deux comptes par mot de
 passe. La réécriture suit donc D-017 (c) **telle que révisée**, D-017 (d), D-019 et
 PO-063.
+`[NOTE du 2026-11-09]` Ces renvois sont révisés à leur tour : sous Kerberos, le compte de
+supervision est un compte AD (D-020) et les règles `sudo` visent ce seul compte (D-022) ;
+PO-063 a changé d'objet. **Risque nouveau, tiré de la révision de F-015**
+(`scomm-depot-actuel.md`) : avec `scomm_monitoring_user_password: ""`, le filtre
+`default(omit)` **ne s'applique pas**, et `password: ""` est transmis tel quel au module
+`user` (P-78). L'effet de cette valeur sur le compte n'est pas établi (@VERIF : la
+documentation du module `user` à la version d'`ansible-core` du seed). **Ne jamais jouer
+le rôle avec le tag `users` avant sa réécriture.**
 
-### PO-066 — Type de clé et algorithmes SSH pour `scom_adm` *(ouvert le 2026-10-20)* — **SUSPENDU le 2026-10-21**
+### PO-066 — Type de clé et algorithmes SSH pour `scom_adm` *(ouvert le 2026-10-20)* — **SUSPENDU le 2026-10-21** — **SANS OBJET pour SCOM le 2026-11-02**
+`[RÉVISÉE le 2026-11-09]` — **sans objet pour SCOM** : D-020 retire SSH du chemin SCOM, et
+`scom_adm` sera supprimé (D-023). La réouverture envisagée ci-dessous — une clé revenant
+avec l'automatisation de la découverte — tombe aussi : la découverte passe par WS-Man
+(F-212). Titre **ÉTAIT :** « … — **SUSPENDU le 2026-10-21** ».
 `[RÉVISÉE le 2026-10-21]` — **suspendu, non clos.** Sans objet **tant que D-019 (a)
 tient** : `scom_adm` s'authentifie par mot de passe, aucune clé n'est posée. *Motif de
 ne pas le fermer :* les contraintes de S-17 (F-183) et la politique cryptographique de
@@ -2679,11 +2971,76 @@ par la procédure. Si la découverte échoue sur « No supported authentication 
 available », c'est une **décision** à prendre, pas un correctif à appliquer.
 
 ### PO-067 — Rotation des mots de passe par BeyondTrust *(ouvert le 2026-10-21)*
+`[RÉVISÉE le 2026-11-09]` — **change d'objet : ne concerne plus les comptes locaux** ni
+leurs entrées BeyondTrust, supprimés une fois Kerberos validé (D-023). La question se
+reporte sur le **compte AD** de supervision, dont le mot de passe est dans **HPAM** et
+géré par l'équipe SCOM (F-218) : si HPAM le fait tourner, le compte *Run As* doit suivre.
+**Qui :** l'équipe SCOM. **ÉTAIT :** BeyondTrust et les deux comptes locaux, texte
+ci-dessous.
 Le dossier ne dit pas si BeyondTrust fait tourner **automatiquement** les mots de passe
 de `scom_adm` et `scom_mon` sur les hôtes (F-191). Si c'est le cas, chaque rotation doit
 aussi mettre à jour le compte *Run As* correspondant dans SCOM, sinon la supervision et
 la maintenance échouent. **Non établi.** Question pour l'équipe SCOM et pour les
 gestionnaires de BeyondTrust. **Qui :** l'opérateur.
+
+### PO-068 — Authentification WinRM du pool UNIX/Linux : Basic ou Kerberos ? *(ouvert le 2026-10-30)* — **CLOS le 2026-11-02**
+Ouvert par l'échec de la découverte (F-211) : Basic est désactivé par GPO sur les
+serveurs de gestion, et S-21 demande de ne pas le désactiver sans Kerberos (F-212). Deux
+voies : rétablir Basic pour le pool, ou passer le pool à Kerberos — pas les deux, le mode
+mixte n'étant pas supporté dans un même pool (F-212).
+**Clos par D-020** (2026-11-02) : Kerberos. *Ce que la clôture n'emporte pas :* que
+Kerberos fonctionne avec RHEL 9 ici — l'équipe SCOM ne l'a jamais validé (F-214) ; la
+tâche « Enable Linux Authentication Type » sur **chaque** serveur du pool (F-212) ; et
+les quatre points ouverts qui suivent.
+
+### PO-069 — Vérification de la chaîne du certificat de l'agent sous Kerberos *(ouvert le 2026-11-02)*
+L'expert SCOM de Microsoft déclare que le certificat « n'est pas utilisé » sous Kerberos
+(F-215) ; la commande de vérification de S-21 reste en TLS et désactive des contrôles
+qu'elle ne définit pas (F-216). **Ce qui n'est pas établi :** que SCOM, sous Kerberos,
+ignore la provenance du certificat — c'est-à-dire qu'un certificat autosigné passerait
+aussi bien que le certificat ADCS. **C'est la question dont dépend D-021** : si la chaîne
+n'est pas vérifiée, le certificat ADCS n'apporte rien à SCOM.
+**Ce qui le clôt, l'un ou l'autre :**
+- une **référence écrite de Microsoft** qui le dise, nommée et lue (R-01) ;
+- **ou l'essai suivant**, une fois une découverte Kerberos réussie : restaurer le
+  certificat autosigné conservé dans `/etc/opt/omi/ssl.avant-pfx` (F-152), relancer la
+  découverte **et** la supervision, puis remettre le certificat ADCS.
+  *Au sens de R-14 :* c'est l'exercice en **divergence** d'une comparaison d'émetteur — un
+  certificat d'un autre émetteur présenté volontairement. Il ne se joue **qu'avec une
+  procédure écrite d'avance** (R-08) : retour arrière, empreintes avant et après
+  (`openssl x509 -fingerprint`, F-209), et redémarrage d'`omid`. R-10 s'applique : on
+  **restaure** des fichiers conservés, on n'en **fabrique** aucun.
+**Qui :** l'opérateur et l'équipe SCOM.
+
+### PO-070 — Omi acceptera-t-il un ticket `HTTP/<MACHINE-FQDN>` sans entrée `HTTP/` au keytab ? *(ouvert le 2026-11-09)*
+Le SPN existe dans l'annuaire, sur l'objet de `host02` (F-223) ; sa version de clé est
+celle du keytab (F-224) ; mais le keytab ne porte **aucune** entrée `HTTP/` (F-213,
+F-224). L'équipe AD annonce « SPN HTTP, keytab » côté Linux (F-218). **Non établi :**
+comment omi choisit la clé pour déchiffrer un ticket de service — par le nom du principal
+demandé, ou par toute clé du compte au keytab. Aucune source lue. **Mesure qui tranche :**
+la commande de vérification de S-21 depuis un serveur de gestion (F-216), avant et, si
+elle échoue, après l'ajout d'une entrée `HTTP/`. L'ajout d'une entrée `HTTP/` par
+`adcli update` fait tourner le mot de passe machine s'il a plus de 30 jours (F-222) ;
+`[PILOTE-DÉCLARÉ]` AD et keytab restent cohérents, comme lors d'une rotation SSSD.
+**Accepter cet effet ou l'éviter est une décision à prendre — non prise.** **Qui :** l'équipe SCOM pour la commande,
+l'opérateur pour le keytab.
+
+### PO-071 — Accès SSSD du compte de supervision sous Kerberos *(ouvert le 2026-11-09)*
+`access_provider = simple` et `simple_allow_groups` = `<GROUPES-ADMIN-LINUX>` seulement
+(F-219) : `<COMPTE-SCOM-Q>` n'y est pas, et `<GROUPE-SCOM-Q>` n'a encore aucun membre
+(F-221). **Non établi :** que la pile PAM d'omi (`/etc/pam.d/omi`, `account include
+password-auth`, F-180) applique le contrôle d'accès SSSD à une authentification
+Kerberos par WS-Man — et donc qu'un refus SSSD bloquerait la supervision. D-022 admet
+que le groupe soit ajouté à `simple_allow_groups`. **Où :** la configuration SSSD
+relève de `rhel_post_install` (R-09). **Qui :** l'opérateur.
+
+### PO-072 — Support de RHEL 9 par la voie Kerberos de SCOM *(ouvert le 2026-11-09)*
+La question documentaire est **instruite** le jour même : RHEL 9 figure dans le tableau
+de S-21 balisé `sc-om-2022 sc-om-2025` (F-212, P-78) ; le marqueur que le pilote avait
+posé sur ce point est levé par cette balise. **Ce qui reste :** la portée de la réserve
+« Only the most recently released version of each distribution will be supported » —
+version majeure ou mineure ? —, et le fait qu'aucune validation n'existe dans cet
+environnement (F-214). **Qui :** l'équipe SCOM, à l'essai.
 
 ---
 
@@ -2921,6 +3278,12 @@ réseau**, hors de la machine.
   modèle de D-015. Le rôle n'est pas modifié ; sa tâche `users` reste sautée.
   `[RÉVISÉE le 2026-10-21, D-019 a]` `scom_adm` s'authentifie **par mot de passe**, comme
   `scom_mon`. **ÉTAIT :** « `scom_adm` (maintenance, clé SSH) ». Le reste de (c) tient.
+  `[RÉVISÉE le 2026-11-09, D-020 et D-023]` **Les deux comptes locaux deviennent
+  provisoires.** Sous Kerberos, la supervision passe par un **compte AD**,
+  `<COMPTE-SCOM-Q>` pour `host02` (D-020, D-023) ; la maintenance ne passe plus par SCOM
+  (D-020). `scom_adm` et `scom_mon` seront **supprimés** une fois Kerberos validé (D-023).
+  **ÉTAIT :** « deux comptes locaux, **`scom_adm`** (maintenance …) et **`scom_mon`**
+  (supervision …), créés **à la main** sur `host02` pour le test » — sans terme.
 - **(d)** sudoers : **partir du modèle S-16** (« 2022 and above »), noms remplacés
   (`scomadm` → `scom_adm`, `scomuser` → `scom_mon`, donc `/tmp/scx-scomadm` →
   `/tmp/scx-scom_adm`), avec **mises en commentaire motivées** : la ligne de signature du
@@ -2933,6 +3296,14 @@ réseau**, hors de la machine.
   autre élévation** pour `scom_mon` tant que l'équipe SCOM n'a pas listé ses besoins.
   Si la découverte exige une ligne commentée, elle sera réactivée **par décision**,
   après avoir vu l'erreur.
+  `[RÉVISÉE le 2026-11-09, D-022]` **Sous Kerberos, les règles `sudo` visent le seul
+  compte AD de supervision**, pas les groupes SCOM (D-022). Les lignes de `scom_adm`
+  perdent leur objet avec la maintenance par SCOM (D-020) ; le fichier
+  `/etc/sudoers.d/scom-test` reste posé jusqu'à la suppression des comptes locaux
+  (D-023). L'exclusion de la ligne de signature **tient**, et F-196 montre qu'elle
+  protégeait le certificat ADCS. **ÉTAIT :** « Restent actives : `Defaults:scom_adm
+  !requiretty`, la lecture du certificat par `scom_adm` (`cat`), `scxlogfilereader -p`
+  pour `scom_mon`. » — comme état cible, non comme état provisoire.
   *Précision de l'agent, à valider :* la ligne de désinstallation active du modèle n'est
   **pas** une désinstallation par *bundle* (elle appelle `omsadmin.sh` ou
   `/opt/microsoft/scx/bin/uninstall`) ; le motif retenu pour elle est celui du cycle de
@@ -2946,6 +3317,8 @@ réseau**, hors de la machine.
   marquée conservée ci-dessus telle qu'écrite le 2026-10-20 (R-11). La saisie
   reste interactive (`passwd`), jamais en ligne de commande, et vaut désormais pour
   `scom_adm` aussi.
+  `[NOTE du 2026-11-09]` Vaut tant que les comptes locaux existent (D-023). Le mot de
+  passe du compte AD de supervision est dans HPAM, géré par l'équipe SCOM (F-218).
 *Portée :* `host02` seulement ; rien de cela ne vaut pour le parc ni pour
 `rhel_post_install` (R-09). Procédure : `procedures/comptes-scom-host02.md`.
 *Motif :* même logique que D-010, D-014 et D-015 — la recette avance à la main, le parc
@@ -2965,13 +3338,67 @@ F-151 et D-015.
 - **(a)** `scom_adm` s'authentifie **par mot de passe**, comme `scom_mon` (F-190).
   **Révise D-017 (c)** (note datée et ÉTAIT posés dans D-017). La partie B de
   `procedures/comptes-scom-host02.md` devient sans objet ; PO-066 est suspendu.
+  `[RÉVISÉE le 2026-11-09, D-020 et D-023]` **Objet retiré** : la maintenance ne passe
+  plus par SCOM (D-020), `scom_adm` n'a plus de rôle dans la cible et sera supprimé
+  (D-023) ; PO-066 est sans objet pour SCOM. **ÉTAIT :** (a) ci-dessus, comme mode
+  d'authentification d'un compte de maintenance durable pour le test.
 - **(b)** les mots de passe des deux comptes viennent de **BeyondTrust**, où ils sont
   déjà générés (F-191). **Lève le marqueur de vérification de D-017 (e)** (note datée
   dans D-017). La saisie reste interactive (`passwd`), jamais en ligne de commande.
+  `[RÉVISÉE le 2026-11-09, D-023]` Les entrées BeyondTrust des deux comptes seront
+  **supprimées** avec eux, une fois Kerberos validé ; le compte AD de supervision a son
+  mot de passe dans **HPAM** (F-218). **ÉTAIT :** (b) ci-dessus, sans terme.
 - **(c)** découverte **par l'assistant** pour le test (F-192) ; l'automatisation est
   reportée et se fera avec l'équipe SCOM (PO-062).
 *Portée :* comme D-017, `host02` seulement. *Ce que la décision laisse ouvert :* la
 rotation par BeyondTrust (PO-067) ; l'exposition SSH des deux comptes (PO-064).
+`[NOTE du 2026-11-09]` PO-067 se reporte sur le compte AD et HPAM ; PO-064 est sans objet
+pour SCOM (D-020). (c) tient : la découverte du test reste faite par l'assistant.
+
+### D-020 — Authentification Kerberos ; compte AD pour la supervision ; cycle de vie de l'agent par AAP (2026-11-02)
+**Décisions de l'opérateur**, 2026-11-02 `[PILOTE-DÉCLARÉ]` (P-75) :
+- le pool UNIX/Linux s'authentifie par **Kerberos** auprès des agents ;
+- la supervision emploie un **compte AD** (F-217) ;
+- **tous** les serveurs Linux sont joints à AD — condition de S-21 (F-212) ;
+- l'**installation**, la **mise à jour** et la **récupération** de l'agent passent par
+  **AAP**, et **plus par SCOM**.
+**Clôt PO-068.** *Motif :* Basic est désactivé par GPO (F-211) et S-21 en fait une
+condition de Kerberos (F-212) ; les activités SSH de S-21 sont exactement celles que
+l'équipe Linux reprend par AAP. *Conséquences consignées :* SSH sort du chemin SCOM —
+PO-064 et PO-066 sans objet pour SCOM ; **révise** D-017 (c) et D-019 (a) (marques
+datées posées). *Ce que la décision n'établit pas :* que Kerberos fonctionne avec RHEL 9
+ici (F-214, PO-072), ni le rôle du certificat (PO-069). *Ce qu'elle ne dit pas :* le flux
+TCP 22 depuis les serveurs de gestion que D-016 réservait « si la découverte l'exige »
+— S-21 range la découverte sur WS-Man ; D-016 n'est pas révisée ici.
+
+### D-021 — L'intégration CEP/CES est suspendue ; le certificat ADCS reste sur `host02` (2026-11-02)
+**Décision de l'opérateur**, 2026-11-02 `[PILOTE-DÉCLARÉ]` (P-75). L'intégration de
+CEP/CES est **suspendue** tant que le traitement du certificat de l'agent par SCOM sous
+Kerberos n'est pas vérifié (PO-069). Le certificat ADCS posé à la main (F-152) **reste en
+place** sur `host02`.
+*Motif :* si SCOM ne vérifie pas la chaîne sous Kerberos (F-215), le certificat ADCS
+n'apporte rien à SCOM, et la chaîne CEP/CES n'aurait pas d'usage pour ce projet.
+*Portée :* les points ouverts propres à CEP/CES — **PO-041 à PO-049** — restent ouverts,
+**en suspens**, et ne sont pas modifiés. D-001 reste non tranchée.
+
+### D-022 — Les règles `sudo` visent le compte de supervision seul, pas les groupes SCOM (2026-11-04)
+**Décision de l'opérateur**, 2026-11-04 `[PILOTE-DÉCLARÉ]` (P-76), **contraire à la
+proposition** de l'interlocuteur de l'équipe AD : les règles `sudo` visent le **compte**
+de supervision (`<COMPTE-SCOM-Q>` pour `host02`), **pas** les groupes `<GROUPE-SCOM-Q>`,
+`<GROUPE-SCOM-P>`. Le groupe **peut** être admis à l'accès SSSD
+(`simple_allow_groups`, PO-071).
+*Motif déclaré :* non relayé. **Révise D-017 (d)** (marque datée posée).
+
+### D-023 — `host02` relève de la Qualification ; les comptes locaux seront supprimés (2026-11-04)
+**Décisions de l'opérateur**, 2026-11-04 `[PILOTE-DÉCLARÉ]` (P-76) :
+- `host02` relève de la **Qualification** : `<COMPTE-SCOM-Q>`, `<GROUPE-SCOM-Q>` ;
+- `scom_adm`, `scom_mon` et leurs entrées BeyondTrust seront **supprimés une fois
+  Kerberos validé**.
+**Révise D-017 (c) et D-019 (b)** (marques datées posées). PO-063 et PO-067 se reportent
+sur le compte AD. *Ce que la décision ne dit pas :* ce que « Kerberos validé » exige —
+découverte et supervision réussies ? — ni par quel geste. L'étape R de
+`procedures/comptes-scom-host02.md` défait les comptes et le sudoers, mais **ne touche
+pas** BeyondTrust (`:169`) : le retrait des entrées est un geste distinct.
 
 
 ---

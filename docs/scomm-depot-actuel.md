@@ -21,6 +21,8 @@ et exécution du rôle sur `host02`), en fin de fichier. Le code n'a pas changé
 deux dates.
 `[NOTE du 2026-10-20]` Complété par **F-188** (confrontation du gabarit sudoers à S-16),
 en fin de fichier. Le code n'a pas changé.
+`[NOTE du 2026-11-09]` **F-015 révisé** (filtre `default` de Jinja2, P-78). Le code n'a
+pas changé.
 
 ---
 
@@ -66,6 +68,20 @@ en fin de fichier. Le code n'a pas changé.
   donc `default(omit)` s'applique (`users.yml:18`) et aucun mot de passe n'est posé.
   `[NOTE du 2026-10-08]` Renvoi à compléter : la condition `when:` du sudoers est à
   `users.yml:29` (tâche entière : `:21-29`).
+  `[RÉVISÉE le 2026-11-09 — FAUX sur le mot de passe]` **`default(omit)` ne s'applique
+  pas à une chaîne vide.** Le filtre `default` de Jinja2 ne rend sa valeur par défaut que
+  si la variable est **indéfinie**, ou **fausse avec `boolean=true`** — source à la
+  version installée sur le poste (`python3-jinja2-3.1.6`, `filters.py:546-576`,
+  `if isinstance(value, Undefined) or (boolean and not value)`), et mesure : `""` rendu
+  tel quel, valeur par défaut rendue pour une variable indéfinie ou avec `true` (P-78).
+  `scomm_monitoring_user_password` étant **définie** à `""` (`defaults/main.yml:40`),
+  `users.yml:18` transmet **`password: ""`** au module `user`. Le commentaire
+  `defaults/main.yml:39` (« Leave empty to skip setting a password ») dit la même chose
+  que l'ancienne phrase, et il est faux pour la même raison. **Non établi :** l'effet de
+  `password: ""` sur le compte ; la version de Jinja2 du seed. Risque : PO-065 (dossier).
+  **ÉTAIT :** « … par défaut **vide** (`defaults/main.yml:40` :
+  `scomm_monitoring_user_password: ""`), donc `default(omit)` s'applique
+  (`users.yml:18`) et aucun mot de passe n'est posé. »
 - **F-016** — **Ce que le dépôt fait aujourd'hui d'un certificat.** Tout est dans
   `roles/scomm_agent/tasks/register.yml` et se résume à trois choses :
   1. `stat` sur `/opt/microsoft/scx/bin/tools/scxsslconfig` (`register.yml:8-11`) ;
