@@ -1139,3 +1139,58 @@ pour le test Kerberos.
 **Valeurs non écrites (R-07) :** noms réels, uid et gid AD, noms des cinq autres fichiers
 de `/etc/sudoers.d`, empreintes du certificat, de la sauvegarde et du fichier sudoers.
 **Aucune documentation citée** par le pilote. Fonde F-225 à F-242.
+
+---
+
+*Preuves ajoutées le **2026-11-19** (consignation C-8). **Aucune n'a été produite sur ce
+poste** (R-08) : P-81 à P-83 relèvent de la réserve de transmission de P-72 à P-77, à
+l'identique. Libellés : ceux du § 2.10 du dossier, aucun nouveau. **Entrée de la
+consignation**, sur le poste de rédaction, sans élévation : `git status --porcelain
+-uall` → aucune ligne, `rc=0` ; `HEAD` = `origin/main` = `854cfef` ; plus hauts numéros
+en usage F-242, PO-073, D-023, S-30, P-80.*
+
+**P-81** — `[ÉCRAN-2026-11-18, relayé]` **Relevés de diagnostic sur `host02`.** Captures
+relayées par le pilote, décrites ; **aucune vue par l'agent**. `realm list` ; `id` du
+compte sous son nom court et sous son UPN ; `getent group` ; `sssctl user-checks -a acct
+-s omi` du compte ; `sssctl domain-status` ; `/var/log/secure` (absence de lignes d'omi
+et du compte ; absence de `sudo` de 16:05 à 16:19 le 12/11) ; journal de SSSD (lignes
+`adcli` de 04:54) ; `omiserver.log` (lignes citées en F-255) et `mtime` du fichier ;
+liste du keytab ; `kvno HTTP/<MACHINE-FQDN>` ; démarrage d'`omid` et changement de PID ;
+`rpm -q --last` et historique `dnf` ; configuration de la rotation des journaux ;
+`omiserver.conf` l. 71 et présence de `omiserver.conf.avant-1270` ; contenu de
+`/var/opt/omi/log/` ; suivi en direct d'`omiserver.log` pendant un essai de l'assistant
+(15:07:56 UTC).
+`[PILOTE-DÉCLARÉ]` : hypothèse PAM écartée ; lecture « vérification sans rotation » des
+lignes `adcli` ; trafic non TLS du 16/11 ; lecture de l'abandon TLS par l'assistant ;
+erreur de fuseau d'abord commise puis corrigée par second courriel.
+**Codes non relayés :** l'ensemble des commandes de ce relevé.
+**Valeurs non écrites (R-07) :** noms réels, UPN, uid et gid AD, noms des contrôleurs de
+domaine. **Aucune documentation citée.** Fonde F-248 à F-259.
+
+**P-82** — `[TIERS-DÉCLARÉ]` **Échanges avec l'équipe SCOM des 18 et 19/11**, courriels
+et messages relayés par le pilote ; **aucun vu par l'agent**. Absence de `winrm.exe` et
+test CIM en PowerShell, avec l'instance `SCX_Agent` renvoyée ; exécution de la tâche
+« Enable Linux Authentication Type » et redémarrage du service ; erreur de l'assistant ;
+contrôle du compte et du mot de passe côté AD ; définition du *Run As* par l'UPN ;
+découverte réussie après saisie manuelle des identifiants (19/11 08:25 CET) ; demande
+« mettre à jour le mot de passe depuis HPAM ». **Non relayés :** compte et options de la
+session CIM ; serveurs du pool où la tâche a été exécutée ; serveur d'où l'assistant a
+été lancé. `[PILOTE-DÉCLARÉ]` : la demande HPAM est sans objet ; la question d'un retour
+en 1.9.3, l'avis du pilote et la décision de l'opérateur (18/11). **Aucune documentation
+citée.** Fonde F-243 à F-247 et F-264.
+
+**P-83** — `[ÉCRAN-2026-11-19, relayé]` **Relevés sur `host02` après la découverte.**
+Captures relayées par le pilote, décrites ; **aucune vue par l'agent**. Empreinte SHA-256
+du certificat par `openssl x509 -fingerprint` comparée au fichier « avant »
+(`rc_openssl=0`, `rc_diff=0`) ; `ls -l` de `/etc/opt/omi/ssl/` ; `/var/log/secure` ;
+lignes « unexpected eof while reading » d'`omiserver.log` (07:39:18 ×3, 07:54:18 ×4 UTC) ;
+décompte des lignes `EventId=20146` vers 09:07 CET : 2 ; `uptime -s` →
+2026-10-25 10:28:42 ; `systemctl show -p ActiveEnterTimestamp sssd` → 2026-11-09
+11:27:44 CET.
+`[PILOTE-DÉCLARÉ]` : lecture des connexions périodiques toutes les 15 minutes.
+**Non relayé :** témoin de la comparaison d'empreinte. **Valeurs non écrites (R-07) :**
+empreintes, nom réel de la machine. **Aucune documentation citée.** Fonde F-260 à F-263,
+et l'exclusion du redémarrage de la machine en F-257.
+**Contrôle R-07 fait par l'opérateur**, avec les noms réels (non écrits), sur le diff de
+cette consignation et sur tout le dépôt : `rc=1` pour les deux. Il complète le contrôle
+par motifs génériques de l'agent, qui ne disposait pas de ces noms.

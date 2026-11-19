@@ -14,7 +14,7 @@ nommée**, les faits **déclarés par l'opérateur**, les **points ouverts** et 
 |---|---|---|
 | Règles de travail | `../CLAUDE.md` | Une règle vit à un seul endroit. |
 | Ce que le code du dépôt fait aujourd'hui — **F-008 à F-021, F-038, F-155 à F-161, et F-188** (F-188 ajouté le 2026-10-20 ; **ÉTAIT :** « F-008 à F-021, F-038, et F-155 à F-161 » ; F-155 à F-161 ajoutés le 2026-10-08 ; **ÉTAIT :** « F-008 à F-021 et F-038 ») | `scomm-depot-actuel.md` | Brouillon sans autorité (F-044), périmable en bloc par la réécriture (D-007). **Toute citation de ces numéros dans ce fichier renvoie là-bas.** |
-| Sorties de commande — **P-01 à P-80** (`[RÉVISÉE le 2026-11-09, C-7]` **ÉTAIT :** « P-01 à P-78 », consignation C-5 ; `[RÉVISÉE le 2026-11-09]` **ÉTAIT :** « P-01 à P-69 », déjà périmé le 2026-10-21 — P-70 et P-71 existaient ; avant : « P-01 à P-65 », jusqu'au 2026-10-20 ; avant : « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
+| Sorties de commande — **P-01 à P-83** (`[RÉVISÉE le 2026-11-19, C-8]` **ÉTAIT :** « P-01 à P-80 », consignation C-7 ; `[RÉVISÉE le 2026-11-09, C-7]` **ÉTAIT :** « P-01 à P-78 », consignation C-5 ; `[RÉVISÉE le 2026-11-09]` **ÉTAIT :** « P-01 à P-69 », déjà périmé le 2026-10-21 — P-70 et P-71 existaient ; avant : « P-01 à P-65 », jusqu'au 2026-10-20 ; avant : « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
 | Procédures jouées par l'opérateur sur les cibles | `procedures/` | Elles n'ont **aucune autorité propre** : tout ce qu'elles affirment vient d'ici, par renvoi `F-xxx` / `PO-xxx`. |
 
 `[RÉVISÉE le 2026-09-29]` Deuxième ligne du tableau **ÉTAIT :** « Sorties de commande —
@@ -31,8 +31,9 @@ faits, des points ouverts et des décisions. `CLAUDE.md` porte les règles de tr
 duplique rien d'ici. » Le principe — un objet, un seul endroit — est inchangé ; c'est le
 nombre d'endroits qui est passé de un à trois (D-006).
 
-Dernière mise à jour : **2026-11-09** (consignation C-7, jeu de
-`procedures/kerberos-scom-host02.md` sur `host02`).
+Dernière mise à jour : **2026-11-19** (consignation C-8, diagnostic de la découverte
+Kerberos et découverte réussie, 18–19/11).
+`ÉTAIT : 2026-11-09 (consignation C-7, jeu de procedures/kerberos-scom-host02.md sur host02).`
 `ÉTAIT : 2026-11-09 (consignation C-5, du 2026-10-22 au 2026-11-09).`
 `ÉTAIT : 2026-10-20 (consignation du 2026-10-13 au 2026-10-20).` — déjà périmée : la
 consignation du 2026-10-21 (§ 2.9, D-019) ne l'avait pas mise à jour.
@@ -2045,6 +2046,137 @@ confirmé est dit pour chacune. Lignes et versions telles que la procédure les 
 corrections sont des constats (F-227, F-234, F-236, F-240), regroupés en PO-073 pour une
 révision distincte.
 
+### 2.12 Du 2026-11-18 au 2026-11-19 — diagnostic de la découverte Kerberos, puis découverte réussie
+
+**Aucun courriel, aucun message, aucune capture n'a été vu par l'agent.** Provenance :
+P-81 à P-83, sous la réserve de transmission de P-72 à P-77, à l'identique. Libellés :
+ceux du § 2.10, aucun nouveau ; le fichier de certificat de l'hôte s'écrit
+`omi-host-<MACHINE-FQDN>.pem`. Ne sont pas écrits (R-07) : les noms réels, l'UPN, les uid
+et gid attribués dans AD, les noms des contrôleurs de domaine, le nom du groupe
+d'administration SCOM, les empreintes. **Heures :** CET, sauf celles d'`omiserver.log`,
+données en **UTC** (F-254).
+
+**A — Ce que l'équipe SCOM a rapporté** `[TIERS-DÉCLARÉ]` (courriels et messages des 18
+et 19/11, P-82).
+- **F-243** — **`winrm.exe` est absent du serveur de gestion** : la commande de
+  vérification de S-21 (`winrm e …`, F-216) **n'a pas été jouée**. Test équivalent en
+  PowerShell : session CIM sur WS-Man, TCP 1270, authentification Kerberos, espace de
+  noms `root/scx`, classe `SCX_Agent` → « Kerberos CIM session created successfully ».
+  Instance renvoyée : `VersionString` 1.9.4-0, `BuildDate` 2026-07-08, `OSName` Red Hat
+  Enterprise Linux, `OSVersion` 9.8, `Hostname` `<MACHINE-FQDN>`, `MachineType`
+  Virtual. *Basculement d'outil, fait par l'équipe SCOM et déclaré comme tel (R-15).*
+  Compte et options de session employés : **non relayés** — @VERIF : en particulier,
+  si des contrôles d'autorité ou de nom ont été désactivés comme dans la commande de
+  S-21 (F-216, PO-069).
+- **F-244** — Tâche « Enable Linux Authentication Type » **exécutée**, service redémarré.
+  **Non répondu :** sur tous les serveurs du pool, comme S-21 le demande (F-212), et
+  depuis quel serveur l'assistant a été lancé.
+- **F-245** — **L'assistant de découverte échoue malgré tout** :
+  « WSManUnknownErrorException The user name or password is incorrect ». Sur le serveur
+  SCOM, `<COMPTE-SCOM-Q>` (sous son UPN) est actif, non verrouillé, mot de passe non
+  expiré, et le mot de passe est accepté par AD. Le compte *Run As* est défini avec
+  l'UPN de `<COMPTE-SCOM-Q>`.
+- **F-246** — **2026-11-19, 08:25 CET : identifiants saisis à la main dans l'assistant →
+  découverte réussie.** L'hôte apparaît dans « UNIX/Linux Computers » : *Healthy*, Red
+  Hat 9.8, agent 1.9.4-0. Première découverte aboutie de ce projet (PO-059).
+- **F-247** — Le 18/11, l'équipe SCOM a demandé de « mettre à jour le mot de passe depuis
+  HPAM » côté Linux. `[PILOTE-DÉCLARÉ]` Sans objet : le serveur ne stocke pas le mot de
+  passe d'un compte AD.
+
+**B — Relevés sur `host02`, 2026-11-18** `[ÉCRAN-2026-11-18, relayé]` (P-81).
+- **F-248** — `realm list` : `permitted-groups` = `<GROUPES-ADMIN-LINUX>` et
+  `<GROUPE-SCOM-Q>`. **Confirme F-238 par `realm`**, plus seulement par `sssd.conf`.
+- **F-249** — `id` du compte, **sous son nom court comme sous son UPN** : résolu, **membre
+  de `<GROUPE-SCOM-Q>`** ; `getent group` liste le compte comme membre. **L'état de F-229
+  et F-241 (non membre) est dépassé.** Date et auteur de l'ajout au groupe : non relayés.
+- **F-250** — `sssctl user-checks -a acct -s omi` du compte : « `pam_acct_mgmt: Success` »
+  (« Permission denied » en F-241). `[PILOTE-DÉCLARÉ]` **L'hypothèse du pilote — refus
+  PAM par non-appartenance au groupe — est écartée** comme cause de l'échec de F-245.
+- **F-251** — `sssctl domain-status` : *Online* ; *Global Catalog* « not connected » ;
+  un contrôleur de domaine actif ; quatre découverts (non nommés, R-07).
+- **F-252** — `/var/log/secure` : **aucune ligne d'omi ni du compte de supervision**.
+- **F-253** — Journal de SSSD : lignes `adcli … GSSAPI client step 1` le 18/11 à 04:54
+  CET. Keytab : versions de clé **3 et 4**, la plus haute 4, **aucune entrée `HTTP/`**
+  (inchangé depuis F-213) ; `kvno HTTP/<MACHINE-FQDN>` = **4** (inchangé depuis F-224).
+  `[PILOTE-DÉCLARÉ]` Les lignes `adcli` de 04:54 sont une vérification **sans rotation** :
+  la version de clé n'a pas changé (cf. F-222).
+- **F-254** — **`omiserver.log` est horodaté en UTC.** Deux recoupements :
+  - `mtime` du fichier le 17/11 à 14:10 (heure locale) contre dernière ligne à 13:10:14 ;
+  - démarrage d'`omid` le 12/11 à 16:11:10 CET (F-257) contre première ligne du nouveau
+    PID à 15:15:44.
+  **Erreur du pilote, consignée** `[PILOTE-DÉCLARÉ]` : les heures du journal ont d'abord
+  été données à l'équipe SCOM comme CET, puis corrigées par un second courriel.
+- **F-255** — Contenu d'`omiserver.log` (heures UTC, F-254) :
+  - 12/11 15:07:28 et 15:08:00 (ancien PID) : `ssl-read` « unexpected eof » et « sys
+    error 104 » ;
+  - 12/11 15:15:44 et 13/11 07:02:36 : `EventId=20146 … HTTP: Client Authorization
+    failed. gss:() mech:(Unknown error)`. **Cause non établie** ;
+  - 16/11 13:45:05 : « packet length too long » et « record layer failure ».
+    `[PILOTE-DÉCLARÉ]` Trafic non TLS sur le 1270. **Origine non établie** — l'équipe
+    SCOM ne sait pas ;
+  - 16/11 14:19, 14:50, 15:02, et 17/11 de 12:58 à 13:10 : « sys error 104 » uniquement ;
+  - 18/11 15:07:56, **pendant un essai de l'assistant suivi en direct** : un « sys error
+    104 », **aucune ligne 20146**.
+- **F-256** — `[PILOTE-DÉCLARÉ]` Lecture de F-255 : l'assistant ouvre la connexion TLS et
+  l'abandonne **avant d'avoir présenté un identifiant** ; l'échec de F-245 naît sur le
+  serveur de gestion, pas sur `host02`. Cohérent avec F-252 (rien dans `secure`) et avec
+  la réussite de F-246 par simple saisie des identifiants ; **non démontré**.
+- **F-257** — **Redémarrage d'omi** (PID 949 — celui de F-207 — remplacé) le 12/11 à
+  16:11:10 CET. Écartés :
+  - un redémarrage de la machine (SSSD actif depuis le 25/10 jusqu'au passage de R du
+    09/11, F-229, F-234) ;
+  - une mise à jour (`rpm -q --last` : `omi` et `scx` installés le 08/10 ; dernière
+    transaction `dnf` le 08/10) ;
+  - un `sudo` interactif (aucun dans `/var/log/secure` de 16:05 à 16:19) ;
+  - une relance par rotation de journaux (`postrotate` seulement pour `rsyslog`, `sssd`,
+    `chrony` et `kvm_stat`).
+  Journal système non conservé sur cette période. **Cause non établie.**
+  `[ÉCRAN-2026-11-19, relayé]` (P-83) Machine démarrée le 2026-10-25 à 10:28:42
+  (`uptime -s`, égal au premier démarrage de SSSD relevé en 0a, F-229), sans redémarrage
+  depuis ; SSSD actif sans interruption depuis A2 (`ActiveEnterTimestamp` 09/11 11:27:44
+  CET, F-238). **Le redémarrage de la machine le 12/11 est exclu.**
+  *Ces deux relevés lèvent une réserve posée par l'agent (R-02) :* l'activité de SSSD
+  « jusqu'au 09/11 », seule relayée le 18/11, ne couvrait pas le 12/11.
+- **F-258** — `/etc/opt/omi/conf/omiserver.conf`, l. 71, active :
+  `sslciphersuite=ALL:!SSLv2:!SSLv3:!TLSv1:!TLSv0:!CBC:!RC4-MD5:!RC4-SHA:!SEED-SHA`.
+  **Complète F-231.** La copie `omiserver.conf.avant-1270` est **toujours** dans
+  `/etc/opt/omi/conf/` (PO-056).
+- **F-259** — `/var/opt/omi/log/` : `omiagent.root.root.log` (0 octet, 16/11),
+  `omi-logrotate.status`, `omiserver.log`.
+
+**C — Après la découverte, 2026-11-19** `[ÉCRAN-2026-11-19, relayé]` (P-83).
+- **F-260** — Empreinte SHA-256 du certificat (`openssl x509 -fingerprint`, F-209)
+  comparée au fichier « avant » : `rc_openssl=0`, `rc_diff=0`. **Certificat inchangé
+  par la découverte.** Témoin de comparaison : non relayé.
+- **F-261** — `/etc/opt/omi/ssl/` : rien de nouveau ; tous les fichiers datent du 08/10 :
+  - `omi-host-<MACHINE-FQDN>.pem` (`root:omi`, 640, 2390 octets) ;
+  - `omikey.pem` (`omi:omi`, 600) ;
+  - `omi.pem`, lien vers le premier ;
+  - `ssl.cnf`.
+  Droits **concordants avec F-152**.
+- **F-262** — `/var/log/secure` : **aucun `sudo` du compte de supervision**. Le chemin
+  privilégié (`scxlogfilereader -p`, D-022, F-239) **n'est pas encore observé** en usage
+  par SCOM.
+- **F-263** — `omiserver.log` : « unexpected eof while reading » à 07:39:18 (×3) et
+  07:54:18 (×4) UTC. `[PILOTE-DÉCLARÉ]` Connexions périodiques de SCOM toutes les 15
+  minutes ; fermeture TLS sans signal de fin, bénigne — @VERIF. Nombre de lignes
+  `EventId=20146` vers 09:07 CET : **2**, les seules du 12 et du 13/11 (F-255) — **aucun
+  refus depuis la découverte**.
+
+**D — Version de l'agent** `[PILOTE-DÉCLARÉ]`.
+- **F-264** — Le 18/11, l'opérateur a posé la question d'un retour en 1.9.3 ; le pilote
+  l'a déconseillé, les indices pointant vers le serveur de gestion. Décision de
+  l'opérateur : garder cette option pour plus tard, faute d'autre solution. **Sans objet
+  depuis le 19/11** : la 1.9.4-0 est acceptée par SCOM (F-246). Note sous D-017 (b).
+
+**E — Ce que cette section tranche, et ce qu'elle laisse.**
+- Tranché en pratique : PO-070 (F-243, F-246, F-263) et PO-072 (F-246). PO-059 et PO-071
+  révisés ; PO-074 ouvert.
+- **PO-069 n'est pas modifié.** La condition préalable de son essai — une découverte
+  Kerberos réussie — est désormais remplie (F-246) ; l'essai lui-même reste à écrire et
+  à jouer.
+- Aucune procédure n'est modifiée.
+
 ---
 
 ## 3. Points ouverts
@@ -3046,6 +3178,11 @@ Ils ne contiennent aucun secret ; leur retrait est prévu par la procédure elle
 `[NOTE du 2026-10-21]` `scom_adm.pub` sort de la liste : la partie B est sans objet
 (D-019 a), la procédure ne le crée plus. Restent `scom-test.sudoers`,
 `scom-comptes-avant.fp`, `scom-comptes-apres.fp`.
+`[NOTE du 2026-11-19, C-8]` `omiserver.conf.avant-1270` est **toujours présent** dans
+`/etc/opt/omi/conf/` (F-258). La présence du PFX et de `/etc/opt/omi/ssl.avant-pfx` n'a
+pas été relayée. La condition d'ouverture — « l'agent accepté par le serveur de
+gestion » — est remplie en pratique (F-246) ; **ne pas retirer `ssl.avant-pfx` tant que
+l'essai de PO-069 n'est pas joué** : il en dépend.
 
 ### PO-057 — Épingler `ansible.posix` dans `rhel_post_install` *(ouvert le 2026-10-08)*
 Son `requirements.yml` épingle `<2.0.0` (F-073) ; or 1.6.0 et 1.6.2 déclarent
@@ -3066,6 +3203,16 @@ ADCS (R-10) ; s'il n'existe pas, la lecture par `scom_adm` échouera à la déco
 pas `-f`, qui ne peut pas échouer sur un fichier absent, F-189).
 
 ### PO-059 — Résultat du test SCOM sur `host02` *(ouvert le 2026-10-20)*
+`[RÉVISÉE le 2026-11-19, C-8]` — **découverte réussie le 2026-11-19** (F-246).
+- Certificat **inchangé** avant et après la découverte (F-260, F-261) ; **1.9.4-0
+  acceptée** (F-246, D-017 b).
+- **Restent :** l'association des profils *Run As* et une supervision stable (PO-074) ;
+  le chemin privilégié (`sudo`), **non observé** (F-262).
+- `[PILOTE-DÉCLARÉ]` Cause exacte de l'échec de l'assistant avant la saisie manuelle
+  (F-245) — *Run As* choisi ou mot de passe enregistré : **non établie**.
+- Non relayés au regard de la liste ci-dessous : l'acceptation du sujet tel quel
+  (PO-023) en tant que telle, et le canal effectif de la découverte.
+**ÉTAIT :** texte ci-dessous, vrai jusqu'au 2026-11-18.
 `[RÉVISÉE le 2026-11-09]` — **premier essai : échec en Basic ; voie Kerberos en cours.**
 L'assistant a échoué sur `WinRMBasicAuthDisabledException` : Basic est désactivé par GPO
 sur les serveurs de gestion (F-211). S-21 tranche : sans Kerberos, Basic ne doit pas être
@@ -3218,7 +3365,15 @@ n'est pas vérifiée, le certificat ADCS n'apporte rien à SCOM.
   **restaure** des fichiers conservés, on n'en **fabrique** aucun.
 **Qui :** l'opérateur et l'équipe SCOM.
 
-### PO-070 — Omi acceptera-t-il un ticket `HTTP/<MACHINE-FQDN>` sans entrée `HTTP/` au keytab ? *(ouvert le 2026-11-09)*
+### PO-070 — Omi acceptera-t-il un ticket `HTTP/<MACHINE-FQDN>` sans entrée `HTTP/` au keytab ? *(ouvert le 2026-11-09)* — **CLOS en pratique le 2026-11-19**
+`[RÉVISÉE le 2026-11-19, C-8]` **Clos en pratique.** L'authentification Kerberos
+fonctionne **sans entrée `HTTP/` au keytab** (F-253) : session CIM (F-243), découverte
+(F-246), connexions périodiques (F-263, lecture `[PILOTE-DÉCLARÉ]`, @VERIF). La mesure
+prévue — la commande `winrm e` de S-21 — n'a pas été jouée (`winrm.exe` absent, F-243) ;
+la session CIM l'a remplacée. **Le mécanisme côté omi reste non sourcé** : comment omi
+choisit la clé, aucune source lue. La question d'`adcli update` (F-222) **ne se pose
+plus** pour ce point.
+**ÉTAIT :** ouvert ; texte ci-dessous, vrai jusqu'au 2026-11-18.
 Le SPN existe dans l'annuaire, sur l'objet de `host02` (F-223) ; sa version de clé est
 celle du keytab (F-224) ; mais le keytab ne porte **aucune** entrée `HTTP/` (F-213,
 F-224). L'équipe AD annonce « SPN HTTP, keytab » côté Linux (F-218). **Non établi :**
@@ -3235,6 +3390,15 @@ la commande de vérification se joue **après** l'ajout du compte au groupe et l
 V, pour qu'un échec ne puisse plus venir de PO-071 (F-242).
 
 ### PO-071 — Accès SSSD du compte de supervision sous Kerberos *(ouvert le 2026-11-09)*
+`[RÉVISÉE le 2026-11-19, C-8]`
+- **La partie PAM est répondue** : « Success » avec le compte, désormais membre du groupe
+  (F-249, F-250) ; la découverte comme la supervision fonctionnent avec le compte admis
+  (F-246, F-263).
+- **Non démontré :** qu'un compte **non admis** serait refusé par omi sous Kerberos — le
+  `@VERIF` sur la phase *account* d'omi sous Kerberos tient, la réussite n'exerçant que
+  le cas où l'accès est permis (R-14 : cas convergent seul).
+- **Le risque du modèle SSSD de `rhel_post_install` reste** (renvoi seul, R-09).
+**ÉTAIT :** texte ci-dessous, révisé le 2026-11-09 (C-7), vrai jusqu'au 2026-11-18.
 `[RÉVISÉE le 2026-11-09, C-7]` **Le groupe est admis** : `realm permit -g` en A2 de
 `procedures/kerberos-scom-host02.md` — `simple_allow_groups` porte désormais
 `<GROUPES-ADMIN-LINUX>` et `<GROUPE-SCOM-Q>` (F-238). **La pile PAM d'omi refuse
@@ -3257,7 +3421,11 @@ Kerberos par WS-Man — et donc qu'un refus SSSD bloquerait la supervision. D-02
 que le groupe soit ajouté à `simple_allow_groups`. **Où :** la configuration SSSD
 relève de `rhel_post_install` (R-09). **Qui :** l'opérateur.
 
-### PO-072 — Support de RHEL 9 par la voie Kerberos de SCOM *(ouvert le 2026-11-09)*
+### PO-072 — Support de RHEL 9 par la voie Kerberos de SCOM *(ouvert le 2026-11-09)* — **CLOS en pratique le 2026-11-19**
+`[RÉVISÉE le 2026-11-19, C-8]` **Clos en pratique.** Découverte et supervision
+fonctionnent sur RHEL 9.8 avec SCOM 2025 (F-246, F-263). La réserve de la page sur « la
+version la plus récente » reste **à confirmer à l'échelle** du parc (PO-062).
+**ÉTAIT :** ouvert ; texte ci-dessous, vrai jusqu'au 2026-11-18.
 La question documentaire est **instruite** le jour même : RHEL 9 figure dans le tableau
 de S-21 balisé `sc-om-2022 sc-om-2025` (F-212, P-78) ; le marqueur que le pilote avait
 posé sur ce point est levé par cette balise. **Ce qui reste :** la portée de la réserve
@@ -3283,6 +3451,17 @@ touchées (R-12 : une garde modifiée perd sa démonstration).
 5. **S doit être joué et capturé en premier** (F-227, F-228).
 **Non décidé :** le sort du dossier personnel créé en V (F-240) — le garder, ou le
 retirer, et par quel geste. **Qui :** l'opérateur ; la révision, par le pilote.
+
+### PO-074 — Profils *Run As* et validation de Kerberos *(ouvert le 2026-11-19)*
+- **Question posée à l'équipe SCOM :** `<COMPTE-SCOM-Q>` est-il associé aux profils
+  « UNIX/Linux Action Account » et « UNIX/Linux Privileged Account », pour l'hôte ou
+  pour le pool ? La découverte n'a abouti qu'avec une saisie manuelle (F-245, F-246) :
+  l'association des profils n'est donc pas établie par elle.
+- `[PILOTE-DÉCLARÉ]` **Critère proposé pour « Kerberos validé » (D-023), non décidé :**
+  profils confirmés, hôte toujours *Healthy* après un à deux jours, et aucune nouvelle
+  ligne `EventId=20146` (F-255, F-263). Ce critère n'exerce pas le chemin privilégié
+  (F-262).
+- **Qui :** l'équipe SCOM pour les profils, l'opérateur pour le contrôle.
 
 ---
 
@@ -3515,6 +3694,8 @@ réseau**, hors de la machine.
 - **(b)** le test se fait en **1.9.4-0**, la version installée ; retour à 1.9.3-0
   **seulement** en cas de problème côté SCOM — version disponible dans le même dépôt
   (F-173). L'équipe SCOM n'a pas dit accepter 1.9.4-0 (F-170).
+  `[NOTE du 2026-11-19, C-8]` Tenue ; 1.9.4-0 acceptée à la découverte du 2026-11-19
+  (F-246). Le retour en 1.9.3, envisagé le 18/11, est sans objet (F-264).
 - **(c)** deux comptes locaux, **`scom_adm`** (maintenance, clé SSH) et **`scom_mon`**
   (supervision, mot de passe), créés **à la main** sur `host02` pour le test, sur le
   modèle de D-015. Le rôle n'est pas modifié ; sa tâche `users` reste sautée.
