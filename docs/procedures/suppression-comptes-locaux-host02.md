@@ -311,7 +311,7 @@ L_ETC=$(sudo grep -rlwE 'scom_adm|scom_mon' /etc); echo "rc_l_etc=$?  (0 attendu
 printf '%s\n' "$L_ETC" | grep -vxE '/etc/(passwd|group|shadow|gshadow|subuid|subgid)-?|/etc/sudoers\.d/scom-test'; echo "rc_hors_liste=${PIPESTATUS[1]}  (1 attendu)"
 FS_LOCAUX=$(df --local -x devtmpfs --output=target | tail -n +2); echo "rc_df=$?"
 ORPH=$(sudo find $FS_LOCAUX -xdev -path /home/scom_adm -prune -o -path /home/scom_mon -prune -o -path /var/spool/mail/scom_adm -prune -o -path /var/spool/mail/scom_mon -prune -o \( -user scom_adm -o -user scom_mon \) -print); RC_ORPH=$?; echo "rc_find=$RC_ORPH  (0 attendu)"
-[ "$RC_ORPH" = 0 ] && [ -z "$ORPH" ] && printf '%s\n' "$L_ETC" | grep -qxF /etc/sudoers.d/scom-test && ! printf '%s\n' "$L_ETC" | grep -qvxE '/etc/(passwd|group|shadow|gshadow|subuid|subgid)-?|/etc/sudoers\.d/scom-test' && getent -s files passwd scom_adm > /dev/null && getent -s files passwd scom_mon > /dev/null && ! pgrep -u scom_adm,scom_mon > /dev/null && ! pgrep -U scom_adm,scom_mon > /dev/null && [ "$(sudo sha256sum < /etc/sudoers.d/scom-test | cut -d' ' -f1)" = 895682f51137e5c87d16b1b2e3a5f0eb51dc587d033d4d942f8fd6a4f8fd5a07 ] && sudo cmp -s /root/scom-test.avant-d023 /etc/sudoers.d/scom-test && [ "$(sudo tar -tzf /root/scom-comptes-locaux.avant-d023.tar.gz | grep -cE '^scom_(adm|mon)/$')" = 2 ] && sudo visudo -c > /dev/null && G_A1=OK; echo "garde_a1=$G_A1  (OK attendu ; KO : rien ne sera retire)"
+[ "$RC_ORPH" = 0 ] && [ -z "$ORPH" ] && printf '%s\n' "$L_ETC" | grep -qxF /etc/sudoers.d/scom-test && ! printf '%s\n' "$L_ETC" | grep -qvxE '/etc/(passwd|group|shadow|gshadow|subuid|subgid)-?|/etc/sudoers\.d/scom-test' && getent -s files passwd scom_adm > /dev/null && getent -s files passwd scom_mon > /dev/null && ! pgrep -u scom_adm,scom_mon > /dev/null && ! pgrep -U scom_adm,scom_mon > /dev/null && [ "$(sudo sha256sum /etc/sudoers.d/scom-test | cut -d' ' -f1)" = 895682f51137e5c87d16b1b2e3a5f0eb51dc587d033d4d942f8fd6a4f8fd5a07 ] && sudo cmp -s /root/scom-test.avant-d023 /etc/sudoers.d/scom-test && [ "$(sudo tar -tzf /root/scom-comptes-locaux.avant-d023.tar.gz | grep -cE '^scom_(adm|mon)/$')" = 2 ] && sudo visudo -c > /dev/null && G_A1=OK; echo "garde_a1=$G_A1  (OK attendu ; KO : rien ne sera retire)"
 [ "$G_A1" = OK ] && sudo rm /etc/sudoers.d/scom-test; echo "rc_rm=$?  (0 attendu)"
 sudo test ! -e /etc/sudoers.d/scom-test; echo "rc_absent=$?  (0 attendu)"
 sudo visudo -c; RC_V_A1=$?; echo "rc_visudo=$RC_V_A1  (0 attendu ; sinon R depuis 2S)"
@@ -323,6 +323,10 @@ echo "=== FIN EA1 ==="
 - **`G_A1`** : `OK`, placée **avant** le `rm` (R-13). `KO` : le fichier **n'est pas retiré**,
   `rc_rm=1` : **arrêt, sans R**. La garde recalcule ses conditions au lieu de faire
   confiance aux étapes précédentes, car un bloc peut être collé hors séquence.
+  `[RÉVISÉE le 2026-11-23, C-12 bis]` L'empreinte est lue par `sha256sum` **sous `sudo`**.
+  **ÉTAIT :** `sudo sha256sum < /etc/sudoers.d/scom-test` : la redirection, faite par le shell
+  de l'opérateur sans élévation, échouait sur ce fichier `440 root:root`, et `G_A1` serait
+  restée à `KO` à chaque jeu.
 - `rm` est **sans `-f`** : un fichier déjà absent se signale.
 - **`visudo -c` différent de `0` : R immédiatement**, depuis la seconde session si `sudo`
   refuse.
@@ -396,6 +400,10 @@ sudo visudo -c; echo "rc_visudo=$?  (0 attendu)"
 FS_LOCAUX=$(df --local -x devtmpfs --output=target | tail -n +2); echo "rc_df=$?"
 ORPH2=$(sudo find $FS_LOCAUX -xdev \( -uid "${UID_ADM:?vide}" -o -uid "${UID_MON:?vide}" \) -print); echo "rc_find=$?  (0 attendu)"
 printf '%s' "$ORPH2" | head -n 20; printf '%s' "$ORPH2" | grep -c .; echo "rc_orphelins=${PIPESTATUS[1]}  (0 affiche, 1 attendu)"
+L_ETC2=$(sudo grep -rlwE 'scom_adm|scom_mon' /etc); echo "rc_l_etc2=$?  (0 si des copies restent, 1 si plus rien, 2 : recherche incomplete)"
+printf '%s\n' "$L_ETC2"
+printf '%s\n' "$L_ETC2" | grep -v '^$' | grep -vxE '/etc/(passwd|group|shadow|gshadow|subuid|subgid)-'; echo "rc_hors_copies=${PIPESTATUS[2]}  (1 attendu : rien d'autre que les copies)"
+printf '%s\n' /etc/subuid | grep -cvxE '/etc/(passwd|group|shadow|gshadow|subuid|subgid)-'; echo "rc_hors_copies_temoin=${PIPESTATUS[1]}  (1 affiche, 0 attendu)"
 sudo grep -c 'EventId=20146' /var/opt/omi/log/omiserver.log; echo "rc_20146=$?  (affiche = ${N_20146:?vide})"
 echo "=== FIN EV1 ==="
 ```
@@ -407,6 +415,13 @@ echo "=== FIN EV1 ==="
   `0`, refus `1` sans message. **Tout écart : arrêt et alerte**, c'est le compte de
   production de la supervision sur cet hôte.
 - **Orphelins par uid** : `0`, `rc=1`. Un fichier trouvé : à dire, **ne rien supprimer**.
+- **Références restantes dans `/etc`** `[AJOUTÉ le 2026-11-23, C-12 bis]` : **noms de fichiers
+  seuls**, jamais le contenu de `shadow`, `gshadow` ou `opasswd`. Attendu `@VERIF` : seules
+  les copies `passwd-`, `group-`, `shadow-`, `gshadow-`, et `subuid-`, `subgid-` si elles
+  existent ; elles gardent l'état d'avant le dernier `userdel`. `rc_hors_copies=1`, témoin
+  `1` affiché et `rc=0`. **Tout autre fichier, en particulier `/etc/subuid` ou `/etc/subgid`
+  sans tiret, est à dire au rapport, sans rien supprimer.** `rc_l_etc2=2` : la recherche est
+  incomplète, à dire aussi. Ce contrôle est un **constat** : il n'arrête rien.
 - **`EventId=20146`** : égal à `N_20146`. **Inférieur** : le journal a pu tourner (F-259),
   **non concluant**. **Supérieur** : un nouveau refus, à dire en tête du rapport.
 
@@ -478,6 +493,7 @@ l'origine de la déclaration sur `scom_mon` et la réponse sur `scom_adm` (*Run 
 | second `userdel` subordonné au premier | oui | exercé en bac à sable (premier à `8`) |
 | absences après A2 | **non** — constat | témoins `root` joués en A2 |
 | règle de `<COMPTE-SCOM-Q>` (V1) | **non** — constat | permis et refusé côte à côte (R-13) |
+| références restantes dans `/etc` (V1) | **non** — constat, pas une garde | témoin `/etc/subuid`, joué en V1 ; cas hors copies exercé en bac à sable |
 | `EventId=20146` (V1, V2) | **non** — constat | compteur **non forcé** |
 
 **Branches non exercées par un jeu nominal :** R et R-ROOT ; tout cas d'arrêt de 0a à 0c ;
@@ -498,6 +514,10 @@ Lues le **2026-11-23** sur le poste de rédaction, sans élévation.
   d'utilisateur de `find` simulés ; `tar`, `sha256sum`, `cmp` et `grep` réels. Il éprouve
   **l'enchaînement du shell**, pas `sudo`, `userdel`, SELinux ni l'état réel de `host02`.
   Le bloc S n'y a pas été joué.
+  `[NOTE du 2026-11-23, C-12 bis]` **Limite :** `sudo` et les droits de fichier y étant
+  simulés dans sa première version, il ne pouvait pas voir une redirection faite sans
+  élévation, défaut de `G_A1` corrigé ici. Rejeu dans un espace de noms utilisateur, fichier
+  illisible par le shell appelant : P-89.
 
 **Ce qui reste `@VERIF` :**
 - l'origine de la déclaration sur `scom_mon`, et l'absence de *Run As* sur `scom_adm` ;
@@ -506,4 +526,5 @@ Lues le **2026-11-23** sur le poste de rédaction, sans élévation.
 - la forme de « no crontab » ; la présence et la sortie de `lastlog` ;
 - le chemin de `rm` dans la ligne `COMMAND=` et les lignes `userdel[` du journal ;
 - le message éventuel de `userdel -r` sur le spool ;
-- la forme du message de `sudo -l -U` pour un utilisateur inconnu.
+- la forme du message de `sudo -l -U` pour un utilisateur inconnu ;
+- la liste des copies de `/etc` qui citent encore les comptes après A2.

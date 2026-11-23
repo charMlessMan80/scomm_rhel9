@@ -1290,3 +1290,23 @@ des suppressions de son script ; elle n'a rien exécuté. Une deuxième extracti
 élévation, résultat écarté, extraction corrigée et scénarios rejoués.
 **Limites :** `sudo`, `userdel`, `visudo`, SELinux et l'état de `host02` ne sont pas éprouvés ;
 le bloc S n'a pas été joué. Fonde S-39 et les mentions « bac à sable » de la procédure.
+`[NOTE du 2026-11-23, C-12 bis]` **Limite du bac à sable ci-dessus :** `sudo` et les droits de
+fichier y étant simulés, il ne pouvait pas voir une redirection `<` faite sans élévation.
+`G_A1` portait ce défaut `[PILOTE-DÉCLARÉ]`, relecture ; garde corrigée, démonstration
+rejouée (R-12). **Rejeu**, sur le poste, sans élévation : `sudo` simulé par `unshare -r`,
+`scom-test` et son répertoire en mode `000`, donc illisibles par le shell appelant
+(`cat` → « Permission denied », `rc=1`) et lisibles dans l'espace de noms :
+```
+ancienne garde (63fdd88)        « Permission denied »  garde_a1=KO  rc_rm=1  rien retiré
+nominal, garde corrigée         garde_a1=OK  garde_a2=OK  userdel 0 0  getent 2
+G_A1, empreinte altérée         garde_a1=KO  rc_rm=1  fichier présent, comptes présents
+G_A1, processus actif           garde_a1=KO  rc_rm=1  fichier présent, comptes présents
+G_A1, fichier hors dossier      garde_a1=KO  rc_rm=1  fichier présent, comptes présents
+G_A1, référence dans /etc       garde_a1=KO  rc_rm=1  fichier présent, comptes présents
+V1, copies seules               rc_l_etc2=0  rc_hors_copies=1  témoin 1 affiché, rc=0
+V1, /etc/subuid sans tiret      fichier affiché  rc_hors_copies=0
+```
+**Déclaré (R-15) :** au premier rejeu, `rc_hors_copies=0` au nominal venait du `userdel`
+simulé, qui ne retirait pas la ligne de `shadow` ni ne créait les copies `-` ; simulation
+corrigée, tous les cas rejoués. Le `sudo`, le `userdel` et le `/etc` réels de `host02` ne
+sont toujours pas éprouvés.
