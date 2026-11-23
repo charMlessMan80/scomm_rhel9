@@ -14,7 +14,7 @@ nommée**, les faits **déclarés par l'opérateur**, les **points ouverts** et 
 |---|---|---|
 | Règles de travail | `../CLAUDE.md` | Une règle vit à un seul endroit. |
 | Ce que le code du dépôt fait aujourd'hui — **F-008 à F-021, F-038, F-155 à F-161, et F-188** (F-188 ajouté le 2026-10-20 ; **ÉTAIT :** « F-008 à F-021, F-038, et F-155 à F-161 » ; F-155 à F-161 ajoutés le 2026-10-08 ; **ÉTAIT :** « F-008 à F-021 et F-038 ») | `scomm-depot-actuel.md` | Brouillon sans autorité (F-044), périmable en bloc par la réécriture (D-007). **Toute citation de ces numéros dans ce fichier renvoie là-bas.** |
-| Sorties de commande — **P-01 à P-83** (`[RÉVISÉE le 2026-11-19, C-8]` **ÉTAIT :** « P-01 à P-80 », consignation C-7 ; `[RÉVISÉE le 2026-11-09, C-7]` **ÉTAIT :** « P-01 à P-78 », consignation C-5 ; `[RÉVISÉE le 2026-11-09]` **ÉTAIT :** « P-01 à P-69 », déjà périmé le 2026-10-21 — P-70 et P-71 existaient ; avant : « P-01 à P-65 », jusqu'au 2026-10-20 ; avant : « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
+| Sorties de commande — **P-01 à P-85** (`[RÉVISÉE le 2026-11-23, C-9]` **ÉTAIT :** « P-01 à P-83 », consignation C-8 ; `[RÉVISÉE le 2026-11-19, C-8]` **ÉTAIT :** « P-01 à P-80 », consignation C-7 ; `[RÉVISÉE le 2026-11-09, C-7]` **ÉTAIT :** « P-01 à P-78 », consignation C-5 ; `[RÉVISÉE le 2026-11-09]` **ÉTAIT :** « P-01 à P-69 », déjà périmé le 2026-10-21 — P-70 et P-71 existaient ; avant : « P-01 à P-65 », jusqu'au 2026-10-20 ; avant : « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
 | Procédures jouées par l'opérateur sur les cibles | `procedures/` | Elles n'ont **aucune autorité propre** : tout ce qu'elles affirment vient d'ici, par renvoi `F-xxx` / `PO-xxx`. |
 
 `[RÉVISÉE le 2026-09-29]` Deuxième ligne du tableau **ÉTAIT :** « Sorties de commande —
@@ -31,8 +31,9 @@ faits, des points ouverts et des décisions. `CLAUDE.md` porte les règles de tr
 duplique rien d'ici. » Le principe — un objet, un seul endroit — est inchangé ; c'est le
 nombre d'endroits qui est passé de un à trois (D-006).
 
-Dernière mise à jour : **2026-11-19** (consignation C-8, diagnostic de la découverte
-Kerberos et découverte réussie, 18–19/11).
+Dernière mise à jour : **2026-11-23** (consignation C-9, stabilité, journaux tournés,
+modification hors procédure de `scom-kerberos`, décision D-024).
+`ÉTAIT : 2026-11-19 (consignation C-8, diagnostic de la découverte Kerberos et découverte réussie, 18–19/11).`
 `ÉTAIT : 2026-11-09 (consignation C-7, jeu de procedures/kerberos-scom-host02.md sur host02).`
 `ÉTAIT : 2026-11-09 (consignation C-5, du 2026-10-22 au 2026-11-09).`
 `ÉTAIT : 2026-10-20 (consignation du 2026-10-13 au 2026-10-20).` — déjà périmée : la
@@ -2002,6 +2003,9 @@ confirmé est dit pour chacune. Lignes et versions telles que la procédure les 
   `install` `rc=0`, `restorecon` `rc=0` ; `/etc/sudoers.d/scom-kerberos` :
   `-r--r-----`, `root root`, `etc_t`, 232 octets. `visudo -c` global `rc=0`,
   `scom-kerberos` inclus.
+  `[NOTE du 2026-11-23, C-9]` **Ne décrit plus le fichier en place depuis le 2026-11-12
+  16:34:07** : 348 octets, une règle ajoutée hors procédure (F-278). Le relevé ci-dessus
+  reste exact pour le 09/11. Retour au contenu de D-022 décidé (D-024), non joué.
 - **F-238** — **A2.** `cmp` avec la sauvegarde avant écriture `rc=0` ; `realm permit -g`
   `rc=0`. `diff` : `rc_diff=1` (1 attendu, S-29) ; **« 19c19 » seul**, une ligne `<` et
   une ligne `>` ; la ligne `>` reprend les trois groupes de `<GROUPES-ADMIN-LINUX>` dans
@@ -2019,6 +2023,9 @@ confirmé est dit pour chacune. Lignes et versions telles que la procédure les 
   Ligne permise : chemin réaffiché, `rc=0` ; ligne refusée : `rc=1`, **sans message**.
   Les trois conditions de R-13 posées par la procédure (`:508-513`) sont réunies : **la
   règle `sudo` de D-022 est démontrée sur `host02`**, dans les deux sens.
+  `[NOTE du 2026-11-23, C-9]` **« Une seule règle » ne vaut plus depuis le 2026-11-12
+  16:34:07** : `sudo -l -U` en montre deux (F-279). Le relevé reste exact pour le 09/11.
+  Le fichier ayant changé, cette démonstration ne couvre pas son état actuel (R-12).
 - **F-240** — **V, forme `sudo -u … sudo -n -l`.** Sortie : « Creating home directory for
   `<COMPTE-SCOM-Q>`. », puis, pour les deux lignes, « sudo: PAM account management
   error: Permission denied » et « sudo: a password is required », `rc=1`. **Non
@@ -2094,7 +2101,10 @@ et 19/11, P-82).
   PAM par non-appartenance au groupe — est écartée** comme cause de l'échec de F-245.
 - **F-251** — `sssctl domain-status` : *Online* ; *Global Catalog* « not connected » ;
   un contrôleur de domaine actif ; quatre découverts (non nommés, R-07).
-- **F-252** — `/var/log/secure` : **aucune ligne d'omi ni du compte de supervision**.
+- **F-252** — `[RÉVISÉE le 2026-11-23, C-9]` `/var/log/secure` : aucune ligne d'omi ni
+  du compte de supervision **depuis la rotation du 15/11 seulement** ; le contrôle du
+  18/11 n'a pas porté sur les fichiers tournés (F-270, F-271).
+  **ÉTAIT :** « `/var/log/secure` : **aucune ligne d'omi ni du compte de supervision**. »
 - **F-253** — Journal de SSSD : lignes `adcli … GSSAPI client step 1` le 18/11 à 04:54
   CET. Keytab : versions de clé **3 et 4**, la plus haute 4, **aucune entrée `HTTP/`**
   (inchangé depuis F-213) ; `kvno HTTP/<MACHINE-FQDN>` = **4** (inchangé depuis F-224).
@@ -2121,7 +2131,12 @@ et 19/11, P-82).
   l'abandonne **avant d'avoir présenté un identifiant** ; l'échec de F-245 naît sur le
   serveur de gestion, pas sur `host02`. Cohérent avec F-252 (rien dans `secure`) et avec
   la réussite de F-246 par simple saisie des identifiants ; **non démontré**.
-- **F-257** — **Redémarrage d'omi** (PID 949 — celui de F-207 — remplacé) le 12/11 à
+- **F-257** — `[RÉVISÉE le 2026-11-23, C-9]` **Cause établie** : le redémarrage du 12/11
+  à 16:11:10 CET est le `scxadmin -restart` de `<ADMIN-TIERS>` (F-274, F-276).
+  **L'exclusion « un `sudo` interactif » était fausse** : elle ne reposait que sur
+  `/var/log/secure`, déjà tourné (F-270, F-271).
+  **ÉTAIT :** texte ci-dessous, écrit le 2026-11-19.
+  **Redémarrage d'omi** (PID 949 — celui de F-207 — remplacé) le 12/11 à
   16:11:10 CET. Écartés :
   - un redémarrage de la machine (SSSD actif depuis le 25/10 jusqu'au passage de R du
     09/11, F-229, F-234) ;
@@ -2154,7 +2169,12 @@ et 19/11, P-82).
   - `omi.pem`, lien vers le premier ;
   - `ssl.cnf`.
   Droits **concordants avec F-152**.
-- **F-262** — `/var/log/secure` : **aucun `sudo` du compte de supervision**. Le chemin
+- **F-262** — `[RÉVISÉE le 2026-11-23, C-9]` **Aucun `sudo` de `scxlogfilereader -p` par
+  le compte**, sur tous les fichiers `secure*` et la période qu'ils couvrent (F-272). La
+  formule « aucun `sudo` du compte » était **trop large** : le compte a tenté
+  `scxadmin -status` le 12/11 à 15:46, deux refus (F-273).
+  **ÉTAIT :** texte ci-dessous, écrit le 2026-11-19.
+  `/var/log/secure` : **aucun `sudo` du compte de supervision**. Le chemin
   privilégié (`scxlogfilereader -p`, D-022, F-239) **n'est pas encore observé** en usage
   par SCOM.
 - **F-263** — `omiserver.log` : « unexpected eof while reading » à 07:39:18 (×3) et
@@ -2175,6 +2195,121 @@ et 19/11, P-82).
 - **PO-069 n'est pas modifié.** La condition préalable de son essai — une découverte
   Kerberos réussie — est désormais remplie (F-246) ; l'essai lui-même reste à écrire et
   à jouer.
+- Aucune procédure n'est modifiée.
+
+### 2.13 Le 2026-11-23 — stabilité, journaux tournés, modification hors procédure de `scom-kerberos`
+
+**Nouveau libellé (R-07) :** `<ADMIN-TIERS>`, un autre administrateur AD disposant de
+`sudo` complet sur `host02`. Les machines sources s'écrivent **poste A** et **poste B**
+(réseau interne, adresses non écrites).
+
+**Aucune capture, aucun message n'a été vu par l'agent.** Provenance : P-84 et P-85, sous
+la réserve de transmission de P-72 à P-77, à l'identique. Ne sont pas écrits (R-07) : les
+noms réels, l'UPN, les adresses, les uid et gid, les empreintes. **Heures :** CET, sauf
+mention UTC.
+
+**A — Stabilité** `[ÉCRAN-2026-11-23, relayé]` (P-84).
+- **F-265** — `omiserver.log` : **toujours 2** lignes `EventId=20146`, celles du 12 et du
+  13/11 (F-255). Dernières lignes : « unexpected eof while reading » le 23/11 à 08:39:18
+  UTC (09:39 CET). La collecte est active.
+- **F-266** — Empreinte du certificat comparée au fichier « avant » : `rc` 0 et 0,
+  **inchangé**.
+- **F-267** — Hôte toujours *Healthy* dans SCOM : **non confirmé**. @VERIF : console SCOM,
+  par l'équipe SCOM (PO-074).
+
+**B — Profils *Run As*** `[TIERS-DÉCLARÉ]`, relayé par l'opérateur (P-85).
+- **F-268** — `<COMPTE-SCOM-Q>` est employé pour les deux profils, « UNIX/Linux Action
+  Account » et « UNIX/Linux Privileged Account ».
+- **F-269** — Le *Run As* est configuré avec l'**élévation par `sudo`**.
+
+**C — Rotation de `/var/log/secure` et correction de C-8.**
+- **F-270** — `[ÉCRAN-2026-11-23, relayé]` `/var/log/secure` tourne chaque semaine.
+  Fichiers relevés : `secure-20261115`, `secure-20261122`. Le 18/11, les lignes du 12/11
+  étaient déjà dans `secure-20261115`.
+- **F-271** — `[PILOTE-DÉCLARÉ]` **Erreur du pilote, consignée :** les contrôles du 18/11
+  n'ont porté que sur `/var/log/secure`. Conséquences : F-252 ne vaut que depuis la
+  rotation du 15/11, et l'exclusion d'un `sudo` interactif en F-257 était fausse.
+- **F-272** — `[ÉCRAN-2026-11-23, relayé]` Recherche du compte dans tous les fichiers
+  `secure*` : **aucun `sudo` de `scxlogfilereader -p` par le compte**. F-262 tient sur la
+  période couverte, dans sa portée révisée. Début exact de cette période : non relayé.
+
+**D — Chronologie du 12/11, `secure-20261115`** `[ÉCRAN-2026-11-23, relayé]` (P-84).
+- **F-273** — Session SSH **avec le compte de service**, depuis le poste A :
+  - 15:21:23 connexion fermée ; 15:39:14 délai dépassé avant authentification ;
+  - 15:43:09 échec `pam_sss` (`sshd:auth`) pour l'UPN du compte ; 15:43:11 « Failed
+    password » ;
+  - 15:43:28 succès `pam_sss` ; 15:43:29 « Accepted password », session ouverte
+    (terminal) ;
+  - 15:46:30 et 15:46:40 : `sudo`, authentification réussie, puis « command not allowed »
+    pour `/opt/microsoft/scx/bin/tools/scxadmin -status` (D-022 appliquée) ;
+  - 16:01:31 déconnexion.
+- **F-274** — Session de `<ADMIN-TIERS>`, connexion GSSAPI depuis le poste B :
+  - 15:56:26 connexion ; 15:57:41 `sudo` ;
+  - 16:03:41 `grep -Ri scom /etc/sudoers /etc/sudoers.d` ; 16:04:50 même recherche pour
+    « scx » ;
+  - 16:06:18 et 16:11:05 `scxadmin -status` ;
+  - **16:11:10 `scxadmin -restart`** ; 16:11:15 `scxadmin -status` ;
+  - **16:32:19 `visudo -f /etc/sudoers.d/scom-kerberos`**, jusqu'à 16:34:07 ; 16:34:58
+    `visudo -c` ;
+  - 16:47:13 fin de session.
+- **F-275** — Le 13/11, dans une **nouvelle session**, commandes de `<ADMIN-TIERS>`
+  (journal : « `<ADMIN-TIERS>` : … COMMAND=… ») : 08:47:04 `sudo ls -l` du dossier
+  personnel du compte ; 08:54:03 `sudo grep -rinw / -e` sur le nom du compte.
+- **F-276** — **F-257 résolu** : le redémarrage d'omi du 12/11 à 16:11:10 CET est le
+  `scxadmin -restart` de `<ADMIN-TIERS>`, à la seconde près (`ActiveEnterTimestamp`
+  d'`omid`).
+- **F-277** — Les refus `EventId=20146` du 12/11 à 16:15:44 CET et du 13/11 à 08:02:36
+  CET (F-255) suivent ces essais. **Leur cause exacte reste non établie.**
+
+**E — Modification hors procédure de `scom-kerberos`** `[ÉCRAN-2026-11-23, relayé]`
+(P-84).
+- **F-278** — `/etc/sudoers.d/scom-kerberos` : **348 octets** (232 en F-237), daté du
+  2026-11-12 16:34:07, à la fin de la session `visudo` de `<ADMIN-TIERS>`. Contenu : les
+  trois lignes de F-237, puis `<COMPTE-SCOM-Q> ALL=(root) NOPASSWD:
+  /opt/microsoft/scx/bin/tools/scxadmin -status`, suivie d'un commentaire de fin de ligne
+  qui date l'ajout du 12/11 et nomme `<ADMIN-TIERS>`, puis une ligne vide. Mode et
+  propriétaire après cette édition : `-r--r-----`, `root root` (`ls -l`). Seul le contexte
+  SELinux n'est pas relayé.
+- **F-279** — `sudo -l -U` : **deux règles**, `scxlogfilereader -p` et `scxadmin -status`.
+- **F-280** — Les autres fichiers de `/etc/sudoers.d` gardent leurs dates (`scom-test` :
+  27/10, cf. F-230 ; les autres : août).
+- **F-281** — `[PILOTE-DÉCLARÉ]` Lecture : la ligne a été ajoutée juste après les refus de
+  15:46. Elle ne sert qu'en session shell : sous Kerberos, SCOM interroge l'agent par
+  WS-Man, sans `sudo` (D-020). Risque faible (lecture d'état seule), mais écart à D-022,
+  fait hors procédure.
+  **Réserve de l'agent (R-02) :** D-020 retire SSH du chemin SCOM mais **ne dit rien de
+  `sudo`**, et le *Run As* est configuré avec élévation (F-269). « Sans `sudo` » n'est donc
+  pas établi pour le chemin privilégié, non observé (F-272, PO-059).
+  **Ce que prévoit le modèle S-16** `[SOURCE-EXTERNE]`, lu à travers
+  `procedures/fichiers/scom-test.sudoers`, égal au bloc de S-16 aux noms et lignes écartées
+  près (F-187, P-69). `grep -n -i scxadmin` sur ce fichier : **une seule ligne**, `rc=0` :
+  - `:20`, commentée ici par D-017 (d), sous « Agent maintenance / Certificate signing »,
+    attribuée à **`scom_adm` (maintenance)** : `scxadmin -restart`, en fin de la commande
+    qui remplace `scx.pem` ;
+  - les lignes de **`scom_mon` (supervision)** — `:46` active, `:50`, `:53`, `:56`, `:57`
+    commentées — **ne contiennent aucune commande `scxadmin`** ; sa seule règle active est
+    `scxlogfilereader -p` ;
+  - `scxadmin -status` est absent du texte de S-16 (P-69, `grep -c` → 0).
+  **Le modèle n'attribue donc aucune commande `scxadmin` au compte de supervision** : sur
+  ce point, la lecture du pilote s'appuie sur S-16. Elle ne s'étend pas à « sans `sudo` »,
+  S-16 donnant à ce compte la règle `scxlogfilereader -p`. S-16 est un modèle, lu le
+  2026-10-20 : il ne mesure pas les appels de cette installation. La vérification auprès
+  de l'équipe SCOM reste utile avant le retour de D-024, mais n'est plus la seule base.
+  **La découverte du 19/11 (F-246) et la collecte depuis ont eu lieu avec cette ligne en
+  place** : aucun relevé ne montre encore la supervision sans elle. Le contrôle après le
+  retour de D-024 devra donc inclure l'état de l'hôte dans SCOM.
+
+**F — Exposition SSH du compte de service.**
+- **F-282** — La session du poste A a été ouverte **avec le compte de service** (F-273).
+- **F-283** — `[PILOTE-DÉCLARÉ]` Cause : A2 (`realm permit -g`) admet `<GROUPE-SCOM-Q>`
+  pour tous les services PAM, SSH compris, et pas seulement pour omi.
+
+**G — Ce que cette section tranche, et ce qu'elle laisse.**
+- Tranché : la cause du redémarrage de F-257 (F-276).
+- Révisés : F-252, F-257, F-262, PO-059, PO-074. Notes datées : F-237, F-239, D-022.
+- Ouvert : PO-075. Décidé, non joué : D-024.
+- Laissé tel quel : F-256, qui cite F-252 pour un essai du 18/11, **postérieur** à la
+  rotation du 15/11, donc couvert. P-81 reste exact pour le seul `/var/log/secure`.
 - Aucune procédure n'est modifiée.
 
 ---
@@ -3203,6 +3338,10 @@ ADCS (R-10) ; s'il n'existe pas, la lecture par `scom_adm` échouera à la déco
 pas `-f`, qui ne peut pas échouer sur un fichier absent, F-189).
 
 ### PO-059 — Résultat du test SCOM sur `host02` *(ouvert le 2026-10-20)*
+`[RÉVISÉE le 2026-11-23, C-9]` Le chemin privilégié reste **non observé** : aucun `sudo`
+de `scxlogfilereader -p` par le compte dans tous les fichiers `secure*` (F-272). Profils
+et stabilité : voir PO-074.
+**ÉTAIT :** texte ci-dessous, vrai jusqu'au 2026-11-22.
 `[RÉVISÉE le 2026-11-19, C-8]` — **découverte réussie le 2026-11-19** (F-246).
 - Certificat **inchangé** avant et après la découverte (F-260, F-261) ; **1.9.4-0
   acceptée** (F-246, D-017 b).
@@ -3453,6 +3592,13 @@ touchées (R-12 : une garde modifiée perd sa démonstration).
 retirer, et par quel geste. **Qui :** l'opérateur ; la révision, par le pilote.
 
 ### PO-074 — Profils *Run As* et validation de Kerberos *(ouvert le 2026-11-19)*
+`[RÉVISÉE le 2026-11-23, C-9]`
+- **Profils répondus** `[TIERS-DÉCLARÉ]` : même compte pour les deux, élévation par
+  `sudo` (F-268, F-269).
+- **Stabilité au 23/11** : aucun nouveau refus, collecte active (F-265).
+- **Reste :** *Healthy* dans SCOM, à confirmer (F-267).
+- **Critère non encore déclaré rempli.**
+**ÉTAIT :** texte ci-dessous, vrai jusqu'au 2026-11-22.
 - **Question posée à l'équipe SCOM :** `<COMPTE-SCOM-Q>` est-il associé aux profils
   « UNIX/Linux Action Account » et « UNIX/Linux Privileged Account », pour l'hôte ou
   pour le pool ? La découverte n'a abouti qu'avec une saisie manuelle (F-245, F-246) :
@@ -3462,6 +3608,19 @@ retirer, et par quel geste. **Qui :** l'opérateur ; la révision, par le pilote
   ligne `EventId=20146` (F-255, F-263). Ce critère n'exerce pas le chemin privilégié
   (F-262).
 - **Qui :** l'équipe SCOM pour les profils, l'opérateur pour le contrôle.
+
+### PO-075 — Fermer l'accès SSH du compte de service *(ouvert le 2026-11-23)*
+- **Constat :** le compte de service a ouvert une session SSH le 12/11 (F-273, F-282) ;
+  `[PILOTE-DÉCLARÉ]` l'admission du groupe par A2 vaut pour tous les services PAM (F-283).
+- **Options :** `DenyGroups` ou `DenyUsers` dans un fichier de configuration `sshd`, ou
+  `pam_access` sur la pile `sshd`. *État connu :* `pam_access` n'est pas activé par
+  `authselect` (F-179) ; `sshd -T` ne montrait ni `allowgroups`, ni `allowusers`, ni
+  `denyusers` (F-178), `denygroups` n'y étant pas relevé.
+- `[PILOTE-DÉCLARÉ]` **Recommandation :** `DenyGroups` sur les deux groupes SCOM.
+  Comportement à vérifier : @VERIF, page de manuel `sshd_config` de la cible.
+- **À porter ensuite** par `rhel_post_install` (R-09, renvoi seul).
+- **Décision : non prise.** D-024 prévoit de jouer son retour arrière avec cette
+  fermeture.
 
 ---
 
@@ -3814,6 +3973,8 @@ de supervision (`<COMPTE-SCOM-Q>` pour `host02`), **pas** les groupes `<GROUPE-S
 `[NOTE du 2026-11-09]` Procédure : `procedures/kerberos-scom-host02.md`.
 `[NOTE du 2026-11-09, C-7]` Appliquée sur `host02` le jour même : règle posée (F-237),
 démontrée dans les deux sens par `sudo -l -U` (F-239) ; groupe admis à SSSD (F-238).
+`[NOTE du 2026-11-23, C-9]` Depuis le 2026-11-12, le fichier en place s'écarte de cette
+décision (F-278, F-279). Retour au contenu de D-022 décidé : **D-024**, non joué.
 
 ### D-023 — `host02` relève de la Qualification ; les comptes locaux seront supprimés (2026-11-04)
 **Décisions de l'opérateur**, 2026-11-04 `[PILOTE-DÉCLARÉ]` (P-76) :
@@ -3825,6 +3986,19 @@ sur le compte AD. *Ce que la décision ne dit pas :* ce que « Kerberos validé 
 découverte et supervision réussies ? — ni par quel geste. L'étape R de
 `procedures/comptes-scom-host02.md` défait les comptes et le sudoers, mais **ne touche
 pas** BeyondTrust (`:169`) : le retrait des entrées est un geste distinct.
+
+### D-024 — Retour de `scom-kerberos` au contenu de D-022 (2026-11-23)
+**Décision de l'opérateur**, 2026-11-23 `[PILOTE-DÉCLARÉ]` (option B) :
+- revenir au contenu de D-022 dans `/etc/sudoers.d/scom-kerberos`, en retirant la ligne
+  `scxadmin -status` et la ligne vide (F-278) ;
+- par une **procédure écrite** (sauvegarde, contrôle de contenu avant pose, `visudo`,
+  `sudo -l -U`, retour arrière), jouée avec la fermeture de SSH pour le compte de service
+  (PO-075).
+*Motif :* moindre privilège ; `scxadmin` n'est utile qu'en shell, que SCOM n'emploie plus
+(D-020). *Réserve :* F-281, sur ce que D-020 établit.
+`[PILOTE-DÉCLARÉ]` **Recommandation du pilote :** prévenir `<ADMIN-TIERS>` avant le retour
+arrière.
+*État :* **non jouée**, procédure non écrite. *Dépendance :* PO-075 n'est pas décidé.
 
 
 ---

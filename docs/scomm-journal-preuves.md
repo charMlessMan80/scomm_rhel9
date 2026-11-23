@@ -1194,3 +1194,34 @@ et l'exclusion du redémarrage de la machine en F-257.
 **Contrôle R-07 fait par l'opérateur**, avec les noms réels (non écrits), sur le diff de
 cette consignation et sur tout le dépôt : `rc=1` pour les deux. Il complète le contrôle
 par motifs génériques de l'agent, qui ne disposait pas de ces noms.
+
+---
+
+*Preuves ajoutées le **2026-11-23** (consignation C-9). **Aucune n'a été produite sur ce
+poste** (R-08) : P-84 et P-85 relèvent de la réserve de transmission de P-72 à P-77, à
+l'identique. Nouveau libellé : `<ADMIN-TIERS>` (§ 2.13 du dossier). **Entrée de la
+consignation**, sur le poste de rédaction, sans élévation : `git status --porcelain
+-uall` → aucune ligne, `rc=0` ; `HEAD` = `origin/main` = `452d7a8` ; plus hauts numéros
+en usage F-264, PO-074, D-023, P-83.*
+
+**P-84** — `[ÉCRAN-2026-11-23, relayé]` **Relevés sur `host02`.** Captures relayées par le
+pilote, décrites ; **aucune vue par l'agent**. Contrôle de stabilité : décompte des lignes
+`EventId=20146` (2), dernières lignes d'`omiserver.log` (23/11 08:39:18 UTC), empreinte du
+certificat contre le fichier « avant » (`rc` 0 et 0). Recherche du compte dans tous les
+fichiers `secure*`. Chronologie du 12/11 et du 13/11 dans `secure-20261115` ; les lignes
+du 13/11 sont celles de `<ADMIN-TIERS>` (« `<ADMIN-TIERS>` : … COMMAND=… »), dans une
+nouvelle session. Intégrité de `/etc/sudoers.d` : taille, date, contenu, mode et
+propriétaire de `scom-kerberos` (`ls -l` : `-r--r-----`, `root root`), `sudo -l -U`, dates
+des autres fichiers.
+`[PILOTE-DÉCLARÉ]` : erreur de portée des contrôles du 18/11 ; lecture de la ligne ajoutée ;
+cause de l'exposition SSH.
+**Non relayés :** témoin de la comparaison d'empreinte ; début de la période couverte par
+`secure*` ; contexte SELinux de `scom-kerberos` après l'édition ; codes de retour des
+autres commandes.
+**Valeurs non écrites (R-07) :** noms réels, UPN, adresses des postes A et B, uid et gid,
+empreintes. **Aucune documentation citée.** Fonde F-265, F-266, F-270 à F-280, F-282.
+
+**P-85** — `[TIERS-DÉCLARÉ]` **Profils *Run As* et élévation `sudo`**, réponse de l'équipe
+SCOM relayée par l'opérateur ; **non vue par l'agent**. Même compte pour « UNIX/Linux
+Action Account » et « UNIX/Linux Privileged Account » ; *Run As* configuré avec élévation
+par `sudo`. **Aucune documentation citée.** Fonde F-268 et F-269.
