@@ -31,8 +31,9 @@ faits, des points ouverts et des décisions. `CLAUDE.md` porte les règles de tr
 duplique rien d'ici. » Le principe — un objet, un seul endroit — est inchangé ; c'est le
 nombre d'endroits qui est passé de un à trois (D-006).
 
-Dernière mise à jour : **2026-11-23** (consignation C-9, stabilité, journaux tournés,
-modification hors procédure de `scom-kerberos`, décision D-024).
+Dernière mise à jour : **2026-11-23** (consignation C-11, jeu de
+`procedures/retour-sudo-ssh-scom-host02.md`, Kerberos validé, D-026).
+`ÉTAIT : 2026-11-23 (consignation C-9, stabilité, journaux tournés, modification hors procédure de scom-kerberos, décision D-024).`
 `ÉTAIT : 2026-11-19 (consignation C-8, diagnostic de la découverte Kerberos et découverte réussie, 18–19/11).`
 `ÉTAIT : 2026-11-09 (consignation C-7, jeu de procedures/kerberos-scom-host02.md sur host02).`
 `ÉTAIT : 2026-11-09 (consignation C-5, du 2026-10-22 au 2026-11-09).`
@@ -2006,6 +2007,8 @@ confirmé est dit pour chacune. Lignes et versions telles que la procédure les 
   `[NOTE du 2026-11-23, C-9]` **Ne décrit plus le fichier en place depuis le 2026-11-12
   16:34:07** : 348 octets, une règle ajoutée hors procédure (F-278). Le relevé ci-dessus
   reste exact pour le 09/11. Retour au contenu de D-022 décidé (D-024), non joué.
+  `[NOTE du 2026-11-23, C-11]` D-024 jouée à 11:03 : le fichier en place a de nouveau
+  232 octets et, selon le pilote, la même empreinte que la pose du 09/11 (F-297 à F-299).
 - **F-238** — **A2.** `cmp` avec la sauvegarde avant écriture `rc=0` ; `realm permit -g`
   `rc=0`. `diff` : `rc_diff=1` (1 attendu, S-29) ; **« 19c19 » seul**, une ligne `<` et
   une ligne `>` ; la ligne `>` reprend les trois groupes de `<GROUPES-ADMIN-LINUX>` dans
@@ -2026,6 +2029,8 @@ confirmé est dit pour chacune. Lignes et versions telles que la procédure les 
   `[NOTE du 2026-11-23, C-9]` **« Une seule règle » ne vaut plus depuis le 2026-11-12
   16:34:07** : `sudo -l -U` en montre deux (F-279). Le relevé reste exact pour le 09/11.
   Le fichier ayant changé, cette démonstration ne couvre pas son état actuel (R-12).
+  `[NOTE du 2026-11-23, C-11]` Depuis 11:03, de nouveau une seule règle ; démonstration
+  rejouée sur le fichier reposé (F-300).
 - **F-240** — **V, forme `sudo -u … sudo -n -l`.** Sortie : « Creating home directory for
   `<COMPTE-SCOM-Q>`. », puis, pour les deux lignes, « sudo: PAM account management
   error: Permission denied » et « sudo: a password is required », `rc=1`. **Non
@@ -2216,6 +2221,7 @@ mention UTC.
   **inchangé**.
 - **F-267** — Hôte toujours *Healthy* dans SCOM : **non confirmé**. @VERIF : console SCOM,
   par l'équipe SCOM (PO-074).
+  `[NOTE du 2026-11-23, C-11]` Confirmé `[TIERS-DÉCLARÉ]` à 10:38 et à 12:16 (F-284, F-312).
 
 **B — Profils *Run As*** `[TIERS-DÉCLARÉ]`, relayé par l'opérateur (P-85).
 - **F-268** — `<COMPTE-SCOM-Q>` est employé pour les deux profils, « UNIX/Linux Action
@@ -2276,7 +2282,12 @@ mention UTC.
   qui date l'ajout du 12/11 et nomme `<ADMIN-TIERS>`, puis une ligne vide. Mode et
   propriétaire après cette édition : `-r--r-----`, `root root` (`ls -l`). Seul le contexte
   SELinux n'est pas relayé.
+  `[NOTE du 2026-11-23, C-11]` Ne décrit plus le fichier en place depuis le 2026-11-23
+  11:03 : retour au contenu de D-022 (§ 2.14, F-297 à F-299). Contexte de la sauvegarde
+  prise juste avant : F-296.
 - **F-279** — `sudo -l -U` : **deux règles**, `scxlogfilereader -p` et `scxadmin -status`.
+  `[NOTE du 2026-11-23, C-11]` Ne décrit plus le fichier en place depuis le 2026-11-23
+  11:03 : retour au contenu de D-022 (§ 2.14, F-300).
 - **F-280** — Les autres fichiers de `/etc/sudoers.d` gardent leurs dates (`scom-test` :
   27/10, cf. F-230 ; les autres : août).
 - **F-281** — `[PILOTE-DÉCLARÉ]` Lecture : la ligne a été ajoutée juste après les refus de
@@ -2304,6 +2315,9 @@ mention UTC.
   **La découverte du 19/11 (F-246) et la collecte depuis ont eu lieu avec cette ligne en
   place** : aucun relevé ne montre encore la supervision sans elle. Le contrôle après le
   retour de D-024 devra donc inclure l'état de l'hôte dans SCOM.
+  `[NOTE du 2026-11-23, C-11]` La collecte périodique (V3, F-310) et l'état *Healthy* de
+  12:16 (F-312) sont constatés **sans** la ligne `scxadmin -status`. Le chemin privilégié
+  reste non observé (PO-059).
 
 **F — Exposition SSH du compte de service.**
 - **F-282** — La session du poste A a été ouverte **avec le compte de service** (F-273).
@@ -2317,6 +2331,160 @@ mention UTC.
 - Laissé tel quel : F-256, qui cite F-252 pour un essai du 18/11, **postérieur** à la
   rotation du 15/11, donc couvert. P-81 reste exact pour le seul `/var/log/secure`.
 - Aucune procédure n'est modifiée.
+
+### 2.14 Le 2026-11-23 — jeu de `procedures/retour-sudo-ssh-scom-host02.md`, Kerberos validé
+
+**Aucune capture, aucun message de `host02` n'a été vu par l'agent.** Provenance : P-87 et
+P-88, sous la réserve de transmission de P-72 à P-77, à l'identique. **Exception :** les
+sources S-31 à S-38, lues ou mesurées par l'agent sur le poste de rédaction (P-86). Ne sont
+pas écrits (R-07) : les noms réels, les adresses hors boucle locale et écoute générique,
+les uid et gid, les empreintes. Dans une ligne de journal citée, `<opérateur>` remplace le
+nom du compte de l'opérateur. **Heures :** CET, sauf mention UTC. Les étapes sont
+désignées par leur nom dans la procédure.
+
+**A — Avant le jeu** `[TIERS-DÉCLARÉ]` (P-88).
+- **F-284** — 10:38 : l'équipe SCOM confirme l'hôte *Healthy*, agent 1.9.4-0, supervisé par
+  le pool UNIX/Linux. La ligne `scxadmin -status` est encore en place à ce moment.
+- **F-285** — **Non relayé :** que l'équipe SCOM, l'interlocuteur de l'équipe AD et
+  `<ADMIN-TIERS>` aient été prévenus avant le jeu (prérequis de la procédure ;
+  recommandation sous D-024).
+
+**B — Jeu** `[ÉCRAN-2026-11-23, relayé]` (P-87).
+- **F-286** — **S, ES2.** Témoins conformes : message de variable vide sans ligne `rc`,
+  forme à `1`. Trois noms, `rc_vars=0`, groupes distincts.
+- **F-287** — **0a, versions.** bash **5.1.8-9.el9** ; sudo **1.9.17p2-3.el9_8** ;
+  openssh-server **9.9p1-9.el9_8**.
+- **F-288** — `[PILOTE-DÉCLARÉ]` **Erreur du pilote, consignée :** la procédure écrit
+  « OpenSSH 8.7 » en `[PILOTE-DÉCLARÉ]` ; la version réelle est 9.9p1 (F-287). Sans
+  conséquence : le code `V_9_9_P1` figure parmi les sources lues, avec les mêmes messages
+  (S-33, S-36). Le texte de la procédure n'est pas modifié par cette consignation.
+- **F-289** — **0a, `man sshd_config` de la cible.** L. 317-325 : `DenyGroups`, avec « This
+  keyword may appear multiple times in sshd_config with each instance appending to the
+  list » ; l. 9 : « first obtained value ».
+- **F-290** — **0a, `sshd -T`.** Aucune directive `allowgroups`, `allowusers`, `denygroups`
+  ni `denyusers` ; `usepam yes` ; `passwordauthentication yes` ; `loglevel INFO` ;
+  `syslogfacility AUTHPRIV` ; `port 22` ; `listenaddress` `[::]:22` et `0.0.0.0:22`.
+- **F-291** — **0a, fichiers.** `/etc/ssh/sshd_config` : `Include
+  /etc/ssh/sshd_config.d/*.conf` à la l. 15, aucun `Match`. `sshd_config.d` :
+  `01-permitrootlogin.conf` (140 octets, 21/08) et `50-redhat.conf` (719 octets, 14/07),
+  aucun `Match`.
+- **F-292** — **0a, service.** `ExecReload` = `/bin/kill -HUP $MAINPID` ; `sshd` actif
+  depuis le 25/10 à 10:28:42.
+- **F-293** — **0b.** `scom-kerberos` dans l'état de F-278 : 348 octets, 5 lignes, une ligne
+  vide, la ligne `scxadmin -status`. `sudo -l -U` : deux règles. Ni sauvegarde, ni fichier
+  de travail.
+- **F-294** — **0c.** Les deux groupes se résolvent sous leur nom exact. Membre de
+  `<GROUPE-SCOM-Q>` : `<COMPTE-SCOM-Q>` ; membre de `<GROUPE-SCOM-P>` : `<COMPTE-SCOM-P>` ;
+  aucun administrateur humain. L'opérateur n'est dans aucun des deux (`0`, `rc=1`).
+  Messages « id: cannot find name for group ID » sur les groupes primaires (convention
+  uid = gid, F-221), sans effet. Référence du certificat conforme.
+- **F-295** — **2S.** `sudo -s`, `id -u` = 0.
+- **F-296** — **SV.** Sauvegarde de 348 octets, `440 root root`, contexte
+  `unconfined_u:object_r:etc_t` (partie utilisateur héritée de l'édition du 12/11, lecture
+  du pilote) ; `cmp` `0`, témoin `1`.
+- **F-297** — **A1, 11:03, contrôle avant pose.** `garde_a1=OK` ; 3 lignes ; 232 octets ;
+  `cmp` des trois premières lignes à `0`. Témoins conformes : ligne voisine, non ASCII,
+  `visudo` « syntax error » à 1:27.
+- **F-298** — **A1, empreinte.** Égale avant et après la pose. `[PILOTE-DÉCLARÉ]` Identique
+  à celle de la pose du 09/11 (F-237) : fichier octet pour octet conforme à D-022. Valeur
+  non écrite.
+- **F-299** — **A1, fichier posé.** `/etc/sudoers.d/scom-kerberos` : `-r--r-----`,
+  `root root`, `system_u:object_r:etc_t`, 232 octets ; `visudo -c` `0`.
+- **F-300** — **A1, règle.** `sudo -l -U` : **une seule règle**. `scxlogfilereader -p`
+  permis (`0`) ; `scxadmin -status` refusé (`1`, sans message). Les trois conditions de
+  R-13 sont réunies. Référence : 2 lignes `EventId=20146`.
+- **F-301** — **A2, 11:04, contrôle avant pose.** `garde_a2=OK`. Témoin `sshd -t -f` :
+  « line 131: Bad configuration option: ScomMotCleInconnu » puis « terminating, 1 bad
+  configuration options », `rc` 255.
+- **F-302** — **A2, fichier posé.** `/etc/ssh/sshd_config.d/10-scom-denygroups.conf` :
+  `-rw-------`, `root root`, `system_u:object_r:etc_t`, 133 octets.
+- **F-303** — **A2, rechargement.** `sshd -t` `0` ; `reload` `0` ; **une ligne « Received
+  SIGHUP; restarting. » dans `/var/log/secure`** : rechargement prouvé.
+  `ActiveEnterTimestamp` inchangé, comme prévu.
+- **F-304** — **A2, configuration lue.** `sshd -T` et `sshd -T -C` (compte de supervision) :
+  deux lignes `denygroups`, une par groupe.
+- **F-305** — Les sessions établies ont survécu au rechargement.
+- **F-306** — **V1.** Nouvelle session SSH de l'opérateur ouverte après le rechargement.
+- **F-307** — **V2, compte de supervision**, repère 10:07:55 UTC. Client : « Permission
+  denied (publickey,gssapi-keyex,gssapi-with-mic,password) », `rc` 255. `sshd-session` :
+  « User `<COMPTE-SCOM-Q>` from ::1 not allowed because a group is listed in DenyGroups »,
+  puis « Connection closed by invalid user `<COMPTE-SCOM-Q>` ::1 port … [preauth] ».
+- **F-308** — **V2, témoin (l'opérateur).** Même échec client, `rc` 255. `sshd-session` :
+  « Connection closed by authenticating user `<opérateur>` ::1 port … [preauth] » ; aucune
+  ligne `DenyGroups`.
+- **F-309** — **V2, lecture.** **Refus démontré** pour `<COMPTE-SCOM-Q>` (R-13, R-14 : le
+  message distingue les deux cas). `sudo -l -U` : une seule règle ; certificat `0 0`,
+  témoin `1` ; `EventId=20146` = 2.
+- **F-310** — **V3**, 10:30:46 UTC. `omiserver.log` : quatre lignes « unexpected eof while
+  reading » à 10:29:18 UTC, postérieures à A1 (10:03 UTC) et au repère de V2 : la collecte
+  continue sans la ligne retirée. `EventId=20146` = 2.
+  Heure relue sur la capture : 10:29:18 UTC. Écart de 5 minutes par rapport à la grille
+  des relevés antérieurs (seconde 18, pas de 15 minutes), non expliqué ; sans effet sur la
+  conclusion, l'heure suivant A1 et le repère de V2.
+- **F-311** — **N.** Fichiers de travail et sauvegarde supprimés, absence vérifiée (`rc` 2).
+  `~/scom-kerberos-avant.fp` conservé.
+
+**C — Après le jeu** `[TIERS-DÉCLARÉ]` (P-88).
+- **F-312** — 12:16 : l'équipe SCOM confirme l'hôte toujours *Healthy*.
+
+**D — `@VERIF` de la procédure levés.**
+- **F-313** — Levés par le jeu : version et page de manuel d'OpenSSH (F-287, F-289) ;
+  présence de `50-redhat.conf` (F-291) ; contexte SELinux du fichier posé (F-302) ; arrivée
+  de la ligne SIGHUP dans `/var/log/secure` (F-303) ; survie des sessions établies
+  (F-305) ; forme de la ligne témoin (F-308).
+  **Branches non exercées (R-04) :** R1, R2 et leurs variantes `root` ; les gardes à `KO`
+  et les cas d'arrêt de 0a à 0c sur `host02` ; une connexion de `<COMPTE-SCOM-P>`.
+
+**E — Sources de la rédaction de C-10** (P-86). Toutes `[SOURCE-EXTERNE]` ou mesures du
+poste, **pas** de `host02`. Lignes et versions telles que la procédure les cite (§
+*Sources*). **Version pertinente pour `host02` : `V_9_9_P1`** (F-287). Les correctifs de
+Fedora et de Red Hat n'ont pas été lus.
+- **S-31** — `man sshd_config` d'`openssh-server-10.2p1-16.fc44`, page du 4 octobre 2025,
+  `MANWIDTH=100` : l. 8-9 (première valeur), l. 318-326 (`DenyGroups`, noms seuls, ordre,
+  ajout à la liste), l. 335 (`DenyUsers`, `AllowUsers`), l. 547-551 (`Include`, ordre
+  lexical). **Sur `host02` :** la page 9.9p1 porte la phrase d'ajout et la première valeur
+  (F-289) ; l'ordre lexical d'`Include` n'y a pas été lu, le fichier inclus est pris en
+  compte (F-304).
+- **S-32** — `man sshd`, même paquet, même date : `-C` (l. 30), `-f` (l. 59), `-T` (l. 95),
+  `-t` (l. 100). **Sur `host02` :** ces options ont rendu les résultats attendus (F-301,
+  F-303, F-304) ; la page de la cible n'a pas été lue.
+- **S-33** — `openssh/openssh-portable`, `auth.c`, `allowed_user`, étiquettes `V_10_2_P1`
+  (l. 193), `V_9_9_P1` (l. 195), `V_8_7_P1` (l. 241) : « User %.100s from %.100s not allowed
+  because a group is listed in DenyGroups ». **Sur `host02` :** message **confirmé** (F-307).
+- **S-34** — Même dépôt, `servconf.c`, `parse_allowdenygroups` : `opt_array_append`, dans
+  les trois versions. **Sur `host02` :** ajout à la liste **non exercé**, une seule
+  directive y étant posée ; la page de la cible le documente (F-289).
+- **S-35** — Même dépôt, `groupaccess.c` : `match_pattern` sur le nom du groupe, l. 102
+  (10.2), l. 91 (9.9, 8.7) ; groupe non résolu ignoré, l. 65-85 (10.2). **Sur `host02` :**
+  correspondance du nom exact **confirmée** par le refus (F-307) ; casse et groupe non
+  résolu **non exercés**.
+- **S-36** — Même dépôt, `sshd.c` : « Received SIGHUP; restarting. », l. 517 (10.2), l. 493
+  (9.9), l. 309 (8.7). **Sur `host02` :** **confirmé** dans `/var/log/secure` (F-303).
+- **S-37** — Mesures sur le poste, `sshd` 10.2p1 **non privilégié**, boucle locale,
+  configuration et clé d'hôte temporaires, `UsePAM no` : trois groupes sur deux fichiers
+  inclus, tous affichés par `sshd -T` et `-T -C` ; mot-clé inconnu, `rc=255` ; refus par
+  groupe et témoin sans ligne `DenyGroups` ; sans options de clé d'hôte, « Host key
+  verification failed » et aucun refus ; nom en majuscules, pas de refus ;
+  `ActiveEnterTimestampMonotonic` inchangé après `reload` d'une unité utilisateur. **Sur
+  `host02`, avec `usepam yes` :** mot-clé inconnu (F-301), refus et témoin (F-307, F-308),
+  horodatage inchangé (F-303) **confirmés** ; majuscules et clé d'hôte **non exercées**.
+- **S-38** — Bac à sable sur le poste, noms fictifs, `sudo`, `systemctl`, `install`,
+  `restorecon`, `cp` et client `ssh` simulés ; `sshd -t`, `sshd -T` et `visudo -cf` réels :
+  enchaînement nominal ; `G_A1` et `G_A2` à `KO` sans pose ni rechargement ; sauvegarde
+  non écrasée ; R1 sans sauvegarde sans restauration ; R1 et R2 avec et sans `sudo`.
+  `visudo -c` global non exercé (`rc=1`). **Sur `host02` :** seul l'enchaînement nominal a
+  été joué (F-297 à F-304) ; les branches `KO` et R restent propres au bac à sable.
+
+**F — Ce que cette section tranche, et ce qu'elle laisse.**
+- Décidé : D-026. Clos : PO-074, PO-075. Jouées : D-024, D-025.
+- Notes datées : F-237, F-239, F-267, F-278, F-279, F-281, PO-059, PO-071, PO-073, D-022,
+  D-023, D-024, D-025.
+- Laissés tels quels, la condition « une fois Kerberos validé » restant exacte tant que la
+  suppression n'est pas faite : PO-063, PO-067, D-017 (c) et (d), D-019 (b). Laissé tel
+  quel, comme état daté : § 2.13 G.
+- La procédure n'est pas modifiée. Ses mentions « aucune commande exécutée sur `host02` »,
+  « OpenSSH 8.7 », « pas encore au dossier » et ses `@VERIF` décrivent donc l'état d'avant
+  le jeu : F-288, F-313 et S-31 à S-38 font foi.
 
 ---
 
@@ -3344,6 +3512,8 @@ ADCS (R-10) ; s'il n'existe pas, la lecture par `scom_adm` échouera à la déco
 pas `-f`, qui ne peut pas échouer sur un fichier absent, F-189).
 
 ### PO-059 — Résultat du test SCOM sur `host02` *(ouvert le 2026-10-20)*
+`[NOTE du 2026-11-23, C-11]` Après le retour de D-024, la collecte et l'état *Healthy* sont
+constatés (F-310, F-312). Le chemin privilégié reste **non observé**.
 `[RÉVISÉE le 2026-11-23, C-9]` Le chemin privilégié reste **non observé** : aucun `sudo`
 de `scxlogfilereader -p` par le compte dans tous les fichiers `secure*` (F-272). Profils
 et stabilité : voir PO-074.
@@ -3535,6 +3705,8 @@ la commande de vérification se joue **après** l'ajout du compte au groupe et l
 V, pour qu'un échec ne puisse plus venir de PO-071 (F-242).
 
 ### PO-071 — Accès SSSD du compte de supervision sous Kerberos *(ouvert le 2026-11-09)*
+`[NOTE du 2026-11-23, C-11]` Le modèle SSSD de `rhel_post_install` devra aussi porter le
+`DenyGroups` de D-025 (renvoi seul, R-09).
 `[RÉVISÉE le 2026-11-19, C-8]`
 - **La partie PAM est répondue** : « Success » avec le compte, désormais membre du groupe
   (F-249, F-250) ; la découverte comme la supervision fonctionnent avec le compte admis
@@ -3579,6 +3751,11 @@ version majeure ou mineure ? —, et le fait qu'aucune validation n'existe dans 
 environnement (F-214). **Qui :** l'équipe SCOM, à l'essai.
 
 ### PO-073 — Révision de `procedures/kerberos-scom-host02.md` *(ouvert le 2026-11-09)*
+`[NOTE du 2026-11-23, C-11]` Les corrections (1) à (5) sont appliquées dans
+`procedures/retour-sudo-ssh-scom-host02.md` ; (3) y est transposée, cette procédure n'ayant
+pas de `realm permit` : la référence est prise dans le bloc qui agit.
+`procedures/kerberos-scom-host02.md` **n'est pas modifiée**. Le point reste ouvert pour la
+procédure de D-023, qui réutilise l'étape R de `procedures/comptes-scom-host02.md`.
 Le jeu du 2026-11-09 (§ 2.11) a relevé cinq défauts. **La procédure n'est pas modifiée
 par la consignation C-7** ; sa révision est un objet distinct, qui rejoue les gardes
 touchées (R-12 : une garde modifiée perd sa démonstration).
@@ -3597,7 +3774,11 @@ touchées (R-12 : une garde modifiée perd sa démonstration).
 **Non décidé :** le sort du dossier personnel créé en V (F-240) — le garder, ou le
 retirer, et par quel geste. **Qui :** l'opérateur ; la révision, par le pilote.
 
-### PO-074 — Profils *Run As* et validation de Kerberos *(ouvert le 2026-11-19)*
+### PO-074 — Profils *Run As* et validation de Kerberos *(ouvert le 2026-11-19)* — **CLOS le 2026-11-23**
+`[RÉVISÉE le 2026-11-23, C-11]` **Clos par D-026** : profils (F-268, F-269), stabilité du 19
+au 23/11 sans nouveau refus (F-265, F-309, F-310), *Healthy* confirmé avant et après le jeu
+(F-284, F-312). Ce critère n'exerce pas le chemin privilégié (PO-059).
+**ÉTAIT :** titre sans « CLOS » et texte ci-dessous, vrais jusqu'au jeu du 2026-11-23.
 `[RÉVISÉE le 2026-11-23, C-9]`
 - **Profils répondus** `[TIERS-DÉCLARÉ]` : même compte pour les deux, élévation par
   `sudo` (F-268, F-269).
@@ -3615,7 +3796,13 @@ retirer, et par quel geste. **Qui :** l'opérateur ; la révision, par le pilote
   (F-262).
 - **Qui :** l'équipe SCOM pour les profils, l'opérateur pour le contrôle.
 
-### PO-075 — Fermer l'accès SSH du compte de service *(ouvert le 2026-11-23)*
+### PO-075 — Fermer l'accès SSH du compte de service *(ouvert le 2026-11-23)* — **CLOS le 2026-11-23**
+`[RÉVISÉE le 2026-11-23, C-11]` **Clos :** D-025 jouée, refus démontré en V2 pour
+`<COMPTE-SCOM-Q>` (F-307 à F-309). Le compte de production est refusé lui aussi sur
+`host02`, par appartenance à `<GROUPE-SCOM-P>` : ce refus **découle** de la règle en vigueur
+(F-304) et de l'appartenance relevée (F-294) ; **aucune connexion de ce compte n'a été
+essayée**. Renvoi à `rhel_post_install` inchangé (R-09).
+**ÉTAIT :** titre sans « CLOS » et texte ci-dessous, vrais jusqu'au jeu du 2026-11-23.
 - **Constat :** le compte de service a ouvert une session SSH le 12/11 (F-273, F-282) ;
   `[PILOTE-DÉCLARÉ]` l'admission du groupe par A2 vaut pour tous les services PAM (F-283).
 - **Options :** `DenyGroups` ou `DenyUsers` dans un fichier de configuration `sshd`, ou
@@ -3986,6 +4173,8 @@ de supervision (`<COMPTE-SCOM-Q>` pour `host02`), **pas** les groupes `<GROUPE-S
 démontrée dans les deux sens par `sudo -l -U` (F-239) ; groupe admis à SSSD (F-238).
 `[NOTE du 2026-11-23, C-9]` Depuis le 2026-11-12, le fichier en place s'écarte de cette
 décision (F-278, F-279). Retour au contenu de D-022 décidé : **D-024**, non joué.
+`[NOTE du 2026-11-23, C-11]` D-024 jouée à 11:03 : le fichier en place est de nouveau
+conforme à cette décision (F-297 à F-300).
 
 ### D-023 — `host02` relève de la Qualification ; les comptes locaux seront supprimés (2026-11-04)
 **Décisions de l'opérateur**, 2026-11-04 `[PILOTE-DÉCLARÉ]` (P-76) :
@@ -3997,6 +4186,8 @@ sur le compte AD. *Ce que la décision ne dit pas :* ce que « Kerberos validé 
 découverte et supervision réussies ? — ni par quel geste. L'étape R de
 `procedures/comptes-scom-host02.md` défait les comptes et le sudoers, mais **ne touche
 pas** BeyondTrust (`:169`) : le retrait des entrées est un geste distinct.
+`[NOTE du 2026-11-23, C-11]` « Kerberos validé » est déclaré par **D-026**. La suppression
+est ouverte, par une procédure distincte, **non écrite et non jouée**.
 
 ### D-024 — Retour de `scom-kerberos` au contenu de D-022 (2026-11-23)
 **Décision de l'opérateur**, 2026-11-23 `[PILOTE-DÉCLARÉ]` (option B) :
@@ -4012,6 +4203,7 @@ arrière.
 *État :* **non jouée**, procédure non écrite. *Dépendance :* PO-075 n'est pas décidé.
 `[NOTE du 2026-11-23, C-10]` Procédure écrite :
 `procedures/retour-sudo-ssh-scom-host02.md`, **non jouée**. PO-075 est tranché par D-025.
+`[NOTE du 2026-11-23, C-11]` Jouée le 2026-11-23, § 2.14 (A1, F-297 à F-300).
 
 ### D-025 — SSH fermé aux groupes SCOM par `DenyGroups` sur `host02` (2026-11-23)
 **Décision de l'opérateur**, 2026-11-23 `[PILOTE-DÉCLARÉ]`. PO-075 est tranché par
@@ -4021,6 +4213,18 @@ fichier de configuration `sshd` dédié, sur `host02`. La même règle sera ensu
 *Motif :* SCOM n'emploie pas SSH sous Kerberos (D-020) ; même logique que l'accès SSSD par
 groupe ; couvre aussi le compte de production.
 *Procédure :* `procedures/retour-sudo-ssh-scom-host02.md`. *État :* **non jouée**.
+`[NOTE du 2026-11-23, C-11]` Jouée le 2026-11-23, § 2.14 (A2, V1, V2, F-301 à F-309).
+
+### D-026 — Kerberos est déclaré validé pour SCOM sur `host02` (2026-11-23)
+**Décision de l'opérateur**, 2026-11-23 `[PILOTE-DÉCLARÉ]`. Le critère de PO-074 est rempli :
+- profils *Run As* (F-268, F-269) ;
+- stabilité du 19 au 23/11 sans nouveau refus (F-265, et F-309, F-310 le jour du jeu) ;
+- *Healthy* confirmé le 23/11, avant (10:38, F-284) et après (12:16, F-312) le jeu de D-024
+  et D-025.
+
+*Effets :* clôt PO-074 ; ouvre la suppression des comptes locaux, de `scom-test` et de leurs
+entrées BeyondTrust (D-023), par une procédure distincte.
+*Portée :* `host02` seulement. Ce critère n'exerce pas le chemin privilégié (PO-059).
 
 
 ---

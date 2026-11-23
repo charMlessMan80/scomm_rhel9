@@ -1225,3 +1225,38 @@ empreintes. **Aucune documentation citée.** Fonde F-265, F-266, F-270 à F-280,
 SCOM relayée par l'opérateur ; **non vue par l'agent**. Même compte pour « UNIX/Linux
 Action Account » et « UNIX/Linux Privileged Account » ; *Run As* configuré avec élévation
 par `sudo`. **Aucune documentation citée.** Fonde F-268 et F-269.
+
+---
+
+*Preuves ajoutées le **2026-11-23** (consignation C-11). P-87 et P-88 **n'ont pas été
+produites sur ce poste** (R-08) et relèvent de la réserve de transmission de P-72 à P-77, à
+l'identique. **Entrée de la consignation**, sur le poste de rédaction, sans élévation :
+`git status --porcelain -uall` → aucune ligne, `rc=0` ; `HEAD` = `origin/main` = `e4c5083`
+(`git rev-list --left-right --count` → `0 0`) ; plus hauts numéros en usage F-283, PO-075,
+D-025, S-30, P-85.*
+
+**P-86** — **Lectures et mesures de rédaction de C-10**, sur le poste, le 2026-11-23, sans
+élévation, hors dépôt. Telles que les cite `procedures/retour-sudo-ssh-scom-host02.md`,
+§ *Sources* ; **les sorties brutes ne sont pas reproduites ici** (R-15) :
+- `man sshd_config` et `man sshd` d'`openssh-server-10.2p1-16.fc44` ;
+- code `openssh/openssh-portable`, `V_10_2_P1`, `V_9_9_P1`, `V_8_7_P1` : `auth.c`,
+  `servconf.c`, `groupaccess.c`, `sshd.c`, `http_code=200` pour chaque fichier ;
+- `sshd` 10.2p1 non privilégié sur la boucle locale : directives réparties, mot-clé inconnu
+  (`rc=255`), refus par groupe, témoin, clé d'hôte, casse, `reload` d'une unité utilisateur ;
+- bac à sable, noms fictifs : nominal, gardes à `KO`, sauvegarde présente ou absente, R1 et
+  R2. `visudo -c` global `rc=1`, non exercé.
+Fonde S-31 à S-38.
+
+**P-87** — `[ÉCRAN-2026-11-23, relayé]` **Jeu de la procédure sur `host02`** : S, ES2, 0a,
+0b, 0c, 2S, SV, A1 (11:03 CET), A2 (11:04 CET), V1, V2 (repère 10:07:55 UTC), V3
+(10:30:46 UTC), N. Captures relayées par le pilote, décrites ; **aucune vue par l'agent**.
+Le détail des valeurs relayées, codes de retour et messages compris, est en F-286 à F-311.
+`[PILOTE-DÉCLARÉ]` : erreur sur la version d'OpenSSH (F-288) ; égalité de l'empreinte avec
+la pose du 09/11 (F-298) ; origine de la partie utilisateur du contexte (F-296).
+**Valeurs non écrites (R-07) :** noms réels, adresses hors boucle locale et écoute
+générique, uid et gid, empreintes. Fonde F-286 à F-311 et F-313.
+
+**P-88** — `[TIERS-DÉCLARÉ]` **Confirmations de l'équipe SCOM**, relayées par l'opérateur ;
+**non vues par l'agent**. 10:38 CET : hôte *Healthy*, agent 1.9.4-0, supervisé par le pool
+UNIX/Linux. 12:16 CET : hôte toujours *Healthy*. **Aucune documentation citée.** Fonde F-284
+et F-312.
