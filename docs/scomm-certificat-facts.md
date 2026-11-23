@@ -2474,6 +2474,12 @@ Fedora et de Red Hat n'ont pas été lus.
   non écrasée ; R1 sans sauvegarde sans restauration ; R1 et R2 avec et sans `sudo`.
   `visudo -c` global non exercé (`rc=1`). **Sur `host02` :** seul l'enchaînement nominal a
   été joué (F-297 à F-304) ; les branches `KO` et R restent propres au bac à sable.
+- **S-39** `[AJOUTÉE le 2026-11-23, C-12]` — `man userdel` de
+  `shadow-utils-4.19.0-7.fc44`, lue sur le poste (P-89) : *EXIT VALUES* `0` succès, `1`, `2`,
+  `6` utilisateur inexistant, `8` utilisateur connecté, `10`, `12` dossier non supprimé ;
+  *CAVEATS* : refus si des processus tournent, fichiers restants à vérifier sur tous les
+  systèmes de fichiers. **Sur `host02` :** page **non lue** ; lecture prescrite à l'étape 0a
+  de `procedures/suppression-comptes-locaux-host02.md` (réserve de F-184, F-200).
 
 **F — Ce que cette section tranche, et ce qu'elle laisse.**
 - Décidé : D-026. Clos : PO-074, PO-075. Jouées : D-024, D-025.
@@ -3492,6 +3498,10 @@ Ils ne contiennent aucun secret ; leur retrait est prévu par la procédure elle
 pas été relayée. La condition d'ouverture — « l'agent accepté par le serveur de
 gestion » — est remplie en pratique (F-246) ; **ne pas retirer `ssl.avant-pfx` tant que
 l'essai de PO-069 n'est pas joué** : il en dépend.
+`[NOTE du 2026-11-23, C-12]` S'y ajoutera, une fois jouée
+`procedures/suppression-comptes-locaux-host02.md`, le sort de ses deux sauvegardes dans
+`/root` : `scom-test.avant-d023` et `scom-comptes-locaux.avant-d023.tar.gz`, cette dernière
+pouvant contenir un historique de commandes. **Non décidé.** L'étape N ne les retire pas.
 
 ### PO-057 — Épingler `ansible.posix` dans `rhel_post_install` *(ouvert le 2026-10-08)*
 Son `requirements.yml` épingle `<2.0.0` (F-073) ; or 1.6.0 et 1.6.2 déclarent
@@ -3756,6 +3766,10 @@ environnement (F-214). **Qui :** l'équipe SCOM, à l'essai.
 pas de `realm permit` : la référence est prise dans le bloc qui agit.
 `procedures/kerberos-scom-host02.md` **n'est pas modifiée**. Le point reste ouvert pour la
 procédure de D-023, qui réutilise l'étape R de `procedures/comptes-scom-host02.md`.
+`[NOTE du 2026-11-23, C-12]` Cette procédure est écrite :
+`procedures/suppression-comptes-locaux-host02.md`, **non jouée**. Elle applique (1) à (5)
+dans sa propre table et **ne réutilise pas** le bloc R de `comptes-scom-host02.md`, qui
+supprimerait sans garde. Le point reste ouvert jusqu'au jeu.
 Le jeu du 2026-11-09 (§ 2.11) a relevé cinq défauts. **La procédure n'est pas modifiée
 par la consignation C-7** ; sa révision est un objet distinct, qui rejoue les gardes
 touchées (R-12 : une garde modifiée perd sa démonstration).
@@ -4188,6 +4202,11 @@ découverte et supervision réussies ? — ni par quel geste. L'étape R de
 pas** BeyondTrust (`:169`) : le retrait des entrées est un geste distinct.
 `[NOTE du 2026-11-23, C-11]` « Kerberos validé » est déclaré par **D-026**. La suppression
 est ouverte, par une procédure distincte, **non écrite et non jouée**.
+`[NOTE du 2026-11-23, C-12]` Procédure écrite, non jouée :
+`procedures/suppression-comptes-locaux-host02.md`. `[PILOTE-DÉCLARÉ]` L'opérateur déclare
+qu'aucun compte *Run As* n'utilise plus `scom_mon` ; origine de cette confirmation (équipe
+SCOM ou constat de l'opérateur dans la console) : non précisée, @VERIF. La déclaration ne
+nomme pas `scom_adm` : @VERIF, à lever avant l'étape A2.
 
 ### D-024 — Retour de `scom-kerberos` au contenu de D-022 (2026-11-23)
 **Décision de l'opérateur**, 2026-11-23 `[PILOTE-DÉCLARÉ]` (option B) :

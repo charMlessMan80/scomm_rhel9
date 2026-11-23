@@ -1260,3 +1260,33 @@ générique, uid et gid, empreintes. Fonde F-286 à F-311 et F-313.
 **non vues par l'agent**. 10:38 CET : hôte *Healthy*, agent 1.9.4-0, supervisé par le pool
 UNIX/Linux. 12:16 CET : hôte toujours *Healthy*. **Aucune documentation citée.** Fonde F-284
 et F-312.
+
+---
+
+*Preuve ajoutée le **2026-11-23** (consignation C-12). **Entrée :** `git status --porcelain
+-uall` → aucune ligne, `rc=0` ; `HEAD` = `origin/main` = `5cf00f3` ; plus hauts numéros en
+usage F-313, PO-075, D-026, S-38, P-88.*
+
+**P-89** — **Rédaction de `procedures/suppression-comptes-locaux-host02.md`**, sur le poste,
+sans élévation ; **rien n'a été joué sur `host02`** (R-08). `man userdel`
+(`shadow-utils-4.19.0-7.fc44`) : fonde S-39. Blocs extraits de la procédure et joués dans un
+bac à sable, comptes simulés, chemins redirigés, aucune suppression réelle (`rm` et
+`userdel -r` simulés par un déplacement) :
+```
+nominal SV, A1, A2, V1, N       garde_a1=OK  garde_a2=OK  userdel 0 0  getent 2  sudo -l -U 1
+G_A1, empreinte altérée         garde_a1=KO  rc_rm=1  fichier présent, comptes présents
+G_A1, processus actif           garde_a1=KO  rc_rm=1  fichier présent, comptes présents
+G_A1, fichier hors dossier      garde_a1=KO  rc_rm=1  fichier présent, comptes présents
+G_A1, référence dans /etc       garde_a1=KO  rc_rm=1  fichier présent, comptes présents
+G_A2, sans A1                   garde_a2=KO  aucun compte supprimé
+premier userdel à 8             rc_userdel_adm=8  rc_userdel_mon=1  second non lancé
+SV déjà présente                rc_absente=1  rc_install=1  contenu conservé
+R sans sauvegarde               rc_sauvegarde=1  rc_install=1  rien restauré
+ER, ER-ROOT après A1 et A2      rc 0  mode 440  empreinte égale à celle du dépôt
+```
+**Déclaré (R-15) :** une première tentative a été refusée par un contrôle de l'outil, à cause
+des suppressions de son script ; elle n'a rien exécuté. Une deuxième extraction laissait
+`/etc` non redirigé dans une ligne `grep -rl` : lecture seule du `/etc` du poste, sans
+élévation, résultat écarté, extraction corrigée et scénarios rejoués.
+**Limites :** `sudo`, `userdel`, `visudo`, SELinux et l'état de `host02` ne sont pas éprouvés ;
+le bloc S n'a pas été joué. Fonde S-39 et les mentions « bac à sable » de la procédure.
