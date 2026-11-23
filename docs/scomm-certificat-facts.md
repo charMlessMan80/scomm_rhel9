@@ -2252,6 +2252,12 @@ mention UTC.
   - **16:32:19 `visudo -f /etc/sudoers.d/scom-kerberos`**, jusqu'à 16:34:07 ; 16:34:58
     `visudo -c` ;
   - 16:47:13 fin de session.
+  `[NOTE du 2026-11-23, C-10]` `[PILOTE-DÉCLARÉ]` Selon l'opérateur, les actions du 12/11
+  — session SSH avec le compte de service, `scxadmin -restart`, ajout de la règle
+  `scxadmin -status` — ont été menées par l'équipe SCOM et l'interlocuteur de l'équipe AD
+  pour faire fonctionner la découverte en l'absence de l'opérateur, sans connaître
+  l'origine du problème. Cette note n'établit **aucune correspondance nominative** entre
+  ces personnes et `<ADMIN-TIERS>`.
 - **F-275** — Le 13/11, dans une **nouvelle session**, commandes de `<ADMIN-TIERS>`
   (journal : « `<ADMIN-TIERS>` : … COMMAND=… ») : 08:47:04 `sudo ls -l` du dossier
   personnel du compte ; 08:54:03 `sudo grep -rinw / -e` sur le nom du compte.
@@ -3621,6 +3627,11 @@ retirer, et par quel geste. **Qui :** l'opérateur ; la révision, par le pilote
 - **À porter ensuite** par `rhel_post_install` (R-09, renvoi seul).
 - **Décision : non prise.** D-024 prévoit de jouer son retour arrière avec cette
   fermeture.
+`[NOTE du 2026-11-23, C-10]` **Décidé : D-025** (`DenyGroups` sur les deux groupes SCOM,
+fichier `sshd` dédié, `host02`). Procédure écrite, **non jouée** : le point reste ouvert
+jusqu'au constat du refus sur `host02`. Le `@VERIF` sur la page de manuel est instruit sur
+le poste (`procedures/retour-sudo-ssh-scom-host02.md`, § *Sources*) et se confirme sur la
+cible à l'étape 0a.
 
 ---
 
@@ -3999,6 +4010,17 @@ pas** BeyondTrust (`:169`) : le retrait des entrées est un geste distinct.
 `[PILOTE-DÉCLARÉ]` **Recommandation du pilote :** prévenir `<ADMIN-TIERS>` avant le retour
 arrière.
 *État :* **non jouée**, procédure non écrite. *Dépendance :* PO-075 n'est pas décidé.
+`[NOTE du 2026-11-23, C-10]` Procédure écrite :
+`procedures/retour-sudo-ssh-scom-host02.md`, **non jouée**. PO-075 est tranché par D-025.
+
+### D-025 — SSH fermé aux groupes SCOM par `DenyGroups` sur `host02` (2026-11-23)
+**Décision de l'opérateur**, 2026-11-23 `[PILOTE-DÉCLARÉ]`. PO-075 est tranché par
+`DenyGroups` sur les deux groupes SCOM, `<GROUPE-SCOM-Q>` et `<GROUPE-SCOM-P>`, dans un
+fichier de configuration `sshd` dédié, sur `host02`. La même règle sera ensuite portée par
+`rhel_post_install` (R-09, renvoi seul).
+*Motif :* SCOM n'emploie pas SSH sous Kerberos (D-020) ; même logique que l'accès SSSD par
+groupe ; couvre aussi le compte de production.
+*Procédure :* `procedures/retour-sudo-ssh-scom-host02.md`. *État :* **non jouée**.
 
 
 ---
