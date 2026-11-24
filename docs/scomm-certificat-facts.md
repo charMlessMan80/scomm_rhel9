@@ -14,7 +14,7 @@ nommée**, les faits **déclarés par l'opérateur**, les **points ouverts** et 
 |---|---|---|
 | Règles de travail | `../CLAUDE.md` | Une règle vit à un seul endroit. |
 | Ce que le code du dépôt fait aujourd'hui — **F-008 à F-021, F-038, F-155 à F-161, et F-188** (F-188 ajouté le 2026-10-20 ; **ÉTAIT :** « F-008 à F-021, F-038, et F-155 à F-161 » ; F-155 à F-161 ajoutés le 2026-10-08 ; **ÉTAIT :** « F-008 à F-021 et F-038 ») | `scomm-depot-actuel.md` | Brouillon sans autorité (F-044), périmable en bloc par la réécriture (D-007). **Toute citation de ces numéros dans ce fichier renvoie là-bas.** |
-| Sorties de commande — **P-01 à P-85** (`[RÉVISÉE le 2026-11-23, C-9]` **ÉTAIT :** « P-01 à P-83 », consignation C-8 ; `[RÉVISÉE le 2026-11-19, C-8]` **ÉTAIT :** « P-01 à P-80 », consignation C-7 ; `[RÉVISÉE le 2026-11-09, C-7]` **ÉTAIT :** « P-01 à P-78 », consignation C-5 ; `[RÉVISÉE le 2026-11-09]` **ÉTAIT :** « P-01 à P-69 », déjà périmé le 2026-10-21 — P-70 et P-71 existaient ; avant : « P-01 à P-65 », jusqu'au 2026-10-20 ; avant : « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
+| Sorties de commande — **P-01 à P-90** (`[RÉVISÉE le 2026-11-24, C-13]` **ÉTAIT :** « P-01 à P-85 », déjà périmé depuis C-11 — P-86 à P-89 existaient ; `[RÉVISÉE le 2026-11-23, C-9]` **ÉTAIT :** « P-01 à P-83 », consignation C-8 ; `[RÉVISÉE le 2026-11-19, C-8]` **ÉTAIT :** « P-01 à P-80 », consignation C-7 ; `[RÉVISÉE le 2026-11-09, C-7]` **ÉTAIT :** « P-01 à P-78 », consignation C-5 ; `[RÉVISÉE le 2026-11-09]` **ÉTAIT :** « P-01 à P-69 », déjà périmé le 2026-10-21 — P-70 et P-71 existaient ; avant : « P-01 à P-65 », jusqu'au 2026-10-20 ; avant : « P-01 à P-55 », jusqu'au 2026-10-08) | `scomm-journal-preuves.md` | Pièces justificatives, consultées au besoin, pas relues à chaque session. **Toute citation `P-xx` renvoie là-bas.** |
 | Procédures jouées par l'opérateur sur les cibles | `procedures/` | Elles n'ont **aucune autorité propre** : tout ce qu'elles affirment vient d'ici, par renvoi `F-xxx` / `PO-xxx`. |
 
 `[RÉVISÉE le 2026-09-29]` Deuxième ligne du tableau **ÉTAIT :** « Sorties de commande —
@@ -31,8 +31,9 @@ faits, des points ouverts et des décisions. `CLAUDE.md` porte les règles de tr
 duplique rien d'ici. » Le principe — un objet, un seul endroit — est inchangé ; c'est le
 nombre d'endroits qui est passé de un à trois (D-006).
 
-Dernière mise à jour : **2026-11-23** (consignation C-11, jeu de
-`procedures/retour-sudo-ssh-scom-host02.md`, Kerberos validé, D-026).
+Dernière mise à jour : **2026-11-24** (consignation C-13, jeu de
+`procedures/suppression-comptes-locaux-host02.md`, D-023 jouée).
+`ÉTAIT : 2026-11-23 (consignation C-11, jeu de procedures/retour-sudo-ssh-scom-host02.md, Kerberos validé, D-026).` — déjà périmée : C-12 ne l'avait pas mise à jour.
 `ÉTAIT : 2026-11-23 (consignation C-9, stabilité, journaux tournés, modification hors procédure de scom-kerberos, décision D-024).`
 `ÉTAIT : 2026-11-19 (consignation C-8, diagnostic de la découverte Kerberos et découverte réussie, 18–19/11).`
 `ÉTAIT : 2026-11-09 (consignation C-7, jeu de procedures/kerberos-scom-host02.md sur host02).`
@@ -2480,6 +2481,8 @@ Fedora et de Red Hat n'ont pas été lus.
   *CAVEATS* : refus si des processus tournent, fichiers restants à vérifier sur tous les
   systèmes de fichiers. **Sur `host02` :** page **non lue** ; lecture prescrite à l'étape 0a
   de `procedures/suppression-comptes-locaux-host02.md` (réserve de F-184, F-200).
+  `[NOTE du 2026-11-24, C-13]` Page de `host02` lue à l'étape 0a : même sens des codes
+  (F-317).
 
 **F — Ce que cette section tranche, et ce qu'elle laisse.**
 - Décidé : D-026. Clos : PO-074, PO-075. Jouées : D-024, D-025.
@@ -2491,6 +2494,137 @@ Fedora et de Red Hat n'ont pas été lus.
 - La procédure n'est pas modifiée. Ses mentions « aucune commande exécutée sur `host02` »,
   « OpenSSH 8.7 », « pas encore au dossier » et ses `@VERIF` décrivent donc l'état d'avant
   le jeu : F-288, F-313 et S-31 à S-38 font foi.
+- `[NOTE du 2026-11-24, C-13]` La suppression est faite (§ 2.15) : PO-063, PO-067, D-017 et
+  D-019 reçoivent une note datée. Le texte ci-dessus reste l'état du 2026-11-23.
+
+### 2.15 Le 2026-11-24 — jeu de `procedures/suppression-comptes-locaux-host02.md` (D-023)
+
+**Aucune capture, aucun message de `host02`, de l'équipe SCOM ou de BeyondTrust n'a été vu
+par l'agent.** Provenance : P-90, sous la réserve de transmission de P-72 à P-77, à
+l'identique. Version jouée : `7f24411` (C-12 bis). Ne sont pas écrits (R-07) : le nom de la
+machine, son FQDN et son adresse, le compte de l'opérateur, le nom du compte AD, les noms de
+fichiers de `sudoers.d` qui contiennent le nom de la machine, les plages `subuid` et
+`subgid`, les uid et gid (ceux de F-200 ne sont pas répétés). **Heures :** UTC, sauf mention
+CET ; `/var/log/secure` est en heure locale (CET), `omiserver.log` en UTC (F-254). ERUN et
+EJRN sont deux blocs **hors procédure**, ajoutés par le pilote, en lecture seule.
+
+**A — Avant le jeu** `[PILOTE-DÉCLARÉ]` (P-90).
+- **F-314** — Préalable *Run As*, déclaré pour le 2026-11-23, relayé le 2026-11-24 : aucun
+  compte *Run As* ne référence `scom_adm` ni `scom_mon` ; l'équipe SCOM les a remplacés par
+  le compte Kerberos lors de la demande de test, en phase de création. Lève les `@VERIF`
+  de la procédure et de la note C-12 de D-023 (origine, `scom_adm`), **au niveau d'une
+  déclaration** : aucun message de l'équipe SCOM n'est relayé sur ce point.
+
+**B — Jeu** `[ÉCRAN-2026-11-24, relayé]` (P-90).
+- **F-315** — **S**, 07:43:31. Le témoin `${…:?}` s'arrête sur « SCOM_TEMOIN_VIDE: vide »,
+  sans ligne `rc` ; `getent` `root` `0`, témoin absent `2`.
+- **F-316** — **0a, versions.** shadow-utils **4.9-16.el9** ; tar **1.34-11.el9**.
+- **F-317** — **0a, `man userdel` de `host02`**, *EXIT VALUES* (l. 147-171) : `0` success,
+  `1` can't update password file, `2` invalid command syntax, `6` specified user doesn't
+  exist, `8` user currently logged in, `10` can't update group file, `12` can't remove home
+  directory. **Même sens que S-39**, page du poste. Lue sur la cible, la page relève d'un F ;
+  S-39 reste la source de rédaction.
+- **F-318** — **0a, `/etc/login.defs`.** `MAIL_DIR /var/spool/mail` ; `USERGROUPS_ENAB yes` ;
+  aucun `USERDEL_CMD`.
+- **F-319** — **0b, comptes.** Présents dans les fichiers locaux ; dossiers
+  `/home/<compte>` ; groupes personnels au 4e champ vide ; aucun groupe supplémentaire.
+- **F-320** — **0b, activité.** Aucun processus (`pgrep -u` et `-U` à `1`, témoin `root`
+  `0`). « no crontab for `<compte>` », `rc` 1, pour les deux.
+- **F-321** — **0b, connexions.** `lastlog` : « \*\*Never logged in\*\* » pour les deux ;
+  `last` : aucune entrée, `wtmp` commençant le 2026-08-18. *Rapprochement :* F-204 relève
+  une connexion SSH de `scom_adm`, jouée sous la forme `ssh … scom_adm@localhost true`
+  (`procedures/comptes-scom-host02.md:383`), sans terminal. Que `sshd` n'inscrive pas une
+  telle session dans `lastlog` ni dans `wtmp` : non lu, @VERIF (code d'OpenSSH 9.9p1).
+- **F-322** — **0b, clés.** Ni `.ssh` ni `authorized_keys` pour les deux comptes
+  (concorde avec D-019 a).
+- **F-323** — **0b, `/etc`, noms de fichiers.** `passwd`, `group`, `shadow`, `gshadow`,
+  `subuid`, `subgid`, leurs six copies `-`, et `sudoers.d/scom-test` ; `rc_hors_liste=1`.
+  `subuid` et `subgid` portent une plage pour chacun des deux comptes ; `subuid-` et
+  `subgid-`, pour `scom_adm` seul. Pas d'`opasswd`.
+- **F-324** — **0b, fichiers hors dossier :** 0 ; le témoin `find` répond.
+- **F-325** — **Écart E1, 0b.** `rc_find=1` : `df` avait listé `/run/user/0`, puis `find` a
+  rendu « No such file or directory » sur ce chemin. Les autres systèmes de fichiers ont été
+  parcourus ; le résultat « 0 orphelin » est retenu (lecture du pilote). `G_A1` recalcule
+  `find` et exige `rc` 0 : il l'a obtenu en A1 (F-331).
+- **F-326** — **0c, `scom-test`.** `-r--r-----`, `root root`, `etc_t`, 5759 octets, daté du
+  27/10 (F-205). `sha256sum -c` `OK`, `rc` 0 ; témoin `FAILED`, `rc` 1.
+- **F-327** — **0c, règles.** `sudo -l -U` : pour `scom_adm`, la seule règle `NOPASSWD`
+  « /bin/sh -c cat » du certificat scx ; pour `scom_mon`, la seule règle
+  `scxlogfilereader -p` (concorde avec F-206). `visudo -c` `0`, tous les fichiers « parsed
+  OK ».
+- **F-328** — **2S.** `sudo -s` dans une seconde session, `id -u` = 0. Sa fermeture n'est pas
+  relayée.
+- **F-329** — **SV.** Aucune sauvegarde préexistante. Copie de `scom-test` en `600 root
+  root`, 5759 octets, `cmp` `0`, témoin `/dev/null` `1`. Archive des dossiers : 1026 octets,
+  `600`, deux dossiers listés, témoin absent ; `N_TAR` = `N_HOME` = 8.
+- **F-330** — **ERUN**, hors procédure, juste avant A1. `findmnt /run/user/0` `rc` 1, `ls`
+  `rc` 2 : le chemin est absent. `[PILOTE-DÉCLARÉ]` Hypothèse : montage passager lié aux
+  sessions PAM de `sudo` (`user@0`). **Non établie** : la session `sudo -s` ouverte ne l'a
+  pas maintenu. Origine : @VERIF.
+- **F-331** — **A1**, référence 07:55:44, `N_20146=2`. `rc_find=0` ; **`garde_a1=OK`** ;
+  `rc_rm=0` ; `rc_absent=0`. Cas nominal de la garde corrigée en C-12 bis, empreinte lue
+  sous le vrai `sudo` de `host02`. Son cas `KO` n'est démontré qu'en bac à sable (P-89).
+- **F-332** — **A1, après.** `visudo -c` `0` ; `scom-test` n'est plus listé.
+- **F-333** — **Écart E2, A1.** `rc_journal_rm=1`, `0` affiché.
+- **F-334** — **EJRN**, hors procédure. 12 lignes `COMMAND=` après la référence, dont, à
+  08:55:44 CET, « COMMAND=/bin/rm /etc/sudoers.d/scom-test », sous le compte de
+  l'opérateur, TTY `pts/1`. Lève le @VERIF sur le chemin de `rm`. `[PILOTE-DÉCLARÉ]` La
+  ligne n'était pas encore écrite dans `/var/log/secure` (rsyslog) au moment du contrôle :
+  **non établie**, @VERIF. Le retrait est établi par l'absence du fichier (F-331),
+  `visudo` (F-332) et cette ligne.
+- **F-335** — **A2, témoin.** « userdel: user 'scom_absent' does not exist », `rc` 6 : le
+  code est démontré sur `host02`.
+- **F-336** — **A2.** `garde_a2=OK` ; `userdel -r` `0` puis `0`.
+- **F-337** — **A2, absences.** Témoins `root` `0` ; `getent passwd` et `group` des deux
+  comptes à `2` ; dossiers et spool absents. Aucun message de `userdel` sur le spool.
+- **F-338** — **A2, journal**, 08:58:00 CET, pour chaque compte : « delete user », « removed
+  group … owned by … », « removed shadow group … owned by … ».
+- **F-339** — **V1, anciens comptes.** « sudo: unknown user scom_adm » et « sudo: unknown
+  user scom_mon », `rc` 1.
+- **F-340** — **V1, `<COMPTE-SCOM-Q>`.** Une seule règle, `scxlogfilereader -p` ; permis
+  `0`, refus `1` sans message ; `visudo -c` `0`.
+- **F-341** — **V1, orphelins par uid.** `rc_find` 0 ; aucun fichier.
+- **F-342** — **V1, `/etc`.** Ne citent plus les comptes que `passwd-`, `shadow-`,
+  `group-`, `gshadow-`, `subuid-`, `subgid-` ; `rc_hors_copies=1`, témoin conforme.
+  `userdel` a donc retiré les plages de `subuid` et `subgid`.
+- **F-343** — **V1, `EventId=20146` :** 2, inchangé.
+- **F-344** — **V2.** `date` affiche 08:33:59. `omiserver.log` : lignes à 08:27:53 et
+  08:37:53, `EventId=30118` « ssl-read error … unexpected eof while reading », postérieures
+  à A1. `EventId=20146` : 2. `[PILOTE-DÉCLARÉ]` Forme connue, sans gravité (F-263, dont le
+  @VERIF demeure). **Intervalle de 10 minutes**, et non 15 (F-263) : non expliqué.
+- **F-345** — **Écart E3, V2.** La ligne de 08:37:53 est postérieure à l'heure affichée par
+  `date` ; la capture montre une invite « [sudo] password for » entre les deux.
+  `[PILOTE-DÉCLARÉ]` Mot de passe saisi avec retard ; heure non retrouvée par l'opérateur :
+  **non établie**. Sans effet sur la conclusion : les deux lignes suivent A1.
+- **F-346** — **N.** Les deux sauvegardes sont conservées dans `/root`, `600 root root`,
+  datées de 08:52 CET ; `unset` `0`.
+
+**C — Après le jeu.**
+- **F-347** — `[TIERS-DÉCLARÉ]` Message et capture de l'équipe SCOM, 10:19 CET : hôte
+  *Healthy*, Red Hat 9.8, agent 1.9.4-0, supervisé. La question sur les alertes ou tâches en
+  échec depuis 08:55 CET **n'a pas reçu de réponse**.
+- **F-348** — `[PILOTE-DÉCLARÉ]` Entrées BeyondTrust de `scom_adm` et `scom_mon` retirées
+  le 2026-11-24 à 11:40 CET, après V2 comme le prescrit la procédure.
+
+**D — `@VERIF` levés, branches, corrections de PO-073.**
+- **F-349** — Levés par le jeu : codes de `userdel` et `MAIL_DIR` (F-317, F-318) ; liste
+  des fichiers de `/etc` (F-323) ; forme de « no crontab », présence et sortie de `lastlog`
+  (F-320, F-321) ; chemin de `rm` (F-334) ; lignes `userdel[` (F-338) ; message sur le
+  spool (F-337) ; message de `sudo` pour un utilisateur inconnu (F-339) ; copies de `/etc`
+  après A2 (F-342) ; *Run As*, au niveau déclaré (F-314).
+  **Branches non exercées sur `host02` (R-04) :** ER, ER-ROOT ; `G_A1` et `G_A2` à `KO` ;
+  `userdel` à `8` ou `12` ; les arrêts de 0a à 0c ; la fermeture de 2S n'est pas relayée.
+- **F-350** — **Corrections de PO-073 sur `host02` :** (2) exercée (F-328) ; (3) exercée,
+  références prises dans A1 et A2 (F-331) ; (5) exercée (F-315) ; (4) appliquée, la forme
+  `sudo -u … sudo -n -l` n'étant pas employée ; **(1) écrite, non exercée** : R n'a pas été
+  joué, sa démonstration reste celle du bac à sable (P-89).
+
+**E — Ce que cette section tranche, et ce qu'elle laisse.**
+- Jouée : D-023. Ouvert : PO-076 (écarts E1 à E3, blocs ERUN et EJRN).
+- Notes datées : S-39, PO-056, PO-063, PO-064, PO-067, PO-073, D-017, D-019, D-023, § 2.14 F.
+- Laissé tel quel : F-240, sort non décidé, rien de nouveau.
+- La procédure n'est pas modifiée (PO-076). Ses mentions « aucune commande exécutée sur
+  `host02` » et ses `@VERIF` décrivent l'état d'avant le jeu : F-314 à F-350 font foi.
 
 ---
 
@@ -3502,6 +3636,13 @@ l'essai de PO-069 n'est pas joué** : il en dépend.
 `procedures/suppression-comptes-locaux-host02.md`, le sort de ses deux sauvegardes dans
 `/root` : `scom-test.avant-d023` et `scom-comptes-locaux.avant-d023.tar.gz`, cette dernière
 pouvant contenir un historique de commandes. **Non décidé.** L'étape N ne les retire pas.
+`[NOTE du 2026-11-24, C-13]` Procédure jouée (§ 2.15). Les deux sauvegardes sont dans
+`/root`, `600 root root` (F-346). **Leur sort n'est pas décidé.** S'y rattache
+`/etc/shadow-`, qui cite encore les comptes après A2 (F-342, noms de fichiers seuls).
+`[PILOTE-DÉCLARÉ]` Recommandation du pilote : **ne rien faire sur `/etc/shadow-`**. Il
+garde le hachage de `scom_mon` jusqu'à la prochaine modification d'un compte local, en
+lecture `root` seule, et l'entrée BeyondTrust est retirée (F-348). Contenu et mode du
+fichier non relevés. **Décision de l'opérateur : non prise.**
 
 ### PO-057 — Épingler `ansible.posix` dans `rhel_post_install` *(ouvert le 2026-10-08)*
 Son `requirements.yml` épingle `<2.0.0` (F-073) ; or 1.6.0 et 1.6.2 déclarent
@@ -3586,6 +3727,8 @@ seront supprimés une fois Kerberos validé (D-023). La question se reporte sur 
 AD** de supervision (`<COMPTE-SCOM-Q>`, puis `<COMPTE-SCOM-P>`), dont le mot de passe est
 dans HPAM et géré par l'équipe SCOM (F-218) : son expiration se règle dans l'annuaire,
 pas par `chage`. **Qui :** l'équipe SCOM et l'interlocuteur de l'équipe AD.
+`[NOTE du 2026-11-24, C-13]` Les comptes locaux sont supprimés de `host02` (D-023 jouée,
+F-336, F-337). L'objet reporté sur le compte AD est inchangé.
 **ÉTAIT :** les deux comptes locaux, texte ci-dessous.
 `[RÉVISÉE le 2026-10-21]` — la non-expiration vaut désormais pour **les deux** comptes,
 `scom_adm` et `scom_mon`, tous deux authentifiés par mot de passe (D-019 a). Le titre
@@ -3601,6 +3744,8 @@ F-186), et la vérifier par une garde (R-12) — pas la déduire de `login.defs`
 WS-Man, F-212), et les comptes locaux seront supprimés (D-023). *Ce qui reste vrai :* tant
 qu'ils existent sur `host02`, `scom_adm` et `scom_mon` ont un mot de passe et sont
 joignables par SSH (`PasswordAuthentication yes`, F-178 ; connexion constatée, F-204).
+`[NOTE du 2026-11-24, C-13]` Ils n'existent plus sur `host02` (F-336, F-337) : cette
+réserve est échue.
 Titre **ÉTAIT :** « PO-064 — Exposition SSH de `scom_mon` *(ouvert le 2026-10-20)* ».
 `[RÉVISÉE le 2026-10-21]` — l'exposition SSH par mot de passe concerne maintenant **les
 deux** comptes (D-019 a). `scom_adm` **a besoin** de SSH : la maintenance passe par SSH
@@ -3653,8 +3798,9 @@ available », c'est une **décision** à prendre, pas un correctif à appliquer.
 leurs entrées BeyondTrust, supprimés une fois Kerberos validé (D-023). La question se
 reporte sur le **compte AD** de supervision, dont le mot de passe est dans **HPAM** et
 géré par l'équipe SCOM (F-218) : si HPAM le fait tourner, le compte *Run As* doit suivre.
-**Qui :** l'équipe SCOM. **ÉTAIT :** BeyondTrust et les deux comptes locaux, texte
-ci-dessous.
+**Qui :** l'équipe SCOM. `[NOTE du 2026-11-24, C-13]` Comptes locaux supprimés (F-336) ;
+entrées BeyondTrust retirées, `[PILOTE-DÉCLARÉ]` (F-348). L'objet reporté est inchangé.
+**ÉTAIT :** BeyondTrust et les deux comptes locaux, texte ci-dessous.
 Le dossier ne dit pas si BeyondTrust fait tourner **automatiquement** les mots de passe
 de `scom_adm` et `scom_mon` sur les hôtes (F-191). Si c'est le cas, chaque rotation doit
 aussi mettre à jour le compte *Run As* correspondant dans SCOM, sinon la supervision et
@@ -3770,6 +3916,13 @@ procédure de D-023, qui réutilise l'étape R de `procedures/comptes-scom-host0
 `procedures/suppression-comptes-locaux-host02.md`, **non jouée**. Elle applique (1) à (5)
 dans sa propre table et **ne réutilise pas** le bloc R de `comptes-scom-host02.md`, qui
 supprimerait sans garde. Le point reste ouvert jusqu'au jeu.
+`[NOTE du 2026-11-24, C-13]` Cette procédure est **jouée** (§ 2.15). Sur `host02` : (2), (3)
+et (5) exercées, (4) appliquée ; **(1) écrite, non exercée**, R n'ayant pas été joué (F-350).
+`procedures/kerberos-scom-host02.md` **n'est pas révisée et ne doit pas être rejouée en
+l'état** : (1) à (5) n'y sont pas portées. **Clôture proposée par le pilote, non
+prononcée :** le point porte encore une question de l'opérateur, le sort du dossier de
+F-240 (« Non décidé » ci-dessous), que la clôture laisserait sans foyer. À clore quand
+l'opérateur l'aura tranchée, ou rattachée à un autre point.
 Le jeu du 2026-11-09 (§ 2.11) a relevé cinq défauts. **La procédure n'est pas modifiée
 par la consignation C-7** ; sa révision est un objet distinct, qui rejoue les gardes
 touchées (R-12 : une garde modifiée perd sa démonstration).
@@ -3833,6 +3986,25 @@ fichier `sshd` dédié, `host02`). Procédure écrite, **non jouée** : le point
 jusqu'au constat du refus sur `host02`. Le `@VERIF` sur la page de manuel est instruit sur
 le poste (`procedures/retour-sudo-ssh-scom-host02.md`, § *Sources*) et se confirme sur la
 cible à l'étape 0a.
+
+### PO-076 — Défauts de `procedures/suppression-comptes-locaux-host02.md` à corriger avant réutilisation *(ouvert le 2026-11-24)*
+Jouée une fois sur `host02` (§ 2.15). `[PILOTE-DÉCLARÉ]` Réutilisation envisagée pour la
+Production et par AAP. **Avant toute réutilisation :**
+- **(a) E1** (F-325, F-330). `FS_LOCAUX` inclut des montages passagers : `df` peut lister un
+  chemin que `find` ne trouve plus, et `rc_find=1` met alors `G_A1` à `KO` pour une cause
+  qui n'est pas la sienne (R-13). Pistes : exclure `tmpfs` et `efivarfs`, ou tolérer un
+  chemin disparu. *Réserve :* exclure `tmpfs` écarte aussi `/tmp` ou `/dev/shm` s'ils en
+  sont, où un fichier d'un compte pourrait rester ; type de ces montages sur `host02` :
+  @VERIF.
+- **(b) E2** (F-333, F-334). Le contrôle du journal suit le `rm` sans délai. Pistes : une
+  attente, ou une lecture par `journalctl` ; que la ligne y soit présente plus tôt :
+  @VERIF.
+- **(c) E3** (F-345). `date -u` est pris avant un `sudo` qui peut demander le mot de passe.
+  Pistes : `sudo -v` en tête de bloc, ou `date` après la lecture.
+- **(d)** ERUN et EJRN, joués hors procédure (F-330, F-334) : à intégrer ou non.
+**La procédure n'est pas modifiée par la consignation C-13.** Toute correction de (a)
+touche `G_A1` et lui fait perdre sa démonstration (R-12) : nominal et `KO` à rejouer.
+**Qui :** le pilote pour la révision, l'opérateur pour la décision de réutilisation.
 
 ---
 
@@ -4113,6 +4285,9 @@ réseau**, hors de la machine.
   `scom_adm` aussi.
   `[NOTE du 2026-11-09]` Vaut tant que les comptes locaux existent (D-023). Le mot de
   passe du compte AD de supervision est dans HPAM, géré par l'équipe SCOM (F-218).
+`[NOTE du 2026-11-24, C-13]` D-023 jouée (§ 2.15) : `/etc/sudoers.d/scom-test` retiré
+(F-331, F-332), `scom_adm` et `scom_mon` supprimés (F-336, F-337). (c), (d) et (e) n'ont
+plus d'objet sur `host02`.
 *Portée :* `host02` seulement ; rien de cela ne vaut pour le parc ni pour
 `rhel_post_install` (R-09). Procédure : `procedures/comptes-scom-host02.md`.
 *Motif :* même logique que D-010, D-014 et D-015 — la recette avance à la main, le parc
@@ -4148,6 +4323,8 @@ F-151 et D-015.
 rotation par BeyondTrust (PO-067) ; l'exposition SSH des deux comptes (PO-064).
 `[NOTE du 2026-11-09]` PO-067 se reporte sur le compte AD et HPAM ; PO-064 est sans objet
 pour SCOM (D-020). (c) tient : la découverte du test reste faite par l'assistant.
+`[NOTE du 2026-11-24, C-13]` (a) et (b) : comptes supprimés (F-336) et entrées BeyondTrust
+retirées, `[PILOTE-DÉCLARÉ]` (F-348).
 
 ### D-020 — Authentification Kerberos ; compte AD pour la supervision ; cycle de vie de l'agent par AAP (2026-11-02)
 **Décisions de l'opérateur**, 2026-11-02 `[PILOTE-DÉCLARÉ]` (P-75) :
@@ -4207,6 +4384,13 @@ est ouverte, par une procédure distincte, **non écrite et non jouée**.
 qu'aucun compte *Run As* n'utilise plus `scom_mon` ; origine de cette confirmation (équipe
 SCOM ou constat de l'opérateur dans la console) : non précisée, @VERIF. La déclaration ne
 nomme pas `scom_adm` : @VERIF, à lever avant l'étape A2.
+`[NOTE du 2026-11-24, C-13]` **Jouée le 2026-11-24** (§ 2.15) : `scom-test` retiré (F-331,
+F-332, F-334), comptes supprimés (F-336 à F-339), entrées BeyondTrust retirées
+`[PILOTE-DÉCLARÉ]` (F-348). Préalable *Run As* déclaré pour les deux comptes (F-314) : les
+deux `@VERIF` de la note C-12 sont levés au niveau d'une déclaration.
+*Statut :* comme D-024 et D-025, une décision jouée reçoit une note ; le dossier ne marque
+pas les décisions closes. Restent hors d'elle : le sort des sauvegardes (PO-056), le dossier
+de F-240 (PO-073), les défauts de la procédure (PO-076).
 
 ### D-024 — Retour de `scom-kerberos` au contenu de D-022 (2026-11-23)
 **Décision de l'opérateur**, 2026-11-23 `[PILOTE-DÉCLARÉ]` (option B) :

@@ -1310,3 +1310,33 @@ V1, /etc/subuid sans tiret      fichier affiché  rc_hors_copies=0
 simulé, qui ne retirait pas la ligne de `shadow` ni ne créait les copies `-` ; simulation
 corrigée, tous les cas rejoués. Le `sudo`, le `userdel` et le `/etc` réels de `host02` ne
 sont toujours pas éprouvés.
+`[NOTE du 2026-11-24, C-13]` Le jeu sur `host02` (P-90) éprouve le cas nominal de `G_A1` et
+de `G_A2` sous le vrai `sudo` ; leurs cas `KO` restent ceux de ce bac à sable.
+
+---
+
+*Preuve ajoutée le **2026-11-24** (consignation C-13). P-90 **n'a pas été produite sur ce
+poste** (R-08) et relève de la réserve de transmission de P-72 à P-77, à l'identique.
+**Entrée :** `git status --porcelain -uall` → aucune ligne, `rc=0` ; `HEAD` = `origin/main`
+= `7f24411` (`git ls-remote origin refs/heads/main`, `rc=0`) ; plus hauts numéros en usage
+F-313, PO-075, D-026, S-39, P-89.*
+
+**P-90** — `[ÉCRAN-2026-11-24, relayé]` **Jeu de `procedures/suppression-comptes-locaux-host02.md`
+(version `7f24411`) sur `host02`**, de S à N : S (07:43:31 UTC), 0a, 0b, 0c, 2S, SV, ERUN,
+A1 (référence 07:55:44 UTC), EJRN, A2, V1, V2 (`date` 08:33:59 UTC), N. ERUN et EJRN sont
+**hors procédure**, ajoutés par le pilote, en lecture seule. Captures relayées et lues par
+le pilote, décrites dans son brief ; **aucune vue par l'agent**, ni aucune sortie brute.
+Le détail des valeurs relayées, codes de retour et messages compris, est en F-315 à F-346.
+**Écarts relevés par le pilote :** E1 (`rc_find=1` en 0b), E2 (`rc_journal_rm=1` en A1),
+E3 (ligne d'`omiserver.log` postérieure à `date` en V2).
+Joints au même relais, **non vus par l'agent** :
+- `[TIERS-DÉCLARÉ]` message et capture de l'équipe SCOM, 2026-11-24, 10:19 CET : *Healthy*,
+  Red Hat 9.8, agent 1.9.4-0, supervisé ; question sur les alertes ou tâches en échec sans
+  réponse (F-347) ;
+- `[PILOTE-DÉCLARÉ]` retrait des entrées BeyondTrust, 11:40 CET (F-348) ;
+- `[PILOTE-DÉCLARÉ]` préalable *Run As*, daté du 2026-11-23 (F-314).
+`[PILOTE-DÉCLARÉ]` : lecture des captures par le pilote ; explications de E1 (F-330), E2
+(F-334) et E3 (F-345), aucune établie ; « sans gravité » de `EventId=30118` (F-344).
+**Valeurs non écrites (R-07) :** nom de la machine, FQDN, adresse, compte de l'opérateur,
+nom du compte AD, noms de fichiers de `sudoers.d` contenant le nom de la machine, plages
+`subuid` et `subgid`, uid et gid. Fonde F-314 à F-350.
